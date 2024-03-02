@@ -10,5 +10,5 @@ This project is developed by Delta Gamez, a game creation, development group and
 
 
 ### Connect's Development Team
-- Leadership [DeltaGaming](https://github.com/DeltaGamingCH) 
-- Developer I [Dimitri Gee](https://github.com/DmitriGee)
+- **Leadership**: [DeltaGaming](https://github.com/DeltaGamingCH) 
+- **Developer I**: [Dimitri Gee](https://github.com/DmitriGee)
