@@ -7,6 +7,7 @@ Connect is a Discord-based project, allowing users to advertise their Discord se
 This project is developed by Delta Gamez, a game creation, development group and gaming community. 
 
 [Join DG Today.](https://discord.gg/sYpmUFQ)
+
 https://deltagamez.ch/
 
 ### Connect's Development Team
