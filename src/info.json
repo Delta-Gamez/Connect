@@ -1,0 +1,22 @@
+{
+    "verison": "0.0.0-ALPHA",
+    "owner": {
+        "name": "DeltaGaming",
+        "emails": {
+            "primary": "deltagaming.ch.nik@gmail.com"
+        },
+        "github": "DeltaGamingCH",
+        "replit": "DeltaGaming5"
+    },
+    "contributors": [
+        {
+            "name": "Dmitri Gee",
+            "emails": {
+                "primary": "drealgee@outlook.com",
+                "secondary": "dmitrigeeu@gmail.com"
+            },
+            "github": "DmitriGee",
+            "replit": "TheLastCreator"
+        }
+    ]
+}
