@@ -21,7 +21,7 @@ client.once('ready', async readyclient => {
 });
 
 client.rest.on('rateLimited', (rateLimitInfo) => {
-    warn(`Rate Limit has been exceeded. Timeout: ${rateLimitInfo.timeout}ms.`);
+    warn(`Rate Limit has been exceeded. Timeout: ${rateLimitInfo.timeToReset}ms.`);
 })
 
 client.on('interactionCreate', async interaction => {

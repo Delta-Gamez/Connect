@@ -1,7 +1,7 @@
+require('dotenv').config();
 const { Interaction } = require('discord.js');
 const { info, warn, error, nolog } = require('../../../src/log.js');
-const { time, timeStamp } = require('console');
-const { TIME } = require('sequelize');
+const config = require('../config.json');
 
 /**
  * @param {Interaction} interaction
@@ -18,38 +18,59 @@ async function signup(interaction) {
         content: 'Thank you! Your form has been submitted and will now be processed.'
     });
     try {
+        const invite = await interaction.channel.createInvite({
+            maxUses: 0,
+            maxAge: 0,
+            unique: true
+        });
         data = {
             guildId: interaction.guild.id,
             guildName: interaction.guild.name,
-            guildIconURL: interaction.guild.iconURL(),
-            guildBannerURL: interaction.guild.bannerURL(),
+            guildIcon: interaction.guild.iconURL(),
+            guildBanner: interaction.guild.bannerURL(),
             shortDesc: String(interaction.fields.getTextInputValue('signup-set-description')),
             memberCount: interaction.guild.memberCount,
-            guildInvite: interaction.guild.channels.cache.first().createInvite().then(invite => invite.url),
-            signupDate: Date.now()
+            guildInvite: String(invite.url)
         }
     } catch (e) {
         error(`Error while creating server data: ${e}`);
         await interaction.editReply({
-            content: 'Uh-oh! An error occurred while processing your form. This could be caused from missing data or incorrect permissions. Please try again later.'
+            content: 'Uh-oh! An error occurred while processing your form. Try again later.'
         });
         return;
     }
     info(`A new server will be submitted for approval. The following server data will be sent:${JSON.stringify(data)}`);
     try {
-        fetch('https://connect.deltagamez.ch/api/v1/', {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-    } catch (e) {
+    fetch(config['database-URL']+config['storage-path'], {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            // Send the token in the Authorization header
+            "Authorization": `Bearer ${process.env.SIGNUP_FETCH_TOKEN}`
+        },
+        credentials: "same-origin" // Send cookies (if any) only to the same origin, ensuring they are not leaked to third parties
+    })
+    .then(response => {
+        if (response.status != 200) {
+            throw new Error(`Request failed with status ${response.status} and body ${response.body}`);
+        }
+    })
+    .catch(e => {
         error(e);
-        await interaction.editReply({
-            content: 'Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.'
-        })
-    }
+        (async () => {
+            interaction.editReply({
+                content: 'Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.'
+            });
+        })();
+    });
+} catch (e) {
+    // Catch synchronous errors
+    error(e);
+    await interaction.editReply({
+        content: 'Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.'
+    });
+}
 }
 
 module.exports = {
