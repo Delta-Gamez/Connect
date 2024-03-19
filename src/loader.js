@@ -21,7 +21,7 @@ function load(client) {
                     }
                 }
             } catch (e) {
-                error(`Error while loading module ${module}.commands: ${e}`)
+                error(`Error while loading module ${module}.commands: ${e}`);
             }
             try {
                 if (!(moduleExport.buttons == undefined)) {
@@ -31,7 +31,7 @@ function load(client) {
                     }
                 }
             } catch (e) {
-                error(`Error while loading module ${module}.buttons: ${e}`)
+                error(`Error while loading module ${module}.buttons: ${e}`);
             }
             try {
                 if (!(moduleExport.modals == undefined)) {
@@ -41,13 +41,13 @@ function load(client) {
                     }
                 }
             } catch (e) {
-                error(`Error while loading module ${module}.modals: ${e}`)
+                error(`Error while loading module ${module}.modals: ${e}`);
             }
         } catch (e) {
             error(`Error while loading module ${module}: ${e}`);
         }
     }
-    info(`Loaded ${client.commands.size} commands, ${client.buttons.size} buttons, ${client.modals.size} modals`)
+    info(`Loaded ${client.commands.size} commands, ${client.buttons.size} buttons, ${client.modals.size} modals`);
 }
 
 /**

@@ -5,7 +5,7 @@ function warn(message) {  // Print Warning
     console.log(`[WARN] ${message}`);
 }
 function error(message) {  // Print Error
-    console.log(`[ERROR] ${message}`)
+    console.log(`[ERROR] ${message}`);
 }
 function nolog(message) {  // Print message, but don't log it.
     console.log(`[HIDDEN] ${message}`);

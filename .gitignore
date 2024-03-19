@@ -2,6 +2,10 @@
 exclude/
 *.old
 
+# Packager files
+.local
+.upm
+
 # Logs
 logs
 *.log

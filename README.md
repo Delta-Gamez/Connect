@@ -14,3 +14,11 @@ https://deltagamez.ch/
 ### Connect's Development Team
 - **Leadership**: [DeltaGaming](https://github.com/DeltaGamingCH)
 - **Developer I**: [Dmitri Gee](https://github.com/DmitriGee)
+
+## Deployment Notes:
+
+This section will quickly hilight the required files and variables needed to proceed
+
+### Environment Variables
+- CLI_TOKEN: The discord bot token (can be found at discord.dev).
+- SIGNUP_FETCH_TOKEN: The token that the bot uses to send data over to a private database (you will need to ask an administrator of Connect's database to get one).

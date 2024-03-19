@@ -10,7 +10,7 @@ async function signup(interaction) {
         });
         return;
     }
-    info(`Owner used signup command.`)
+    info(`Owner used signup command.`);
     const form = new ModalBuilder()
         .setCustomId('signup-submit')
         .setTitle('Sign up on our website!')
@@ -33,4 +33,4 @@ module.exports = {
     async execute(interaction) {
         await signup(interaction);
     }
-};
+}
