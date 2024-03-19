@@ -17,7 +17,7 @@ https://deltagamez.ch/
 
 ## Deployment Notes:
 
-This section will quickly hilight the required files and variables needed to proceed
+This section will quickly highlight the required files and variables needed to proceed.
 
 ### Environment Variables
 - CLI_TOKEN: The discord bot token (can be found at discord.dev).
