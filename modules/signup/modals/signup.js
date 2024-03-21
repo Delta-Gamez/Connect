@@ -9,7 +9,7 @@ const config = require('../config.json');
 async function signup(interaction) {
     if (!(interaction.member.id && interaction.guild.ownerId && parseInt(interaction.member.id) === parseInt(interaction.guild.ownerId))) {
         await interaction.reply({
-            content:`You are not the owner!`
+            content:`The server owner must use this command.`
         });
         return;
     }
