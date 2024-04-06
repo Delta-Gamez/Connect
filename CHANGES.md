@@ -3,6 +3,16 @@
 
 ## Versions
 
+### 0.1.1 PRERELEASE
+#### Changes Made:
+- Removed uneeded dependencies
+- Added Commands to make code more understandable
+- Changed signup command, So it displayes a diffrent error if it is used outside of a server
+- Refactered the !(x == y) to x !== y
+- Added Date Stamps to Logs, etc
+#### Changes Needed:
+- Add file logging to src/log.js
+
 ### 0.1.0 PRERELEASE
 #### Changes Made:
 - Update signup modal's data submission script.
