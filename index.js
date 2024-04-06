@@ -97,3 +97,5 @@ info('Loading Commands');
 load(client);
 info('Logging In');
 client.login(process.env.CLI_TOKEN);
+
+// Test Oreo
