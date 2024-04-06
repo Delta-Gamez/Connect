@@ -4,6 +4,12 @@ const { info, warn, error, nolog } = require('../../../src/log.js');
  * @param {Interaction} interaction
  */
 async function signup(interaction) {
+    if(!interaction.guildId) {
+        await interaction.reply({
+            content:`This command can only be used in a server.`
+        });
+        return;
+    }
     if (!(interaction.member.id && interaction.guild.ownerId && parseInt(interaction.member.id) === parseInt(interaction.guild.ownerId))) {
         await interaction.reply({
             content:`The server owner must use this command.`

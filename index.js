@@ -1,6 +1,5 @@
 require('dotenv').config();
-const discord = require('discord.js');
-const sequelize = require('sequelize');
+
 const { Client, IntentsBitField, RESTEvents } = require('discord.js');
 const { info, warn, error, nolog } = require('./src/log.js');
 const { load, register } = require('./src/loader.js');
