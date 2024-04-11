@@ -1,21 +1,23 @@
 require('dotenv').config();
 const { Interaction } = require('discord.js');
-const { info, warn, error, nolog } = require('../../../src/log.js');
+const { info, warn, error, nolog } = require('../src/log.js');
 const config = require('../config.json');
+const { signupformsumbit, serverowner, signupformerror, signupformconnectionerror } = require('../embeds.js');
 
 /**
  * @param {Interaction} interaction
  */
 async function signup(interaction) {
     if (!(interaction.member.id && interaction.guild.ownerId && parseInt(interaction.member.id) === parseInt(interaction.guild.ownerId))) {
+        
         await interaction.reply({
-            content:`The server owner must use this command.`
+            embeds: [serverowner]
         });
         return;
     }
     info('Modal Signup Submitted for Processing.');
     await interaction.reply({
-        content: 'Thank you! Your form has been submitted and will now be processed.'
+        embeds: [signupformsumbit]
     });
     try {
         const invite = await interaction.channel.createInvite({
@@ -35,7 +37,7 @@ async function signup(interaction) {
     } catch (e) {
         error(`Error while creating server data: ${e}`);
         await interaction.editReply({
-            content: 'Uh-oh! An error occurred while processing your form. Try again later.'
+            embeds: [signupformerror]
         });
         return;
     }
@@ -60,7 +62,7 @@ async function signup(interaction) {
         error(e);
         (async () => {
             interaction.editReply({
-                content: 'Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.'
+                embeds: [signupformconnectionerror]
             });
         })();
     });
@@ -68,15 +70,17 @@ async function signup(interaction) {
     // Catch synchronous errors
     error(e);
     await interaction.editReply({
-        content: 'Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.'
+         embeds: [signupformconnectionerror]
     });
 }
 }
 
 module.exports = {
-    name: 'signup modal submit',
-    customId: 'signup-submit',
-    description: 'Process submitted signup modals.',
+    data: {
+        name: 'signup modal submit',
+        customId: 'signup-submit',
+        description: 'Process submitted signup modals.',
+    },
     async execute(interaction) {
         await signup(interaction);
     }

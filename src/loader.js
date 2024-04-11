@@ -1,6 +1,8 @@
 const { Client, Collection, Routes } = require('discord.js');
 const fs = require('fs');
 const { info, warn, error, nolog } = require('./log.js');
+const config = require('../config.json');
+const { REST } = require('@discordjs/rest');
 
 /**
  * @param {Client} client
@@ -12,56 +14,31 @@ function load(client) {
     client.buttons = new Collection();
     client.modals = new Collection();
 
-    // Read all module directories
-    const modules = fs.readdirSync('modules');
+    // Read all commands
+    const commandFiles = fs.readdirSync(`./Commands`);
 
-    // Iterate over each module
-    for (const module of modules) {
-        try {
-            // Import the main file of the module
-            const moduleExport = require(`../modules/${module}/index.js`);
+    for (const file of commandFiles) {
+        const filePath = `../Commands/${file}`;
+        const command = require(filePath);
+        // Set a new item in the Collection with the key as the command name and the value as the exported module
+        if ('data' in command && 'execute' in command) {
+            client.commands.set(command.data.name, command);
+        } else {
+            warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
+        }
+    }
 
-            // If the module has commands, load them
-            try {
-                if (moduleExport.commands !== undefined) {
-                    for (const command of moduleExport.commands) {
-                        const commandExport = require(`../modules/${module}/${command}`);
-                        client.commands.set(commandExport.name, commandExport);
-                    }
-                }
-            } catch (e) {
-                // Log any errors that occur while loading commands
-                error(`Error while loading module ${module}.commands: ${e}`);
-            }
+    // Read all Modals
+    const ModalFiles = fs.readdirSync(`./Modals`);
 
-            // If the module has buttons, load them
-            try {
-                if (moduleExport.buttons !== undefined) {
-                    for (const button of moduleExport.buttons) {
-                        const buttonExport = require(`../modules/${module}/${button}`);
-                        client.buttons.set(buttonExport.customId, buttonExport);
-                    }
-                }
-            } catch (e) {
-                // Log any errors that occur while loading buttons
-                error(`Error while loading module ${module}.buttons: ${e}`);
-            }
-
-            // If the module has modals, load them
-            try {
-                if (moduleExport.modals !== undefined) {
-                    for (const modal of moduleExport.modals) {
-                        const modalExport = require(`../modules/${module}/${modal}`);
-                        client.modals.set(modalExport.customId, modalExport);
-                    }
-                }
-            } catch (e) {
-                // Log any errors that occur while loading modals
-                error(`Error while loading module ${module}.modals: ${e}`);
-            }
-        } catch (e) {
-            // Log any errors that occur while loading the module
-            error(`Error while loading module ${module}: ${e}`);
+    for (const file of ModalFiles) {
+        const filePath = `../Modals/${file}`;
+        const Modal = require(filePath);
+        // Set a new item in the Collection with the key as the command name and the value as the exported module
+        if ('data' in Modal && 'execute' in Modal) {
+            client.modals.set(Modal.data.customId, Modal);
+        } else {
+            warn(`The Modal at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
 
@@ -74,26 +51,27 @@ function load(client) {
  */
 // Function to register all commands
 async function register(client) {
+    const rest = new REST({ version: '9' }).setToken(config['discord-token']);
+
     try {
-        // First, clear all existing application commands
-        const _ = await client.rest.put(
+        info(`Started refreshing ${client.commands.size} application (/) commands.`);
+        
+        // Create an array of commands
+        const commands = client.commands.map(command => command.data.toJSON());
+
+        // Use the REST API to register commands
+        await rest.put(
             Routes.applicationCommands(client.user.id),
-            { body: [] }, // Empty array to clear commands
+            { body: commands }
         );
 
-        // Then, register all commands stored in the client.commands collection
-        const data = await client.rest.put(
-            Routes.applicationCommands(client.user.id),
-            { body: client.commands }, // client.commands contains all commands to register
-        );
-
-        // Log the number of successfully registered commands
-        info(`Successfully registered ${data.length} application commands.`);
-    } catch (e) {
-        // Log any errors that occur while registering commands
-        error(`Error while registering commands: ${e}`);
+        info(`Successfully reloaded ${client.commands.size} application (/) commands.`);
+    } catch (error) {
+        error("Received an error while refreshing commands.");
+        error(error);
     }
 }
+
 
 module.exports = {
     load, register

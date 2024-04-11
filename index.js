@@ -1,6 +1,6 @@
-require('dotenv').config();
+const config = require('./config.json');
 
-const { Client, IntentsBitField, RESTEvents } = require('discord.js');
+const { Client, IntentsBitField, Events } = require('discord.js');
 const { info, warn, error, nolog } = require('./src/log.js');
 const { load, register } = require('./src/loader.js');
 
@@ -91,8 +91,7 @@ client.on('error', (e) => {
     error(`Runtime Error: ${e}`);
 });
 
-
 info('Loading Commands');
 load(client);
 info('Logging In');
-client.login(process.env.CLI_TOKEN);
+client.login(config["discord-token"]);

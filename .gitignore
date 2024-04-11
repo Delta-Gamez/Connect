@@ -1,5 +1,6 @@
 # Development data
 exclude/
+token
 *.old
 
 # Packager files

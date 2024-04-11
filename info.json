@@ -1,5 +1,5 @@
 {
-    "verison": "0.1.0-PRERELEASE",
+    "verison": "0.1.3-PRERELEASE",
     "owner": {
         "name": "DeltaGaming",
         "emails": {
@@ -17,6 +17,14 @@
             },
             "github": "DmitriGee",
             "replit": "@TheLastCreator"
+        },
+        {
+            "name": "Jay",
+            "emails": {
+                "primary": "jayisthesmartest@outlook.com"
+            },
+            "github": "kezza2k7",
+            "discord": "imaoreo"
         }
     ]
 }
