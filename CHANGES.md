@@ -3,6 +3,14 @@
 
 ## Versions
 
+
+### 0.1.4 DEVELOPMENT
+#### Changes Made:
+- Added a Event Handeler
+- Added Support for commands with AutoComplete
+- Moved Events into seperate Event Scripts src/events
+- Added Status to the Discord Bot (can be changed in the ready event)
+
 ### 0.1.3 DEVELOPMENT
 #### Changes Made:
 - Refactor code for improved performance.
@@ -10,6 +18,7 @@
 - Cleaned up files
 - Added all Embeds (embed.js)
 - Added a config.json instead of process var
+- Fixed signup label limit
 #### Changes Needed:
 - Add file logging to src/log.js
 
