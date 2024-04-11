@@ -3,17 +3,22 @@
 
 ## Versions
 
-### 0.1.1 PRERELEASE
+### 0.1.2 DEVELOPMENT
 #### Changes Made:
-- Removed uneeded dependencies
-- Added Commands to make code more understandable
-- Changed signup command, So it displayes a diffrent error if it is used outside of a server
-- Refactered the !(x == y) to x !== y
-- Added Date Stamps to Logs, etc
+- Fixed modal error "Invalid Label Length"
+- Changed [CHANGES.md](./CHANGES.md) from past-tense to present-tense.
+
+### 0.1.1 DEVELOPMENT
+#### Changes Made:
+- Remove uneeded dependencies
+- Add Commands to make code more understandable
+- Change signup command, So it displays a diffrent error if it is used outside of a server
+- Refactor !(x == y) to x !== y
+- Add Date Stamps to Logs, etc
 #### Changes Needed:
 - Add file logging to src/log.js
 
-### 0.1.0 PRERELEASE
+### 0.1.0 DEVELOPMENT
 #### Changes Made:
 - Update signup modal's data submission script.
 - Add signup modal configuration.

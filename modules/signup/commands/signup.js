@@ -22,7 +22,8 @@ async function signup(interaction) {
         .setTitle('Sign up your community on our website.')
     const descriptionInput = new TextInputBuilder()
         .setCustomId('signup-set-description')
-        .setLabel(`Write a short description about your server shown to everyone.`)
+        // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
+        .setLabel(`Describe your server to us.`)
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
