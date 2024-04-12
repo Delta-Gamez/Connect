@@ -10,8 +10,8 @@ const config = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('signup')
-		.setDescription('Create a Account on Connect.'),
+		.setName('login')
+		.setDescription('Login into a existing Connect account.'),
 
         async execute(interaction) {
             const response = await axios.post(`${config['database-URL']}${config['storage-path']}/users/exist`, {
@@ -29,26 +29,26 @@ module.exports = {
             }
 
             const form = new ModalBuilder()
-                .setCustomId('signup-submit')
-                .setTitle('Create a Account on Connect.')
+                .setCustomId('login-submit')
+                .setTitle('Sign into a existing Connect account.')
 
             const usernameInput = new TextInputBuilder()
-                .setCustomId('signup-set-username')
+                .setCustomId('login-set-username')
                 // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-                .setLabel(`What do you want your username to be?`)
+                .setLabel(`What is your username?`)
                 .setRequired(true)
                 .setMinLength(4)
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Write your Username...')
+                .setPlaceholder('Username...')
 
             const passwordInput = new TextInputBuilder()
-                .setCustomId('signup-set-password')
+                .setCustomId('login-set-password')
                 // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-                .setLabel(`What do you want your password to be?`)
+                .setLabel(`What is your password?`)
                 .setRequired(true)
                 .setMinLength(4)
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Write your Passwords...')
+                .setPlaceholder('Password...')
 
             const actionRow1 = new ActionRowBuilder().addComponents(usernameInput);
             const actionRow2 = new ActionRowBuilder().addComponents(passwordInput);

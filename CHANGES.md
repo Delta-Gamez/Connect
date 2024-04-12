@@ -3,6 +3,12 @@
 
 ## Versions
 
+### 0.1.5 DEVELOPMENT
+#### Changes Made:
+- Added Signup and Login Command
+- Added Support for commands with AutoComplete
+- Moved Events into seperate Event Scripts src/events
+- Added Status to the Discord Bot (can be changed in the ready event)
 
 ### 0.1.4 DEVELOPMENT
 #### Changes Made:
