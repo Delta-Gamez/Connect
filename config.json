@@ -2,5 +2,5 @@
     "database-URL": "http://localhost:3000",
     "database-token": "$2b$25$m2Adz6X/AsNY3JQwbTd8uu",
     "storage-path": "/api/v1",
-    "discord-token": "ur-token"
+    "discord-token": "ur-token-here"
 }

@@ -2,6 +2,7 @@
 exclude/
 token
 *.old
+config.json
 
 # Packager files
 .local

@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Interaction } = require('discord.js');
 const { info, warn, error, nolog } = require('../src/log.js');
 const config = require('../config.json');
-const { addserverformsumbit, serverowner, signupformerror, signupformconnectionerror } = require('../embeds.js');
+const { addserverformsumbit, serverowner, formprocceserror, signupformconnectionerror } = require('../embeds.js');
 const axios = require('axios');
 
 /**
@@ -39,7 +39,7 @@ async function addserver(interaction) {
     } catch (e) {
         error(`Error while creating server data: ${e}`);
         await interaction.editReply({
-            embeds: [signupformerror]
+            embeds: [formprocceserror]
         });
         return;
     }

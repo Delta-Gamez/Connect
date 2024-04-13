@@ -28,20 +28,6 @@ module.exports = {
                 return;
             }
 
-            const response = await axios.post(`${config['database-URL']}${config['storage-path']}/users/exist`, {
-                DiscordID: interaction.member.id
-            })
-
-            info(`Checking if user exists in database. ${response.data.exists}`);
-            
-            
-            if(!response.data.exists) {
-                await interaction.reply({
-                    embeds: [notsignedin]
-                });
-                return;
-            }
-
             const response2 = await axios.get(`${config['database-URL']}${config['storage-path']}/servers/${interaction.guildId}`)
 
             info(`Checking if server exists in database. ${response2.data.exists}`);
