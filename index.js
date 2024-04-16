@@ -1,5 +1,3 @@
-const config = require('./config.json');
-
 const { Client, IntentsBitField, Events } = require('discord.js');
 const { info, warn, error, nolog } = require('./src/log.js');
 const { load } = require('./src/loader.js');
@@ -31,4 +29,4 @@ client.rest.on('rateLimited', (rateLimitInfo) => {
 info('Loading Commands');
 load(client);
 info('Logging In');
-client.login(config["discord-token"]);
+client.login(process.env.DISCORD_TOKEN);

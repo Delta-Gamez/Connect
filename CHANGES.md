@@ -3,6 +3,14 @@
 
 ## Versions
 
+### 0.1.6 DEVELOPMENT
+#### Changes Made:
+- Changed Config.Json to env variables
+- DISCORD_TOKEN
+- DATABASE_URL 
+- DATABASE_TOKEN
+- STORAGE_PATH
+
 ### 0.1.5 DEVELOPMENT
 #### Changes Made:
 - Added Signup and Login Command

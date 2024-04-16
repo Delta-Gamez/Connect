@@ -1,7 +1,6 @@
 require('dotenv').config();
 const { Interaction } = require('discord.js');
 const { info, warn, error, nolog } = require('../src/log.js');
-const config = require('../config.json');
 const { addserverformsumbit, serverowner, formprocceserror, signupformconnectionerror } = require('../embeds.js');
 const axios = require('axios');
 
@@ -45,9 +44,9 @@ async function addserver(interaction) {
     }
     info(`A new server will be submitted for approval. The following server data will be sent:${JSON.stringify(data)}`);
     try {
-    await axios.post(`${config['database-URL']}${config['storage-path']}/servers`, data, {
+    await axios.post(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`, data, {
         headers: {
-            "Authorization": `${config['database-token']}`
+            "Authorization": `${process.env.DATABASE_TOKEN}`
         },
         withCredentials: true
     })
