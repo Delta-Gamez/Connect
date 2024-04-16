@@ -2,7 +2,6 @@ const { Interaction, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBu
 const { info, warn, error, nolog } = require('../src/log.js');
 const { servererror, serverowner, notsignedin } = require('../embeds.js')
 const axios = require('axios');
-const config = require('../config.json');
 
 /**
  * @param {Interaction} interaction
@@ -28,7 +27,7 @@ module.exports = {
                 return;
             }
 
-            const response2 = await axios.get(`${config['database-URL']}${config['storage-path']}/servers/${interaction.guildId}`)
+            const response2 = await axios.get(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`)
 
             info(`Checking if server exists in database. ${response2.data.exists}`);
 

@@ -1,7 +1,6 @@
 const { Client, Collection, Routes } = require('discord.js');
 const fs = require('fs');
 const { info, warn, error, nolog } = require('./log.js');
-const config = require('../config.json');
 const { REST } = require('@discordjs/rest');
 
 /**
@@ -51,7 +50,7 @@ function load(client) {
  */
 // Function to register all commands
 async function register(client) {
-    const rest = new REST({ version: '9' }).setToken(config['discord-token']);
+    const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 
     try {
         info(`Started refreshing ${client.commands.size} application (/) commands.`);
