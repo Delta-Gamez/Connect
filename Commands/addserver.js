@@ -27,9 +27,12 @@ module.exports = {
                 return;
             }
 
+            /*
             const response2 = await axios.get(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`)
+            */
+            const response2 = await fetch(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`).then(response => response.json());
 
-            info(`Checking if server exists in database. ${response2.data.exists}`);
+            info(`Checking if server exists in database. ${response2.status}`);
 
             if(response2.data.exists) {
                 const serverexist = new EmbedBuilder()
