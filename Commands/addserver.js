@@ -28,13 +28,13 @@ module.exports = {
             }
 
             /*
-            const response2 = await axios.get(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`)
+              const response2 = await axios.get(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`)
             */
             const response2 = await fetch(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/${interaction.guildId}`).then(response => response.json());
 
             info(`Checking if server exists in database. ${response2.status}`);
 
-            if(response2.data.exists) {
+            if(response2.status != 404) {
                 const serverexist = new EmbedBuilder()
                     .setTitle('Server already exists.')
                     .setDescription(`Your server "${interaction.guild.name}" is already in our database.`)
