@@ -3,9 +3,18 @@
 
 ## Versions
 
+### 0.1.7 DEVELOPMENT
+#### Changes Made:
+- Removed uneeded code
+- Logs get send to Logs DC Channel (configuirable in config.json)
+- Beta Commands support allows Developers to mark a command as "Beta" in the config.json and then it will only show that command in the betaserver also changeable in config.json
+- Statues and Statues Type has been moved into config.json
+- Started work on Partnership module
+
 ### 0.1.6 DEVELOPMENT
 #### Changes Made:
 - Changed Config.Json to env variables
+- Removed Signup and Login Command
 - DISCORD_TOKEN
 - DATABASE_URL 
 - DATABASE_TOKEN

@@ -1,5 +1,5 @@
-const { Client, IntentsBitField, Events } = require('discord.js');
-const { info, warn, error, nolog } = require('./src/log.js');
+const { Client, IntentsBitField } = require('discord.js');
+const { info, warn } = require('./src/log.js');
 const { load } = require('./src/loader.js');
 const { readdirSync } = require("fs")
 
