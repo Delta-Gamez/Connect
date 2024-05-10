@@ -59,6 +59,19 @@ function load(client) {
         }
     }
 
+    // Read all Buttons
+    const ButtonFiles = fs.readdirSync(`./Buttons`);
+    for (const file of ButtonFiles) {
+        const filePath = `../Buttons/${file}`;
+        const Button = require(filePath);
+        // Set a new item in the Collection with the key as the command name and the value as the exported module
+        if ('data' in Button && 'execute' in Button) {
+            client.buttons.set(Button.data.customId, Button);
+        } else {
+            warn(`The Button at ${filePath} is missing a required "data" or "execute" property.`);
+        }
+    }
+
     // Log the number of commands, buttons, and modals that were loaded
     info(`Loaded ${client.globalcommands.size} commands, ${client.buttons.size} buttons, ${client.modals.size} modals, ${client.betacommands.size} beta commands.`);
 }
