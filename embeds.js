@@ -23,7 +23,7 @@ const formprocceserror = new EmbedBuilder(errortemplate)
 
 const serverlerror = new EmbedBuilder(errortemplate)
     .setTitle('Server Error')
-    .setDescription('An error occurred while processing your request\n. Please try again later.');
+    .setDescription('An error occurred while processing your request.\n Please try again later.');
 
 const ServerErrorformconnectionerror = new EmbedBuilder(errortemplate)
     .setTitle('Server Error')
