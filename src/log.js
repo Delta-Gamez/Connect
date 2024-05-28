@@ -1,23 +1,24 @@
 const { EmbedBuilder } = require("discord.js");
+const { embedLog, embedLogWarn, embedLogError, embedLogInfo } = require("./../embeds.js");
 
 function info(message) {
     // Print Information
-    log(`\x1b[0m[INFO]`, `${message}`, `#00703c`);
+    log(embedLog.Info.title, `${message}`,embedLog.Info.color);
 }
 
 function warn(message) {
     // Print Warning
-    log(`\x1b[0;33m[WARN]`, `${message}`, `#ffdd00`);
+    log(embedLog.Warn.title, `${message}`, embedLog.Warn.color);
 }
 
 function error(message) {
     // Print Error
-    log(`\x1b[0;1;31m[ERROR]`, `${message}`, `#d4351c`);
+    log(embedLog.Error.title, `${message}`, embedLog.Error.color);
 }
 
-function nolog(message) {
-    // Print message, but don't log it.
-    log(`[HIDDEN]`, `${message}`, `#b1b4b6`);
+function success(message) {
+    // Print Success
+    log(embedLog.Success.title, `${message}`, embedLog.Success.color);
 }
 
 function custom(type, message, color) {
@@ -62,4 +63,4 @@ function sendwebhook(url, message, username, color) {
     });
 }
 
-module.exports = { info, warn, error, nolog, custom };
+module.exports = { info, warn, error, success, custom };

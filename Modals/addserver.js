@@ -1,12 +1,7 @@
 require("dotenv").config();
-const { Interaction } = require("discord.js");
+const { Interaction, EmbedBuilder } = require("discord.js");
 const { info, warn, error, nolog } = require("../src/log.js");
-const {
-    addserverformsumbit,
-    serverowner,
-    formprocceserror,
-    signupformconnectionerror,
-} = require("../embeds.js");
+const { embedInfoSuccess, embedInfoError } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -16,17 +11,17 @@ module.exports = {
         description: "Process submitted addserver modals.",
     },
     async execute(interaction) {
-        await checkServerOwner(interaction)
+        await checkServerOwner(interaction);
         info("Modal addserver Submitted for Processing.");
         await interaction.reply({
-            embeds: [addserverformsumbit],
+            embeds: [embedInfoSuccess.ModalSumbit],
         });
         try {
             let data = await createData(interaction);
         } catch (e) {
             error(`Error while creating server data: ${e}`);
             await interaction.editReply({
-                embeds: [formprocceserror],
+                embeds: [embedInfoError.ModalProcess],
             });
             return;
         }
@@ -39,7 +34,7 @@ module.exports = {
             // Catch synchronous errors
             error(e);
             await interaction.editReply({
-                embeds: [signupformconnectionerror],
+                embeds: [embedInfoError.ServerConnectionError],
             });
         }
     },
@@ -55,7 +50,7 @@ async function checkServerOwner(interaction) {
         )
     ) {
         await interaction.reply({
-            embeds: [serverowner],
+            embeds: [embedInfoError.ServerOwner],
         });
         return;
     }
@@ -105,7 +100,7 @@ async function createServer(interaction, data) {
             error(e);
             (async () => {
                 interaction.editReply({
-                    embeds: [signupformconnectionerror],
+                    embeds: [embedInfoError.ServerConnectionError],
                 });
             })();
         });

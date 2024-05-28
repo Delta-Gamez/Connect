@@ -1,56 +1,66 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require("discord.js");
 
-// Templates for Embeds
-const errortemplate = new EmbedBuilder()
-    .setColor('#880808')
-
-const successtemplate = new EmbedBuilder()
-    .setColor('#004898')
-
+// Logging Templates:
+const embedLog = {
+    Success: {
+        title: "\x1b[0m[SUCCESS]",
+        color: "#00703c",
+    },
+    Warn: {
+        title: "\x1b[0;33m[WARN]",
+        color: "#ffdd00",
+    },
+    Error: {
+        title: "\x1b[0;1;31m[ERROR]",
+        color: "#d4351c",
+    },
+    Info: {
+        title: "\x1b[0m[INFO]",
+        color: "#00703c",
+    }
+};
 
 // Error Embeds
-const servererror = new EmbedBuilder(errortemplate)
-    .setTitle('Server Error')
-    .setDescription('You need to be in a server to use this!');
-
-const serverowner = new EmbedBuilder(errortemplate)
-    .setTitle('Server Owner')
-    .setDescription('Only the server owner can use this command.');
-
-const formprocceserror = new EmbedBuilder(errortemplate)
-    .setTitle('Server Error')
-    .setDescription('An error occurred while processing your form. Please try again later.');
-
-const serverlerror = new EmbedBuilder(errortemplate)
-    .setTitle('Server Error')
-    .setDescription('An error occurred while processing your request.\n Please try again later.');
-
-const ServerErrorformconnectionerror = new EmbedBuilder(errortemplate)
-    .setTitle('Server Error')
-    .setDescription('Uh-oh! An error occurred while sending your form to our servers. Try again in a few minutes.');
-
-const signedin = new EmbedBuilder(errortemplate)
-    .setTitle('You already have a account.')
-    .setDescription('Since you already have a account no further action is needed.');
-
+const embedInfoErrorTemplate = new EmbedBuilder().setColor("#880808");
+const embedInfoError = {
+    Template: embedInfoErrorTemplate,
+    ServerError: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle("Server Error")
+        .setDescription("You need to be in a server to use this!"),
+    ServerOwner: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle("Server Owner")
+        .setDescription("Only the server owner can use this command."),
+    ModalProcess: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle(`Server Error`)
+        .setDescription(
+            "An error occurred while processing your form. Please try again later.",
+        ),
+    Process: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle(`Server Error`)
+        .setDescription(
+            "An error occurred while processing your request.\n Please try again later.",
+        ),
+    ServerConnectionError: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle(`Server Error`)
+        .setDescription(
+            "An error occured, and I couldn't quite reach my database.\n Please try again later.",
+        ),
+};
 
 // Success Embeds
-const addserverformsumbit = new EmbedBuilder(successtemplate)
-    .setTitle('Server Submitted')
-    .setDescription('Thank you! Your form has been submitted and will now be processed.');
-
-const signedup = new EmbedBuilder(successtemplate)
-    .setTitle('Account Created')
-    .setDescription('Thank you for signing up with Connect!');
+const embedInfoSuccessTemplate = new EmbedBuilder().setColor("#004898");
+const embedInfoSuccess = {
+    Template: embedInfoSuccessTemplate,
+    ModalSumbit: new EmbedBuilder(embedInfoSuccessTemplate)
+        .setTitle("Server Submitted")
+        .setDescription(
+            "Thank you! Your form has been submitted and will now be processed.",
+        ),
+};
 
 // Exporting Embeds
 module.exports = {
-    servererror,
-    serverowner,
-    addserverformsumbit,
-    ServerErrorformconnectionerror,
-    formprocceserror,
-    signedin,
-    signedup,
-    serverlerror
+    embedLog,
+    embedInfoError,
+    embedInfoSuccess,
 };

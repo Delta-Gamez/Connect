@@ -1,9 +1,9 @@
 const { Client, IntentsBitField } = require("discord.js");
-const { info, warn, custom } = require("./src/log.js");
+const { info, warn, success } = require("./src/log.js");
 const { load } = require("./src/loader.js");
 const { readdirSync } = require("fs");
 
-custom(`[Starting]`, `Connect is now Starting.`);
+success("Connect is now starting.");
 
 intents = new IntentsBitField();
 intents.add(
@@ -44,4 +44,4 @@ client.rest.on("rateLimited", (rateLimitInfo) => {
 
 load(client);
 client.login(process.env.DISCORD_TOKEN);
-custom(`[Started]`, `Connect is now online.`);
+success("Connect has now Started.");
