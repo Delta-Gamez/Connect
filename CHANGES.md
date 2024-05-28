@@ -3,12 +3,7 @@
 
 ## Versions
 
-### 0.1.2 DEVELOPMENT
-#### Changes Made:
-- Fixed modal error "Invalid Label Length"
-- Changed [CHANGES.md](./CHANGES.md) from past-tense to present-tense.
-
-### 0.1.1 DEVELOPMENT
+### 0.1.1 PRERELEASE
 #### Changes Made:
 - Remove uneeded dependencies
 - Add Commands to make code more understandable
