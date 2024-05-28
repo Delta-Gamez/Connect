@@ -17,20 +17,7 @@ const axios = require("axios");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("partnership")
-        .setDescription("Setup Partnership")
-        .addChannelOption((option) =>
-            option
-                .setName("channel")
-                .setDescription("The channel to send Request Partnership to.")
-                .setRequired(true),
-        )
-        .addRoleOption((option) =>
-            option
-                .setName("role")
-                .setDescription(
-                    "The Role to mention when the Partnership is requested.",
-                ),
-        ),
+        .setDescription("Setup Partnership"),
     async execute(interaction) {
         await IsServerAndOwnerCheck(interaction);
         try {
@@ -58,50 +45,149 @@ async function IsServerAndOwnerCheck(interaction) {
         return;
     }
 }
-
 async function PartnershipSubCommand(interaction) {
-    // THIS NEEDS TO BE AXIOS.GET THIS DOESNT WORK WITH FETCH FOR SOME REASON
     let old = await axios.get(
         `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
     );
+    
+    const embedModulePartnership = new EmbedBuilder()
+        .setTitle("Partnership")
+        .setDescription("Would you like to setup the partnership module?")
+        .setColor("#004898");
+    
+    const PartnerShip_Enable = new ButtonBuilder()
+        .setCustomId("xpartnership-enable")
+        .setLabel("Enable")
+        .setStyle(ButtonStyle.Primary);
 
-    if (old.status !== 200) {
-        await interaction.reply({
-            embeds: [embedInfoError.ServerConnectionError],
-            ephemeral: true,
-        });
+    const PartnerShip_Disable = new ButtonBuilder()
+        .setCustomId("xpartnership-disable")
+        .setLabel("Disable")
+        .setStyle(ButtonStyle.Danger);
+
+    const PartnerShip_Edit = new ButtonBuilder()
+        .setCustomId("xpartnership-edit")
+        .setLabel("Edit")
+        .setStyle(ButtonStyle.Primary);
+
+    let row
+    if(old.data.exists && old.data.server.PartnerShip){
+        row = new ActionRowBuilder().addComponents(PartnerShip_Edit, PartnerShip_Disable);
+    } else {
+        row = new ActionRowBuilder().addComponents(PartnerShip_Enable, PartnerShip_Disable);
+    }
+
+    const response = await interaction.reply({
+        embeds: [embedModulePartnership],
+        components: [row],
+        ephemeral: true,
+    });
+
+    const collectorFilter = i => i.user.id === interaction.user.id;
+    try {
+        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+        if(confirmation.customId == 'xpartnership-enable'){
+            await ChangePartnership(true, confirmation, old, false);
+            await PartnershipSubCommande(old, confirmation);
+        } else if(confirmation.customId == 'xpartnership-disable'){
+            await ChangePartnership(false, confirmation, old, true);
+        } else if(confirmation.customId == 'xpartnership-edit'){
+            await PartnershipSubCommande(old, confirmation);
+        }
+    } catch (e) {
+        console.error(e)
+        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+    }
+}
+
+async function ChangePartnership(status, interaction, old, reply) {
+    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+        .setTitle("Partnership")
+        .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
+    
+    if(reply) {
+        if(!old.data.exists){
+            await interaction.update({
+                embeds: [removedembed],
+                ephemeral: true,
+                components: [],
+            });
+            return;
+        }
+    }
+
+    if(!old.data.exists){
         return;
     }
 
-    if (old.data.status !== 200 || old.data.server.ShortDesc.length < 19) {
+    data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
+        PartnerShip: status,
+    };
+
+    let response = await axios.put(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
+        data,
+        {
+            headers: {
+                Authorization: `${process.env.DATABASE_TOKEN}`,
+            },
+            withCredentials: true,
+        },
+    );
+
+    console.log(response)
+
+    if(reply){
+        await interaction.update({
+            embeds: [removedembed],
+            ephemeral: true,
+            components: [],
+        });
+    }
+}
+
+async function PartnershipSubCommande(old, interaction) {
+    if (old.data.status != 200) {
         StartPartnershipModal(interaction);
     } else {
         SendPartnerShipEmbed(interaction);
     }
-    // End of Partnership Setup
 }
+
 async function StartPartnershipModal(interaction) {
-    const form = new ModalBuilder()
-        .setCustomId("setup-partnership-submit")
-        .setTitle("Setup your Server for Partnerships.");
+    data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
+        Connect: false,
+        PartnerShip: true,
+    };
 
-    const descriptionInput = new TextInputBuilder()
-        .setCustomId("setup-set-description")
-        // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`Describe your server to us.`)
-        .setRequired(true)
-        .setMinLength(20)
-        .setMaxLength(400)
-        .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write your description...");
+    const response = await axios.post(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
+        data,
+        {
+            headers: {
+                Authorization: `${process.env.DATABASE_TOKEN}`,
+            },
+            withCredentials: true,
+        },
+    );
 
-    const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
-    form.addComponents(actionRow1);
-    await interaction.showModal(form);
-    return;
-
-    // Continues on Modals/setup.js
+    if(response.data.status == 200){
+        PartnershipSubCommande(response, interaction);
+    }
 }
+
 async function SendPartnerShipEmbed(interaction) {
     const select = new ChannelSelectMenuBuilder()
         .setCustomId("channels")
@@ -110,7 +196,7 @@ async function SendPartnerShipEmbed(interaction) {
 
     const row = new ActionRowBuilder().addComponents(select);
     const pickAChannelEmbed = new EmbedBuilder().setTitle(`Pick a Channel`);
-    const response  = await interaction.reply({
+    const response  = await interaction.update({
         embeds: [pickAChannelEmbed],
         components: [row],
         ephemeral: true,
@@ -133,7 +219,7 @@ async function roleSelect(interaction, channelid) {
         .setPlaceholder("Pick a Role")
 
     const xButton = new ButtonBuilder()
-        .setCustomId('cancel')
+        .setCustomId('xcancel')
         .setLabel('X')
         .setStyle(ButtonStyle.Danger);
 
@@ -150,24 +236,25 @@ async function roleSelect(interaction, channelid) {
 
     try {
         const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
-        if(confirmation.customID == 'pcancel'){
-            return;
-        } else [
-            console.log(confirmation.values[0])
-        ]
+        if(confirmation.customId == 'xcancel'){
+            await SendEmbededMessage(confirmation, channelid)
+        } else {
+            await SendEmbededMessage(confirmation, channelid, confirmation.values[0])
+        }
     } catch (e) {
         await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
     }
 } 
 
-async function SendEmbededMessage(interaction, channel){
-    const role = interaction.options.getRole("role");
+async function SendEmbededMessage(interaction, channelid, roleid){
+    const channel = interaction.guild.channels.cache.get(channelid);
+
     let PartnerShipEmbed;
-    if (role) {
+    if (roleid) {
         PartnerShipEmbed = new EmbedBuilder()
             .setTitle("Partnership")
             .setDescription(
-                `Press Open to request a partnership with this server.\nThis would ping the role : <@&${role.id}>`,
+                `Press Open to request a partnership with this server.\nThis would ping the role : <@&${roleid}>`,
             )
             .setColor("#004898");
     } else {
@@ -195,9 +282,10 @@ async function SendEmbededMessage(interaction, channel){
         .setTitle("Setup Partnership")
         .setDescription(`PartnerShip Openner message sent to: ${channel}`);
 
-    await interaction.reply({
+    await interaction.update({
         embeds: [embed],
         ephemeral: true,
+        components: [],
     });
     return;
 }

@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const { embedLog, embedLogWarn, embedLogError, embedLogInfo } = require("./../embeds.js");
+const { embedLog } = require("./../embeds.js");
 
 function info(message) {
     // Print Information

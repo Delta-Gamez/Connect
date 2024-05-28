@@ -55,7 +55,7 @@ module.exports = {
                 }
             }
         } else if (interaction.isButton()) {
-            if (interaction.customId.startsWith("p")) {
+            if (interaction.customId.startsWith("x")) {
                 return;
             }
             const button = client.buttons.get(interaction.customId);

@@ -12,30 +12,62 @@ module.exports = {
     },
     async execute(interaction) {
         await checkServerOwner(interaction);
-        info("Modal addserver Submitted for Processing.");
-        await interaction.reply({
-            embeds: [embedInfoSuccess.ModalSumbit],
-        });
-        try {
-            let data = await createData(interaction);
-        } catch (e) {
-            error(`Error while creating server data: ${e}`);
-            await interaction.editReply({
-                embeds: [embedInfoError.ModalProcess],
-            });
-            return;
-        }
-        info(
-            `A new server will be submitted for approval. The following server data will be sent: ${JSON.stringify(data)}`,
+        let old = await axios.get(
+            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
         );
-        try {
-            createServer(interaction, data);
-        } catch (e) {
-            // Catch synchronous errors
-            error(e);
-            await interaction.editReply({
-                embeds: [embedInfoError.ServerConnectionError],
+
+        if(old.data.exists){
+            if(old.data.server.ShortDesc > 19){
+                const embed = new EmbedBuilder(embedInfoSuccess.Template)
+                    .setTitle("Updated Connect")
+                    .setDescription("Updated your Description.");
+
+                await interaction.reply({
+                    embeds: [embed],
+                    ephemeral: true,
+                });
+            } else {
+                await interaction.reply({
+                    embeds: [embedInfoSuccess.ModalSumbit],
+                });
+            }
+
+            let data = await createData(interaction);
+
+            await axios.put(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`, data,
+                {
+                    headers: {
+                        Authorization: `${process.env.DATABASE_TOKEN}`,
+                    },
+                    withCredentials: true,
+                },
+            )
+        } else {
+            info("Modal addserver Submitted for Processing.");
+            await interaction.reply({
+                embeds: [embedInfoSuccess.ModalSumbit],
             });
+            try {
+                let data = await createData(interaction);
+            } catch (e) {
+                error(`Error while creating server data: ${e}`);
+                await interaction.editReply({
+                    embeds: [embedInfoError.ModalProcess],
+                });
+                return;
+            }
+            info(
+                `A new server will be submitted for approval. The following server data will be sent: ${JSON.stringify(data)}`,
+            );
+            try {
+                createServer(interaction, data);
+            } catch (e) {
+                // Catch synchronous errors
+                error(e);
+                await interaction.editReply({
+                    embeds: [embedInfoError.ServerConnectionError],
+                });
+            }
         }
     },
 };
@@ -72,7 +104,7 @@ async function createData(interaction) {
         ServerIcon: interaction.guild.iconURL(),
         ServerBanner: interaction.guild.bannerURL(),
         ServerOwner: interaction.guild.ownerId,
-        Discoverable: true,
+        Connect: true,
     };
 
     return data;
