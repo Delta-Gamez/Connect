@@ -104,11 +104,6 @@ async function DiscoverySubCommand(interaction) {
         .setLabel("Enable")
         .setStyle(ButtonStyle.Primary);
 
-    const Connect_Disable = new ButtonBuilder()
-        .setCustomId("xconnect-disable")
-        .setLabel("Disable")
-        .setStyle(ButtonStyle.Danger);
-
     const Connect_Edit = new ButtonBuilder()
         .setCustomId("xconnect-edit")
         .setLabel("Edit")
@@ -116,8 +111,19 @@ async function DiscoverySubCommand(interaction) {
 
     let row
     if(old.data.exists && old.data.server.Connect){
+        const Connect_Disable = new ButtonBuilder()
+            .setCustomId("xconnect-disable")
+            .setLabel("Disable")
+            .setStyle(ButtonStyle.Danger);
+
         row = new ActionRowBuilder().addComponents(Connect_Edit, Connect_Disable);
     } else {
+        const Connect_Disable = new ButtonBuilder()
+            .setCustomId("xconnect-disable")
+            .setLabel("Disable")
+            .setStyle(ButtonStyle.Danger)
+            .setDisabled(true);
+
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
 

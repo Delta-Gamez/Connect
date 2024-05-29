@@ -60,11 +60,6 @@ async function PartnershipSubCommand(interaction) {
         .setLabel("Enable")
         .setStyle(ButtonStyle.Primary);
 
-    const PartnerShip_Disable = new ButtonBuilder()
-        .setCustomId("xpartnership-disable")
-        .setLabel("Disable")
-        .setStyle(ButtonStyle.Danger);
-
     const PartnerShip_Edit = new ButtonBuilder()
         .setCustomId("xpartnership-edit")
         .setLabel("Edit")
@@ -72,8 +67,19 @@ async function PartnershipSubCommand(interaction) {
 
     let row
     if(old.data.exists && old.data.server.PartnerShip){
+        const PartnerShip_Disable = new ButtonBuilder()
+        .setCustomId("xpartnership-disable")
+        .setLabel("Disable")
+        .setStyle(ButtonStyle.Danger)
+
         row = new ActionRowBuilder().addComponents(PartnerShip_Edit, PartnerShip_Disable);
     } else {
+        const PartnerShip_Disable = new ButtonBuilder()
+            .setCustomId("xpartnership-disable")
+            .setLabel("Disable")
+            .setStyle(ButtonStyle.Danger)
+            .setDisabled(true)
+            
         row = new ActionRowBuilder().addComponents(PartnerShip_Enable, PartnerShip_Disable);
     }
 
