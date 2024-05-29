@@ -1,7 +1,4 @@
 const {
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
     ActionRowBuilder,
     SlashCommandBuilder,
     EmbedBuilder,
@@ -45,6 +42,7 @@ async function IsServerAndOwnerCheck(interaction) {
         return;
     }
 }
+
 async function PartnershipSubCommand(interaction) {
     let old = await axios.get(
         `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
@@ -194,60 +192,65 @@ async function SendPartnerShipEmbed(interaction) {
         .setPlaceholder("Pick a Channel")
         .setChannelTypes(0);
 
-    const row = new ActionRowBuilder().addComponents(select);
-    const pickAChannelEmbed = new EmbedBuilder().setTitle(`Pick a Channel`);
-    const response  = await interaction.update({
-        embeds: [pickAChannelEmbed],
-        components: [row],
-        ephemeral: true,
-    });
-
-    const collectorFilter = i => i.user.id === interaction.user.id;
-
-    try {
-        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
-        console.log(confirmation.values[0])
-        roleSelect(confirmation, confirmation.values[0])
-    } catch (e) {
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-    }
-}
-
-async function roleSelect(interaction, channelid) {
-    const select = new RoleSelectMenuBuilder()
+    const selectrole = new RoleSelectMenuBuilder()
         .setCustomId("roles")
         .setPlaceholder("Pick a Role")
 
-    const xButton = new ButtonBuilder()
-        .setCustomId('xcancel')
-        .setLabel('X')
-        .setStyle(ButtonStyle.Danger);
+    const continueButton = new ButtonBuilder()
+        .setCustomId("xcontinue")
+        .setLabel(">")
+        .setStyle(ButtonStyle.Primary)
+        .setDisabled(true);
 
     const row = new ActionRowBuilder().addComponents(select);
-    const buttonrow = new ActionRowBuilder().addComponents(xButton);
-    const pickAChannelEmbed = new EmbedBuilder().setTitle(`Pick a Role or use the X for "No Role"`);
-    const response  = await interaction.update({
+    const row2 = new ActionRowBuilder().addComponents(selectrole);
+    let row3 = new ActionRowBuilder().addComponents(continueButton);
+    const pickAChannelEmbed = new EmbedBuilder().setTitle("Pick a Channel");
+    const response = await interaction.update({
         embeds: [pickAChannelEmbed],
-        components: [row, buttonrow],
+        components: [row, row2, row3],
         ephemeral: true,
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
 
-    try {
-        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
-        if(confirmation.customId == 'xcancel'){
-            await SendEmbededMessage(confirmation, channelid)
-        } else {
-            await SendEmbededMessage(confirmation, channelid, confirmation.values[0])
+    const collector = interaction.channel.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
+
+    let selectedChannel = null;
+    let selectedRole = null;
+
+    collector.on('collect', async i => {
+
+        if (i.customId === 'channels') {
+            row3 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
+            selectedChannel = i.values[0];
+            await i.update({ components: [row, row2, row3] });
         }
-    } catch (e) {
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-    }
-} 
+
+        if (i.customId === 'roles') {
+            selectedRole = i.values[0];
+            await i.update({ components: [row, row2, row3] });
+        }
+
+        if (i.customId === 'xcontinue') {
+            if (selectedChannel) {
+                await SendEmbededMessage(i, selectedChannel, selectedRole)
+                collector.stop(); // Stop the collector once the button is pressed and the channel is selected
+            } else {
+                await i.reply({ content: 'Please select a channel before continuing.', ephemeral: true });
+            }
+        }
+    });
+
+    collector.on('end', async collected => {
+        if (collected.size === 0) {
+            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        }
+    });
+}
 
 async function SendEmbededMessage(interaction, channelid, roleid){
-    const channel = interaction.guild.channels.cache.get(channelid);
+    const channel = await interaction.guild.channels.cache.get(channelid);
 
     let PartnerShipEmbed;
     if (roleid) {

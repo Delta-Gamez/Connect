@@ -161,36 +161,6 @@ async function IsServerAndOwnerCheck(interaction) {
     }
 }
 
-// Gets the servers data, and returns if already "discoverable"
-async function DiscoverySubCommande(interaction) {
-    const response2 = await fetch(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    ).then((response) => response.json());
-
-    info(`Checking if server exists in database. ${response2.status}`);
-
-    if (response2.status != 404) {
-        if (response2.server.Discoverable) {
-            const _serverexist = new EmbedBuilder(embedInfoError.Template)
-                .setTitle("Connect is already setup.")
-                .setDescription(
-                    `Your server "${interaction.guild.name}" is already in our database.\n
-                    Your server is also discoverable!`,
-                );
-
-            await interaction.reply({
-                embeds: [_serverexist],
-            });
-            return;
-        } else {
-            ChangingConnectStatus(interaction);
-        }
-    } else {
-        info(`Owner used addserver command.`);
-        StartDiscoveryModal(interaction);
-    }
-}
-
 // Sends the Modal to the user for extra informaton
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
