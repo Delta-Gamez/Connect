@@ -5,7 +5,9 @@ const {
     ButtonBuilder,
     ButtonStyle,
     ChannelSelectMenuBuilder,
-    RoleSelectMenuBuilder
+    RoleSelectMenuBuilder,
+    StringSelectMenuBuilder,
+    StringSelectMenuOptionBuilder
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedInfoError, embedInfoSuccess } = require("../embeds.js");
@@ -85,16 +87,18 @@ async function PartnershipSubCommand(interaction) {
     try {
         const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
         if(confirmation.customId == 'xpartnership-enable'){
-            await ChangePartnership(true, confirmation, old, false);
             await PartnershipSubCommande(old, confirmation);
+            await ChangePartnership(true, confirmation, old, false);
         } else if(confirmation.customId == 'xpartnership-disable'){
             await ChangePartnership(false, confirmation, old, true);
         } else if(confirmation.customId == 'xpartnership-edit'){
             await PartnershipSubCommande(old, confirmation);
         }
     } catch (e) {
-        console.error(e)
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        console.log(e)
+        if(e.size === 0){
+            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        }
     }
 }
 
@@ -152,9 +156,9 @@ async function ChangePartnership(status, interaction, old, reply) {
 
 async function PartnershipSubCommande(old, interaction) {
     if (old.data.status != 200) {
-        StartPartnershipModal(interaction);
+        await StartPartnershipModal(interaction);
     } else {
-        SendPartnerShipEmbed(interaction);
+        await SendPartnerShipEmbed(interaction);
     }
 }
 
@@ -186,29 +190,20 @@ async function StartPartnershipModal(interaction) {
     }
 }
 
-async function SendPartnerShipEmbed(interaction) {
-    const select = new ChannelSelectMenuBuilder()
-        .setCustomId("channels")
-        .setPlaceholder("Pick a Channel")
-        .setChannelTypes(0);
-
-    const selectrole = new RoleSelectMenuBuilder()
-        .setCustomId("roles")
-        .setPlaceholder("Pick a Role")
+async function coll(interaction, component, requiremnet, embed, options) {
+    let row1 = new ActionRowBuilder().addComponents(component);
 
     const continueButton = new ButtonBuilder()
-        .setCustomId("xcontinue")
-        .setLabel(">")
-        .setStyle(ButtonStyle.Primary)
-        .setDisabled(true);
+    .setCustomId("xcontinue")
+    .setLabel(">")
+    .setStyle(ButtonStyle.Primary)
+    .setDisabled(requiremnet);
 
-    const row = new ActionRowBuilder().addComponents(select);
-    const row2 = new ActionRowBuilder().addComponents(selectrole);
-    let row3 = new ActionRowBuilder().addComponents(continueButton);
-    const pickAChannelEmbed = new EmbedBuilder().setTitle("Pick a Channel");
+    let row2 = new ActionRowBuilder().addComponents(continueButton);
+
     const response = await interaction.update({
-        embeds: [pickAChannelEmbed],
-        components: [row, row2, row3],
+        embeds: [embed],
+        components: [row1, row2],
         ephemeral: true,
     });
 
@@ -217,57 +212,143 @@ async function SendPartnerShipEmbed(interaction) {
     const collector = interaction.channel.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
 
     let selectedChannel = null;
-    let selectedRole = null;
 
-    collector.on('collect', async i => {
-
-        if (i.customId === 'channels') {
-            row3 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
-            selectedChannel = i.values[0];
-            await i.update({ components: [row, row2, row3] });
-        }
-
-        if (i.customId === 'roles') {
-            selectedRole = i.values[0];
-            await i.update({ components: [row, row2, row3] });
-        }
-
-        if (i.customId === 'xcontinue') {
-            if (selectedChannel) {
-                await SendEmbededMessage(i, selectedChannel, selectedRole)
-                collector.stop(); // Stop the collector once the button is pressed and the channel is selected
+    return new Promise((resolve, reject) => {
+        collector.on('collect', async i => {
+            if (i.customId === 'xcontinue') {
+                collector.stop();
+                resolve([selectedChannel, i]); // Resolve the Promise with the selectedChannel
             } else {
-                await i.reply({ content: 'Please select a channel before continuing.', ephemeral: true });
-            }
-        }
-    });
+                if(!options){
+                    selectedChannel = i.values;
+                    row2 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
+                    await i.update({ components: [row1, row2] });
+                } else {
+                    selectedChannel = i.values[0]
+                    const updatedMemberRequirementOptions = options.map(option =>
+                        option.data.value === i.values[0] 
+                            ? { ...option.data, default: true } 
+                            : option.data
+                    );
+        
+                    row1 = new ActionRowBuilder().addComponents(
+                        new StringSelectMenuBuilder()
+                            .setCustomId('xmember-requirements')
+                            .setPlaceholder('Select a Member Requirement')
+                            .addOptions(updatedMemberRequirementOptions)
+                    );
 
-    collector.on('end', async collected => {
-        if (collected.size === 0) {
-            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-        }
+                    await i.update({ components: [row1, row2] });
+                }
+            }
+        });
+
+        collector.on('end', async collected => {
+            if (collected.size === 0) {
+                console.log(collected)
+                console.log(`RESET`)
+                await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+                reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
+            }
+        });
     });
 }
+async function SendPartnerShipEmbed(interaction) {
 
-async function SendEmbededMessage(interaction, channelid, roleid){
-    const channel = await interaction.guild.channels.cache.get(channelid);
+    const select = new ChannelSelectMenuBuilder()
+    .setCustomId("channels")
+    .setPlaceholder("Pick a Channel")
+    .setChannelTypes(0);
 
-    let PartnerShipEmbed;
-    if (roleid) {
-        PartnerShipEmbed = new EmbedBuilder()
-            .setTitle("Partnership")
-            .setDescription(
-                `Press Open to request a partnership with this server.\nThis would ping the role : <@&${roleid}>`,
-            )
-            .setColor("#004898");
-    } else {
-        PartnerShipEmbed = new EmbedBuilder()
-            .setTitle("Partnership")
-            .setDescription(
-                "Press Open to request a partnership with this server.",
-            )
-            .setColor("#004898");
+    const selectembed = new EmbedBuilder()
+    .setTitle("Pick a Channel");
+
+    let channelid = await coll(interaction, select, true, selectembed);
+    interaction = channelid[1];
+    channelid = channelid[0][0];
+
+    const selectrole = new RoleSelectMenuBuilder()
+    .setCustomId("mention")
+    .setPlaceholder("Select a Role to Mention")
+    .setMinValues(1)
+    .setMaxValues(5);
+
+    const roleembed = new EmbedBuilder()
+    .setTitle("Pick a Role");
+
+    let roles = await coll(interaction, selectrole, false, roleembed);
+    interaction = roles[1];
+    roles = roles[0];
+    let rolesText = ""
+    for (let i = 0; i < roles.length; i++) {
+        rolesText += `<@&${roles[i]}> `;
     }
+
+    const memberRequirementoptions =[
+        new StringSelectMenuOptionBuilder()
+            .setLabel('None')
+            .setValue('none')
+            .setDescription('No Member Requirement')
+            .setEmoji('🚫'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('25+ Members')
+            .setValue('25+ Members')
+            .setDescription('25+ Members Requirment'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('50+ Members')
+            .setValue('50+ Members')
+            .setDescription('50+ Members Requirment'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('100+ Members')
+            .setValue('100+ Members')
+            .setDescription('100+ Members Requirment'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('250+ Members')
+            .setValue('250+ Members')
+            .setDescription('250+ Members Requirment'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('500+ Members')
+            .setValue('500+ Members')
+            .setDescription('500+ Members Requirment'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('1,000+ Members')
+            .setValue('1,000+ Members')
+            .setDescription('1,000+ Members Requirment')
+        ]
+
+
+    const memberRequirements = new StringSelectMenuBuilder()
+        .setCustomId('xmember-requirements')
+        .setPlaceholder('Select a Member Requirement')
+        .addOptions(memberRequirementoptions);
+
+    const memberRequirementembed = new EmbedBuilder()
+        .setTitle('Member Requirements');
+
+    let memberRequirement = await coll(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+    interaction = memberRequirement[1];
+    memberRequirement = memberRequirement[0];
+    if(memberRequirement[0] == 'none'){
+        memberRequirement = null;
+    }
+
+    await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement)
+}
+
+async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement){
+    const channel = await interaction.guild.channels.cache.get(channelid);
+    partnerShipEmbedDescription = "Press Open to request a partnership with this server."
+    if(memberRequirement){
+        partnerShipEmbedDescription += `\nRequirements: ${memberRequirement}`;
+    }
+    if (roleMention) {
+        partnerShipEmbedDescription += `\nThis would ping the role(s) : ${roleMention}`;
+    }
+
+    const PartnerShipEmbed = new EmbedBuilder()
+        .setTitle("Partnership")
+        .setDescription(partnerShipEmbedDescription)
+        .setColor("#004898");
 
     let button = new ButtonBuilder()
         .setCustomId("partnership-request")

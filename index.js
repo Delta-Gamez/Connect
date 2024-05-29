@@ -1,6 +1,6 @@
 const { Client, IntentsBitField } = require("discord.js");
 const { info, warn, success } = require("./src/log.js");
-const { load } = require("./src/loader.js");
+const { load, register } = require("./src/loader.js");
 const { readdirSync } = require("fs");
 
 success("Connect is now starting.");
@@ -42,6 +42,9 @@ client.rest.on("rateLimited", (rateLimitInfo) => {
     );
 });
 
-load(client);
-client.login(process.env.DISCORD_TOKEN);
+load(client).then(() => {
+    client.login(process.env.DISCORD_TOKEN).then(() => {
+        register(client);
+    });
+});
 success("Connect has now Started.");

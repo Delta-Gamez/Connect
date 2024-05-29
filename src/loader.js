@@ -8,7 +8,7 @@ const { betacommands, betaserver } = require('../config.json');
  * @param {Client} client
  */
 // Function to load all modules
-function load(client) {
+async function load(client) {
     // Initialize collections for commands, buttons, and modals
     client.commands = new Collection();
     client.globalcommands = new Collection();
@@ -99,15 +99,18 @@ async function register(client) {
         const betacommandse = client.betacommands.map(command => command.data.toJSON());
 
         // Use the REST API to register commands
-        await rest.put(
-            Routes.applicationGuildCommands(client.user.id, betaserver),
-            { body: betacommandse }
-        );
+        if(betacommandse.length > 0) {
+            await rest.put(
+                Routes.applicationGuildCommands(client.user.id, betaserver),
+                { body: betacommandse }
+            );
+        }
+
 
         info(`Successfully reloaded ${client.commands.size} application (/) commands.`);
     } catch (error) {
-        error("Received an error while refreshing commands.");
-        error(error);
+        console.log("Received an error while refreshing commands.");
+        console.log(error);
     }
 }
 
