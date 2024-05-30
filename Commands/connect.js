@@ -23,7 +23,6 @@ module.exports = {
     async execute(interaction) {
         await IsServerAndOwnerCheck(interaction);
         try {
-
             DiscoverySubCommand(interaction);
         } catch (error) {
             error(error);
@@ -89,6 +88,8 @@ async function ChangeConnect(status, interaction, old, reply) {
         });
     }
 }
+
+// Main Screen (Enable or Disable)
 async function DiscoverySubCommand(interaction) {
     let old = await axios.get(
         `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
