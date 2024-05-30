@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const { embedInfoSuccess } = require("../embeds.js");
 
 module.exports = {
@@ -6,9 +6,13 @@ module.exports = {
         customId: "partnership-accept",
     },
     async execute(interaction) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
+            return interaction.reply({content: `You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Accept the Partnership Request`, ephemeral: true});
+        }
         const userId = await interaction.channel.name.split(':')[0];
+        let user
         if (userId) {
-            const user = await interaction.guild.members.fetch(userId);
+            user = await interaction.guild.members.fetch(userId);
         }
         
         if (!user) {
@@ -26,6 +30,6 @@ module.exports = {
             .setTimestamp();
 
         await interaction.channel.setName(`${user.user.username} - Accepted`);
-        await interaction.reply({ content: `<@${userId}>`, embeds: [embed] });
+        await interaction.reply({ content: `<@${user.user.id}>`, embeds: [embed] });
     },
 };

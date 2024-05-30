@@ -21,32 +21,34 @@ function success(message) {
     log(embedLog.Success.title, `${message}`, embedLog.Success.color);
 }
 
-function custom(type, message, color) {
+function custom(type, message, color, embed) {
     let _color = color ?? `#b1b4b6`;
-    log(`${type}`, `${message}`, _color);
+    log(`${type}`, `${message}`, _color, embed);
 }
 
-function log(type, message, color) {
+function log(type, message, color, embed) {
     // Sends Log, Warn, Error, or Nolog to Discord
     const { logswebhook } = require("../config.json");
     console.log(`${type} ${new Date().toISOString()}] ${message}`);
 
-    sendwebhook(logswebhook, `${message}`, `${type}`, color);
+    sendwebhook(logswebhook, `${message}`, `${type}`, color, embed);
 }
 
-function sendwebhook(url, message, username, color) {
-    let embed
-    if (message.length > 255) {
-        embed = new EmbedBuilder()
-            .setColor(color)
-            .setTitle(username)
-            .setTimestamp()
-            .setDescription(message);
-    } else {
-        embed = new EmbedBuilder()
-            .setColor(color)
-            .setTitle(message)
-            .setTimestamp();
+function sendwebhook(url, message, username, color, embed) {
+    embed = embed ?? null;
+    if(!embed){
+        if (message.length > 255) {
+            embed = new EmbedBuilder()
+                .setColor(color)
+                .setTitle(username)
+                .setTimestamp()
+                .setDescription(message);
+        } else {
+            embed = new EmbedBuilder()
+                .setColor(color)
+                .setTitle(message)
+                .setTimestamp();
+        }
     }
 
     let payload = {
