@@ -26,7 +26,7 @@ module.exports = {
         
         const embed = new EmbedBuilder(embedInfoSuccess.Template)
             .setTitle("Partnership Accepted")
-            .setDescription(`Your partnership request has been accepted.`)
+            .setDescription(`Your partnership request has been accepted. Please wait for further instructions by staff, to complete the partnership.`)
             .setTimestamp();
 
         await interaction.channel.setName(`${user.user.username} - Accepted`);
