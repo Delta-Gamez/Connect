@@ -22,7 +22,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
         .setTitle("Partnership Declined")
-        .setDescription(`Your partnership request has been declined for the following reason: ${partnershipDeclineReason}`)
+        .setDescription(`Your partnership request has been denied by a staff member for: ${partnershipDeclineReason}`)
         .setTimestamp();
 
         if(!user) {
