@@ -40,23 +40,23 @@ const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter
 const embedInfoError = {
     Template: embedInfoErrorTemplate,
     ServerError: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
+        .setTitle(iconError, messageErrorServer)
         .setDescription('You need to be in a server to use this!'),
     ServerOwner: new EmbedBuilder(embedInfoErrorTemplate)
         .setTitle(iconError, 'ERROR')
         .setDescription('Only the server owner can run this command.'),
     ModalProcess: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
+        .setTitle(iconError, messageErrorServer)
         .setDescription(
             'An error occurred while processing your form. Please try again later.',
         ),
     Process: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
+        .setTitle(iconError, messageErrorServer)
         .setDescription(
             'An error occurred while processing your request.\n Please try again later.',
         ),
     ServerConnectionError: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
+        .setTitle(iconError, messageErrorServer)
         .setDescription(
             'Database could not be reached.\n Please try again later or contact support.',
         ),
@@ -88,6 +88,8 @@ const embedPartnership = {
 
 
 // Styling Variables
+const messageErrorServer = 'SERVER ERROR';
+
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
 const colorError = '#F14647';
