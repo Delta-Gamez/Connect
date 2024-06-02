@@ -1,4 +1,5 @@
-const { EmbedBuilder } = require('discord.js');
+const { timeStamp } = require('console');
+const { EmbedBuilder, Embed } = require('discord.js');
 
 // Log Embeds
 const embedLog = {
@@ -19,6 +20,82 @@ const embedLog = {
         color: colorInfo,
     }
 };
+
+
+const embedInfo = {
+    Success: {
+        title: 'SUCCESS',
+        color: colorSuccess,
+        footer: 'Connect',
+        timeStamp: '',
+    }, 
+    Warn: {
+        title: 'WARNING',
+        color: colorWarn,
+    }, 
+    Error: {
+        title: (iconError, 'ERROR'),
+        color: colorError
+    }, 
+    Info: {
+        title: 'INFO',
+        color: colorInfo
+    }
+}
+
+
+// Connect Embeds /*This is still in work, please don't make any edits to it.*/
+
+const embedConnectTemplate = new EmbedBuilder().setFooter('Connect');
+const embedConnect = {
+    Template: embedConnectTemplate,
+    DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
+        .setTitle(iconSuccess, 'DESCRIPTION UPDATED')
+        .setDescription('Your community description has been updated.'),
+    ModalSubmit: new EmbedBuilder(embedInfo.Success)
+        .setDescription('Your community has sucessfully been submitted and will now be processed.'),
+    Error: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+        .setDescription('Error'),
+    OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+        .setTitle(iconError, messageErrorServer)
+        .setDescription('You need to be in a server to use this!'),
+    ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+        .setTitle(iconError, 'ERROR')
+        .setDescription('Only the server owner can run this command.'),
+    ModalSumbit: new EmbedBuilder(embedInfo.Success, embedConnectTemplate)
+        .setTitle(iconSuccess, 'SERVER SUBMITTED')
+        .setDescription('Your server has sucessfully been submitted and will now be processed.'),
+    ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+        .setTitle(iconError, messageErrorServer)
+        .setDescription(
+            'An error occurred while processing your form.\n Please try again later.',
+        ),
+    Process: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+        .setTitle(iconError, messageErrorServer)
+        .setDescription(
+            'An error occurred while processing your request.\n Please try again later.',
+        ),
+    ErrorDatabase: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle(iconError, messageErrorServer)
+        .setDescription(
+            'Database could not be reached.\n Please try again later or contact support.',
+        ),
+
+    };
+
+
+// Partnership Embeds /*This is still in work, please don't make any edits to it.*/
+const embedPartnershipTemplate = new EmbedBuilder().setColor(colorInfo).setFooter('Connect Partnerships');
+const embedPartnership = {
+    Template: embedConnectTemplate,
+    Submitted: new EmbedBuilder(embedInfoErrorTemplate)
+        .setTitle(iconError, 'SERVER ERROR')
+        .setDescription('You need to be in a server to use this!'),
+    };
+    
+
+
+
 
 // Info Success Embeds
 const embedInfoSuccessTemplate = new EmbedBuilder().setColor(colorSuccess).setFooter('Connect');
@@ -62,9 +139,6 @@ const embedInfoError = {
         ),
 };
 
-// Info Info Embeds
-const embedInfoInfoTemplate = new EmbedBuilder().setColor(colorInfo);
-
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
 
@@ -82,5 +156,6 @@ const iconError = '<:DG_CO_Error:1142926009579094226> &nbsp';
 module.exports = {
     embedLog,
     embedInfoError,
+    embedConnect,
     embedInfoSuccess,
 };

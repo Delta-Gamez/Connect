@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Interaction, EmbedBuilder } = require("discord.js");
 const { info, warn, error, nolog } = require("../src/log.js");
-const { embedInfoSuccess, embedInfoError } = require("../embeds.js");
+const { embedConnect } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -18,19 +18,23 @@ module.exports = {
 
         if(old.data.exists){
             if(old.data.server.ShortDesc > 19){
-                const embed = new EmbedBuilder(embedInfoSuccess.Template)
+                const embed = new EmbedBuilder(embedConnect.Template)
                     .setTitle("Updated Connect")
-                    .setDescription("Updated your Description.");
-
+                    .setDescription("Your server description has been updated."); //DeltaGaming: below 'embed' is still used, unclear what it does, should be replaced and removed asap. 
+                await interaction.reply({
+                    embeds: [embedConnect.DescriptionUpdated], 
+                    ephemeral: true,
+                })
                 await interaction.reply({
                     embeds: [embed],
                     ephemeral: true,
-                });
+                }); //??
             } else {
                 await interaction.reply({
-                    embeds: [embedInfoSuccess.ModalSumbit],
+                    embeds: [embedConnect.ModalSumbit],
                 });
             }
+            
 
             let data = await createData(interaction);
 
@@ -45,14 +49,14 @@ module.exports = {
         } else {
             info("Modal addserver Submitted for Processing.");
             await interaction.reply({
-                embeds: [embedInfoSuccess.ModalSumbit],
+                embeds: [embedConnect.ModalSumbit],
             });
             try {
                 let data = await createData(interaction);
             } catch (e) {
                 error(`Error while creating server data: ${e}`);
                 await interaction.editReply({
-                    embeds: [embedInfoError.ModalProcess],
+                    embeds: [embedConnect.ModalProcess],
                 });
                 return;
             }
@@ -65,7 +69,7 @@ module.exports = {
                 // Catch synchronous errors
                 error(e);
                 await interaction.editReply({
-                    embeds: [embedInfoError.ServerConnectionError],
+                    embeds: [embedConnect.ErrorDatabase],
                 });
             }
         }
@@ -82,7 +86,7 @@ async function checkServerOwner(interaction) {
         )
     ) {
         await interaction.reply({
-            embeds: [embedInfoError.ServerOwner],
+            embeds: [embedConnect.ServerOwner],
         });
         return;
     }
@@ -132,7 +136,7 @@ async function createServer(interaction, data) {
             error(e);
             (async () => {
                 interaction.editReply({
-                    embeds: [embedInfoError.ServerConnectionError],
+                    embeds: [embedConnect.ErrorDatabase],
                 });
             })();
         });
