@@ -65,28 +65,6 @@ const embedInfoError = {
 // Info Info Embeds
 const embedInfoInfoTemplate = new EmbedBuilder().setColor(colorInfo);
 
-// Connect Embeds /*This is still in work, please don't make any edits to it.*/
-/*const embedConnectTemplate = new EmbedBuilder().setColor(colorInfo).setFooter('Connect');
-const embedConnect = {
-    Template: embedConnectTemplate,
-    Submitted: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
-        .setDescription('You need to be in a server to use this!'),
-    };
-*/
-
-
-// Partnership Embeds /*This is still in work, please don't make any edits to it.*/
-/*const embedPartnershipTemplate = new EmbedBuilder().setColor(colorInfo).setFooter('Connect');
-const embedPartnership = {
-    Template: embedConnectTemplate,
-    Submitted: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(iconError, 'SERVER ERROR')
-        .setDescription('You need to be in a server to use this!'),
-    };
-*/
-
-
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
 
