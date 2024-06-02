@@ -10,7 +10,7 @@ const {
     StringSelectMenuOptionBuilder
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
-const { embedInfoError, embedInfoSuccess } = require("../embeds.js");
+const { embedInfo, embedConnect } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -31,14 +31,14 @@ module.exports = {
 async function IsServerAndOwnerCheck(interaction) {
     if (!interaction.guildId) {
         await interaction.reply({
-            embeds: [embedInfoError.ServerError],
+            embeds: [embedConnect.OutsideServer],
             ephemeral: true,
         });
         return;
     }
     if (interaction.member.id !== interaction.guild.ownerId) {
         await interaction.reply({
-            embeds: [embedInfoError.ServerOwner],
+            embeds: [embedConnect.ServerOwner],
             ephemeral: true,
         });
         return;

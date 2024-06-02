@@ -1,5 +1,20 @@
-const { timeStamp } = require('console');
+/*const { timeStamp } = require('console');*/
 const { EmbedBuilder, Embed } = require('discord.js');
+
+// Styling Variables
+const messageErrorServer = 'SERVER ERROR';
+
+const colorSuccess = '#45BB8A';
+const colorWarn = '#FFB53E';
+const colorError = '#F14647';
+const colorInfo = '#00469F';
+
+const iconSuccess = '<:DG_CO_Check:1028309734450806815> &nbsp';
+const iconWarn = '<:DG_CO_Warn:1142925963668238536> &nbsp';
+const iconError = '<:DG_CO_Error:1142926009579094226> &nbsp';
+
+const embedConnectFooter = new EmbedBuilder().setFooter({ text: 'Connect' });
+const embedPartnershipFooter = new EmbedBuilder().setFooter({ text: 'Connect Partnership '});
 
 // Log Embeds
 const embedLog = {
@@ -27,7 +42,7 @@ const embedInfo = {
         title: 'SUCCESS',
         color: colorSuccess,
         footer: 'Connect',
-        timeStamp: '',
+        /*timeStamp: '',*/
     }, 
     Warn: {
         title: 'WARNING',
@@ -46,36 +61,34 @@ const embedInfo = {
 
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
 
-const embedConnectTemplate = new EmbedBuilder().setFooter('Connect');
 const embedConnect = {
-    Template: embedConnectTemplate,
-    DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
+    DescriptionUpdated: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
         .setTitle(iconSuccess, 'DESCRIPTION UPDATED')
         .setDescription('Your community description has been updated.'),
-    ModalSubmit: new EmbedBuilder(embedInfo.Success)
+    ModalSubmit: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
         .setDescription('Your community has sucessfully been submitted and will now be processed.'),
-    Error: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+    Error: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setDescription('Error'),
-    OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+    OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(iconError, messageErrorServer)
         .setDescription('You need to be in a server to use this!'),
-    ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+    ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(iconError, 'ERROR')
         .setDescription('Only the server owner can run this command.'),
-    ModalSumbit: new EmbedBuilder(embedInfo.Success, embedConnectTemplate)
+    ModalSumbit: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
         .setTitle(iconSuccess, 'SERVER SUBMITTED')
         .setDescription('Your server has sucessfully been submitted and will now be processed.'),
-    ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+    ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(iconError, messageErrorServer)
         .setDescription(
             'An error occurred while processing your form.\n Please try again later.',
         ),
-    Process: new EmbedBuilder(embedInfo.Error, embedConnectTemplate)
+    Process: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(iconError, messageErrorServer)
         .setDescription(
             'An error occurred while processing your request.\n Please try again later.',
         ),
-    ErrorDatabase: new EmbedBuilder(embedInfoErrorTemplate)
+    ErrorDatabase: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(iconError, messageErrorServer)
         .setDescription(
             'Database could not be reached.\n Please try again later or contact support.',
@@ -85,20 +98,17 @@ const embedConnect = {
 
 
 // Partnership Embeds /*This is still in work, please don't make any edits to it.*/
-const embedPartnershipTemplate = new EmbedBuilder().setColor(colorInfo).setFooter('Connect Partnerships');
 const embedPartnership = {
-    Template: embedConnectTemplate,
-    Submitted: new EmbedBuilder(embedInfoErrorTemplate)
+    Submitted: new EmbedBuilder(embedInfo.Error, embedPartnershipFooter)
         .setTitle(iconError, 'SERVER ERROR')
         .setDescription('You need to be in a server to use this!'),
     };
-    
 
 
 
 
 // Info Success Embeds
-const embedInfoSuccessTemplate = new EmbedBuilder().setColor(colorSuccess).setFooter('Connect');
+const embedInfoSuccessTemplate = new EmbedBuilder().setColor(colorSuccess).setFooter({ text: "Connect" });
 const embedInfoSuccess = {
     Template: embedInfoSuccessTemplate,
     ModalSumbit: new EmbedBuilder(embedInfoSuccessTemplate)
@@ -106,14 +116,13 @@ const embedInfoSuccess = {
         .setDescription(
             'Your server has sucessfully been submitted and will now be processed.',
         )
-        .setFooter('Connect')
 };
 
 // Info Warn Embeds
-const embedInfoWarnTemplate = new EmbedBuilder().setColor(colorWarn).setFooter('Connect');
+/*const embedInfoWarnTemplate = new EmbedBuilder().setColor(colorWarn).setFooter('Connect');*/
 
 // Info Error Embeds
-const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter('Connect');
+const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter({ text: "Connect" });
 const embedInfoError = {
     Template: embedInfoErrorTemplate,
     ServerError: new EmbedBuilder(embedInfoErrorTemplate)
@@ -139,23 +148,12 @@ const embedInfoError = {
         ),
 };
 
-// Styling Variables
-const messageErrorServer = 'SERVER ERROR';
-
-const colorSuccess = '#45BB8A';
-const colorWarn = '#FFB53E';
-const colorError = '#F14647';
-const colorInfo = '#00469F';
-
-const iconSuccess = '<:DG_CO_Check:1028309734450806815> &nbsp';
-const iconWarn = '<:DG_CO_Warn:1142925963668238536> &nbsp';
-const iconError = '<:DG_CO_Error:1142926009579094226> &nbsp';
-
 
 // Exporting Embeds
 module.exports = {
     embedLog,
-    embedInfoError,
+    embedInfo,
     embedConnect,
-    embedInfoSuccess,
+    embedInfoError,
+    embedInfoSuccess
 };
