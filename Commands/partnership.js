@@ -109,7 +109,7 @@ async function PartnershipSubCommand(interaction) {
 }
 
 async function ChangePartnership(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+    const removedembed = new EmbedBuilder()
         .setTitle("Partnership")
         .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
     
@@ -368,7 +368,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         components: [actionRow],
     });
 
-    let embed = new EmbedBuilder(embedInfoSuccess.Template)
+    let embed = new EmbedBuilder()
         .setTitle("Setup Partnership")
         .setDescription(`PartnerShip Openner message sent to: ${channel}`);
 

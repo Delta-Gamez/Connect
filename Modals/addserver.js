@@ -18,24 +18,16 @@ module.exports = {
 
         if(old.data.exists){
             if(old.data.server.ShortDesc > 19){
-                const embed = new EmbedBuilder(embedConnect.Template)
-                    .setTitle("Updated Connect")
-                    .setDescription("Your server description has been updated."); //DeltaGaming: below 'embed' is still used, unclear what it does, should be replaced and removed asap. 
                 await interaction.reply({
                     embeds: [embedConnect.DescriptionUpdated], 
                     ephemeral: true,
-                })
-                await interaction.reply({
-                    embeds: [embed],
-                    ephemeral: true,
-                }); //??
+                });
             } else {
                 await interaction.reply({
                     embeds: [embedConnect.ModalSumbit],
                 });
             }
             
-
             let data = await createData(interaction);
 
             await axios.put(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`, data,
