@@ -17,5 +17,3 @@ module.exports = {
 
         custom("Guild Joined", `Joined Guild: ${guild.name} (${guild.id})`, "#", embed);
 }};
-
-//function custom(type, message, color, embed) {}
