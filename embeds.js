@@ -9,9 +9,9 @@ const colorWarn = '#FFB53E';
 const colorError = '#F14647';
 const colorInfo = '#00469F';
 
-const iconSuccess = '<:DG_CO_Check:1028309734450806815> &nbsp';
-const iconWarn = '<:DG_CO_Warn:1142925963668238536> &nbsp';
-const iconError = '<:DG_CO_Error:1142926009579094226> &nbsp';
+const iconSuccess = '<:DG_CO_Check:1028309734450806815> ';
+const iconWarn = '<:DG_CO_Warn:1142925963668238536> ';
+const iconError = '<:DG_CO_Error:1142926009579094226> ';
 
 const embedConnectFooter = new EmbedBuilder().setFooter({ text: 'Connect' });
 const embedPartnershipFooter = new EmbedBuilder().setFooter({ text: 'Connect Partnership '});
