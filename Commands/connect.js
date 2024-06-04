@@ -21,7 +21,20 @@ module.exports = {
         .setDescription("Setup Connect"),
 
     async execute(interaction) {
-        await IsServerAndOwnerCheck(interaction);
+        if (!interaction.guildId) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerError],
+                ephemeral: true,
+            });
+            return;
+        }
+        if (interaction.member.id !== interaction.guild.ownerId) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerOwner],
+                ephemeral: true,
+            });
+            return;
+        }
         try {
             DiscoverySubCommand(interaction);
         } catch (error) {
@@ -147,24 +160,6 @@ async function DiscoverySubCommand(interaction) {
     } catch (e) {
         console.error(e)
         await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-    }
-}
-
-// Checks that the user has permssions to run the command
-async function IsServerAndOwnerCheck(interaction) {
-    if (!interaction.guildId) {
-        await interaction.reply({
-            embeds: [embedInfoError.ServerError],
-            ephemeral: true,
-        });
-        return;
-    }
-    if (interaction.member.id !== interaction.guild.ownerId) {
-        await interaction.reply({
-            embeds: [embedInfoError.ServerOwner],
-            ephemeral: true,
-        });
-        return;
     }
 }
 
