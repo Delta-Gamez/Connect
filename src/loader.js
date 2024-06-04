@@ -1,6 +1,6 @@
 const { Client, Collection, Routes } = require('discord.js');
 const fs = require('fs');
-const { info, warn, error, nolog } = require('./log.js');
+const { warn, error, nolog, success } = require('./log.js');
 const { REST } = require('@discordjs/rest');
 const { betacommands, betaserver } = require('../config.json');
 
@@ -73,7 +73,7 @@ async function load(client) {
     }
 
     // Log the number of commands, buttons, and modals that were loaded
-    info(`Loaded ${client.globalcommands.size} commands, ${client.buttons.size} buttons, ${client.modals.size} modals, ${client.betacommands.size} beta commands.`);
+    success(`Loaded ${client.globalcommands.size} commands, ${client.buttons.size} buttons, ${client.modals.size} modals, ${client.betacommands.size} beta commands.`);
 }
 
 /**
@@ -84,7 +84,7 @@ async function register(client) {
     const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 
     try {
-        info(`Started refreshing ${client.commands.size} application (/) commands.`);
+        success(`Started refreshing ${client.commands.size} application (/) commands.`);
         
         // Create an array of commands
         const commands = client.globalcommands.map(command => command.data.toJSON());
@@ -107,7 +107,7 @@ async function register(client) {
         }
 
 
-        info(`Successfully reloaded ${client.commands.size} application (/) commands.`);
+        success(`Successfully reloaded ${client.commands.size} application (/) commands.`);
     } catch (error) {
         console.log("Received an error while refreshing commands.");
         console.log(error);
