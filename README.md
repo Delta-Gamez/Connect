@@ -12,8 +12,8 @@ https://deltagamez.ch/
 
 ### Connect's Development Team
 - **Leadership**: [DeltaGaming](https://github.com/DeltaGamingCH)
+- **Developer II**: [Jay B](https://github.com/kezza2k7)
 - **Developer I**: [Dmitri Gee](https://github.com/DmitriGee)
-- **Developer I**: [Jay B](https://github.com/kezza2k7)
 
 ## Deployment Notes:
 
