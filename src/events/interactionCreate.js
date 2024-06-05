@@ -1,17 +1,25 @@
-const { info, warn, error, nolog, success } = require("../log.js");
+const { info, warn, error, nolog } = require("../log.js");
+const path = require("path");
 
 module.exports = {
     name: "interactionCreate",
     execute: async (interaction) => {
         if (interaction.isAutocomplete()) {
-            const command = interaction.client.slashcommands.get(
+            let command = interaction.client.slashcommands.get(
                 interaction.commandName,
             );
             if (!command) {
-                error(
-                    `No command matching ${interaction.commandName} was found.`,
+                command = await searchFile(
+                    path.resolve(__dirname, "../../Commands"),
+                    `${interaction.commandName}.js`,
                 );
-                return;
+                command = require(command)
+                if (!command) {
+                    error(
+                        `No command matching ${interaction.commandName} was found.`,
+                    );
+                    return;
+                }
             }
             try {
                 await command.autocomplete(interaction);
@@ -23,10 +31,10 @@ module.exports = {
         const client = interaction.client;
 
         if (interaction.isCommand()) {
-            const command = client.commands.get(interaction.commandName);
+            let command = client.commands.get(interaction.commandName);
             if (!command) {
-                success(
-                    `Interaction Requested: ${interaction.commandName} (Not Found)`,
+                error(
+                    `No command matching ${interaction.commandName} was found.`,
                 );
                 await interaction.reply({
                     content: `Command ${interaction.commandName} not found.`,
@@ -97,6 +105,6 @@ module.exports = {
                 );
             }
         }
-        return
+        return;
     },
 };
