@@ -1,5 +1,4 @@
 const { info, warn, error, nolog } = require("../log.js");
-const fs = require("fs");
 const path = require("path");
 
 module.exports = {
@@ -43,10 +42,10 @@ module.exports = {
                 });
                 return;
             }
-            info(`Interaction Requested: ${interaction.commandName} (Success)`);
+            success(`Interaction Requested: ${interaction.commandName} (Success)`);
             try {
                 await command.execute(interaction);
-                info(`Executed Command: ${interaction.commandName} (Success)`);
+                success(`Executed Command: ${interaction.commandName} (Success)`);
             } catch (e) {
                 error(
                     `Error while Executing Command ${interaction.commandName}: ${e}`,
@@ -69,17 +68,17 @@ module.exports = {
             }
             const button = client.buttons.get(interaction.customId);
             if (!button) {
-                info(`Button Requested: ${interaction.customId} (Not Found)`);
+                success(`Button Requested: ${interaction.customId} (Not Found)`);
                 await interaction.reply({
                     content: `Button ${interaction.customId} not found.`,
                     ephemeral: true,
                 });
                 return;
             }
-            info(`Button Requested: ${interaction.customId} (Success)`);
+            success(`Button Requested: ${interaction.customId} (Success)`);
             try {
                 await button.execute(interaction);
-                info(`Executed Button: ${interaction.customId} (Success)`);
+                success(`Executed Button: ${interaction.customId} (Success)`);
             } catch (e) {
                 error(
                     `Error while Executing Button ${interaction.customId}: ${e}`,
@@ -88,17 +87,17 @@ module.exports = {
         } else if (interaction.isModalSubmit()) {
             const modal = client.modals.get(interaction.customId);
             if (!modal) {
-                info(`Modal Requested: ${interaction.customId} (Not Found)`);
+                success(`Modal Requested: ${interaction.customId} (Not Found)`);
                 await interaction.reply({
                     content: `Modal ${interaction.customId} not found.`,
                     ephemeral: true,
                 });
                 return;
             }
-            info(`Modal Requested: ${interaction.customId} (Success)`);
+            success(`Modal Requested: ${interaction.customId} (Success)`);
             try {
                 await modal.execute(interaction);
-                info(`Executed Modal: ${interaction.customId} (Success)`);
+                success(`Executed Modal: ${interaction.customId} (Success)`);
             } catch (e) {
                 console.error(e);
                 error(

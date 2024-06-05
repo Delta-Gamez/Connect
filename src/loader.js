@@ -1,6 +1,6 @@
 const { Client, Collection, Routes } = require("discord.js");
 const fs = require("fs");
-const { info, warn, error, nolog } = require("./log.js");
+const { info, warn, error, nolog, success } = require("./log.js");
 const { REST } = require("@discordjs/rest");
 const { betacommands, betaserver, ignorecommands } = require("../config.json");
 require("dotenv").config();
@@ -127,6 +127,7 @@ async function register(client) {
         info(
             `Successfully reloaded ${client.commands.size} application (/) commands.`,
         );
+
     } catch (error) {
         console.log("Received an error while refreshing commands.");
         console.log(error);

@@ -11,7 +11,20 @@ module.exports = {
         description: "Process submitted addserver modals.",
     },
     async execute(interaction) {
-        await checkServerOwner(interaction);
+        if (
+            !(
+                interaction.member.id &&
+                interaction.guild.ownerId &&
+                parseInt(interaction.member.id) ===
+                    parseInt(interaction.guild.ownerId)
+            )
+        ) {
+            await interaction.reply({
+                embeds: [embedConnect.ServerOwner],
+            });
+            return;
+        }
+        
         let old = await axios.get(
             `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
         );
@@ -68,21 +81,6 @@ module.exports = {
     },
 };
 
-async function checkServerOwner(interaction) {
-    if (
-        !(
-            interaction.member.id &&
-            interaction.guild.ownerId &&
-            parseInt(interaction.member.id) ===
-                parseInt(interaction.guild.ownerId)
-        )
-    ) {
-        await interaction.reply({
-            embeds: [embedConnect.ServerOwner],
-        });
-        return;
-    }
-}
 async function createData(interaction) {
     const invite = await interaction.channel.createInvite({
         maxUses: 0,

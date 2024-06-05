@@ -19,19 +19,19 @@ const embedPartnershipFooter = new EmbedBuilder().setFooter({ text: 'Connect Par
 // Log Embeds
 const embedLog = {
     Success: {
-        title: '\x1b[0m[SUCCESS]',
+        title: '\x1b[SUCCESS]',
         color: colorSuccess,
     },
     Warn: {
-        title: '\x1b[0;33m[WARN]',
+        title: '\x1b[WARN]',
         color: colorWarn,
     },
     Error: {
-        title: '\x1b[0;1;31m[ERROR]',
+        title: '\x1b[ERROR]',
         color: colorError,
     },
     Info: {
-        title: '\x1b[0m[INFO]',
+        title: '\x1b[INFO]',
         color: colorInfo,
     }
 };
@@ -69,7 +69,7 @@ const embedConnect = {
     Error: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setDescription('Error'),
     OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this!'),
     ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ERROR`)
@@ -78,17 +78,17 @@ const embedConnect = {
         .setTitle(`${iconSuccess} SERVER SUBMITTED`)
         .setDescription('Your server has sucessfully been submitted and will now be processed.'),
     ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'An error occurred while processing your form.\n Please try again later.',
         ),
     Process: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'An error occurred while processing your request.\n Please try again later.',
         ),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'Database could not be reached.\n Please try again later or contact support.',
         ),
@@ -125,23 +125,23 @@ const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter
 const embedInfoError = {
     Template: embedInfoErrorTemplate,
     ServerError: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this!'),
     ServerOwner: new EmbedBuilder(embedInfoErrorTemplate)
         .setTitle(`${iconError} 'ERROR'`)
         .setDescription('Only the server owner can run this command.'),
     ModalProcess: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'An error occurred while processing your form. Please try again later.',
         ),
     Process: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'An error occurred while processing your request.\n Please try again later.',
         ),
     ServerConnectionError: new EmbedBuilder(embedInfoErrorTemplate)
-        .setTitle(`${iconError} messageErrorServer`)
+        .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
             'Database could not be reached.\n Please try again later or contact support.',
         ),
