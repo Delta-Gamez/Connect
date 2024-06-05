@@ -107,7 +107,6 @@ async function PartnershipSubCommand(interaction) {
             await PartnershipSubCommande(old, confirmation);
         }
     } catch (e) {
-        console.log(e)
         if(e.size === 0){
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
         }

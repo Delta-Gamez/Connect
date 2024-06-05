@@ -120,13 +120,8 @@ async function ManagementCommand(interaction) {
             StaffManagementCommande(old, confirmation);
         }
     } catch (e) {
-        warn(e);
-        if (e.size === 0) {
-            await interaction.editReply({
-                content:
-                    "Confirmation not received within 1 minute, cancelling",
-                components: [],
-            });
+        if(e.size === 0){
+            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
         }
     }
 }

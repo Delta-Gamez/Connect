@@ -162,8 +162,9 @@ async function DiscoverySubCommand(interaction) {
             await UpdateDiscoverModal(confirmation);
         }
     } catch (e) {
-        console.error(e)
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        if(e.size === 0){
+            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        }
     }
 }
 
