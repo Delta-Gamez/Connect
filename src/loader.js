@@ -3,6 +3,7 @@ const fs = require("fs");
 const { info, warn, error, nolog } = require("./log.js");
 const { REST } = require("@discordjs/rest");
 const { betacommands, betaserver, ignorecommands } = require("../config.json");
+require("dotenv").config();
 
 /**
  * @param {Client} client
@@ -35,7 +36,7 @@ async function load(client) {
         } else {
             const filePath = `../Commands/${file}`;
             const command = require(filePath);
-            
+
             // Set a new item in the Collection with the key as the command name and the value as the exported module
             if ("data" in command && "execute" in command) {
                 if (ignorecommands.includes(file)) {
