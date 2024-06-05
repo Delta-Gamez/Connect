@@ -3,6 +3,7 @@ const { Interaction, EmbedBuilder } = require("discord.js");
 const { info, warn, error, nolog } = require("../src/log.js");
 const { embedConnect } = require("../embeds.js");
 const axios = require("axios");
+const UpdateDatabase = require("../utils/updateDatabase.js");
 
 module.exports = {
     data: {
@@ -43,14 +44,7 @@ module.exports = {
             
             let data = await createData(interaction);
 
-            await axios.put(`${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`, data,
-                {
-                    headers: {
-                        Authorization: `${process.env.DATABASE_TOKEN}`,
-                    },
-                    withCredentials: true,
-                },
-            )
+            await UpdateDatabase(data);
         } else {
             info("Modal addserver Submitted for Processing.");
             await interaction.reply({

@@ -1,4 +1,4 @@
-const { info, warn, error, nolog } = require("../log.js");
+const { info, warn, error, success } = require("../log.js");
 const path = require("path");
 
 module.exports = {

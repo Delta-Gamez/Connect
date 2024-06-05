@@ -10,10 +10,13 @@ const {
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
-    embedInfoError,
+    embedInfo,
     embedInfoSuccess,
+    embedConnect,
 } = require("../embeds.js");
 const axios = require("axios");
+const UpdateDatabase = require("../utils/updateDatabase.js");
+const { data } = require("./partnership.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,14 +26,14 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
-                embeds: [embedInfoError.ServerError],
+                embeds: [embedConnect.OutsideServer],
                 ephemeral: true,
             });
             return;
         }
         if (interaction.member.id !== interaction.guild.ownerId) {
             await interaction.reply({
-                embeds: [embedInfoError.ServerOwner],
+                embeds: [embedConnect.ServerOwner],
                 ephemeral: true,
             });
             return;
@@ -44,7 +47,7 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+    const removedembed = new EmbedBuilder(embedInfo.Success)
         .setTitle("Connect")
         .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
     
@@ -80,16 +83,7 @@ async function ChangeConnect(status, interaction, old, reply) {
         ServerInvite: String(invite.url),
     };
 
-    let response = await axios.put(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    let response = await UpdateDatabase(data)
 
     console.log(response)
 
@@ -104,9 +98,19 @@ async function ChangeConnect(status, interaction, old, reply) {
 
 // Main Screen (Enable or Disable)
 async function DiscoverySubCommand(interaction) {
-    let old = await axios.get(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    );
+    let old;
+    try {
+        old = await axios.get(
+            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+        );
+    } catch (e) {
+        await interaction.reply({
+            embeds: [embedConnect.ErrorDatabase],
+            ephemeral: true,
+            components: [],
+        });
+        return;
+    }
     
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Connect")

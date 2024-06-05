@@ -1,14 +1,19 @@
 const {
-    Collection,
-    Routes,
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
     ActionRowBuilder,
+    RoleSelectMenuBuilder,
 } = require("discord.js");
+const { embedConnect } = require("../embeds.js");
 const { info, warn, error } = require("../src/log.js");
-const { rest } = require("../src/loader.js");
+const { rest, load } = require("../src/loader.js");
+const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
+const YesNoOption = require("../utils/YesNoOption.js");
+const UpdateDatabase = require("../utils/updateDatabase.js");
+const enableCommandForGuild = require("../utils/enableCommandForGuild.js");
+const disableCommandForGuild = require("../utils/disableCommandForGuild.js");
 const axios = require("axios");
 
 module.exports = {
@@ -39,9 +44,20 @@ module.exports = {
 };
 
 async function ManagementCommand(interaction) {
-    let old = await axios.get(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    );
+    let old;
+    try {
+        old = await axios.get(
+            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+        );
+    } catch (e) {
+        await interaction.reply({
+            embeds: [embedConnect.ErrorDatabase],
+            ephemeral: true,
+            components: [],
+        });
+        return;
+    }
+
 
     const embedModuleStaffMangement = new EmbedBuilder()
         .setTitle("Staff Management")
@@ -96,12 +112,12 @@ async function ManagementCommand(interaction) {
         });
         if (confirmation.customId == "xStaffMan-enable") {
             // Enable the Module
-            await ChangeManagement(true, confirmation, old, true);
+            StaffManagementCommande(old, confirmation);
         } else if (confirmation.customId == "xStaffMan-disable") {
-            await ChangeManagement(false, confirmation, old, true);
             // Disable the Module
+            await ChangeManagement(false, confirmation, old, true);
         } else if (confirmation.customId == "xStaffMan-edit") {
-            // Edit the Module
+            StaffManagementCommande(old, confirmation);
         }
     } catch (e) {
         warn(e);
@@ -158,42 +174,8 @@ async function ChangeManagement(status, interaction, old, reply) {
         },
     );
 
-    if (status) {
-        let commands = new Collection();
-
-        // Load your command data, e.g., from a file
-        const command = require(`../Commands/test.js`);
-
-        // Add the command to the collection
-        commands.set(command.data.name, command);
-
-        // Convert the command data to JSON format required by Discord API
-        const commandData = commands.map(command => command.data.toJSON());
-
-        // Use PATCH to add the command to the guild
-        await rest.put(
-            Routes.applicationGuildCommands(interaction.client.user.id, interaction.guild.id),
-            { body: commandData }
-        );
-    } else {
-        const commands = await rest.get(
-            Routes.applicationGuildCommands(interaction.client.user.id, interaction.guild.id)
-        );
-
-        // Find the command by name
-        const command = commands.find(cmd => cmd.name === "test");
-
-        // Check if the command exists
-        if (!command) {
-            info(`Command with name "${commandName}" not found.`);
-            return;
-        }
-
-        // Delete the command by ID
-        await rest.delete(
-            Routes.applicationGuildCommand(interaction.client.user.id, interaction.guild.id, command.id)
-        );
-
+    if (!status) {
+        await disableCommandForGuild(interaction, "loa");
     }
 
     if (reply) {
@@ -202,5 +184,121 @@ async function ChangeManagement(status, interaction, old, reply) {
             ephemeral: true,
             components: [],
         });
+    }
+}
+
+async function StaffManagementCommande(old, interaction) {
+    if (old.data.status != 200) {
+        await StartStaffManagement(interaction);
+    } else {
+        await SendStaffManagementQuestionsEmbeds(interaction);
+    }
+}
+
+async function SendStaffManagementQuestionsEmbeds(interaction) {
+
+    const selectManagementRoles = new RoleSelectMenuBuilder()
+    .setCustomId("manmention")
+    .setPlaceholder("Select Management Roles")
+    .setMinValues(1)
+    .setMaxValues(5);
+
+    const selectembed = new EmbedBuilder()
+    .setTitle("Select Management Roles");
+
+    let ManRoles = await sendMenuBuilders(interaction, selectManagementRoles, true, selectembed);
+    interaction = ManRoles[1];
+    ManRoles = ManRoles[0];
+    let rolesManText = []
+    for (let i = 0; i < ManRoles.length; i++) {
+        rolesManText.push(ManRoles[i].id);
+    }
+
+    const selectModeraterRoles = new RoleSelectMenuBuilder()
+    .setCustomId("modmention")
+    .setPlaceholder("Select Moderater Roles")
+    .setMinValues(1)
+    .setMaxValues(5);
+
+    const roleembed = new EmbedBuilder()
+    .setTitle("Select Moderater Roles");
+
+    let roles = await sendMenuBuilders(interaction, selectModeraterRoles, true, roleembed);
+    interaction = roles[1];
+    roles = roles[0];
+    let rolesModText = []
+    for (let i = 0; i < roles.length; i++) {
+        rolesModText.push(roles[i].id);
+    }
+
+    let loaembed = new EmbedBuilder().setTitle("Would you like to Enable LOA (/loa)?")
+    let loa = await YesNoOption(interaction, loaembed);
+    interaction = loa[1];
+    loa = loa[0];
+
+    await UpdateDatabaseData(interaction, rolesManText, rolesModText, loa)
+}
+
+async function UpdateDatabaseData(interaction, rolesManText, rolesModText, loa) {
+    data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
+        StaffManagement: true,
+        StaffManagementRoles: JSON.stringify(rolesManText),
+        StaffModeraterRoles: JSON.stringify(rolesModText),
+    };
+
+    const response = await UpdateDatabase(data);
+
+    if(loa){
+        await enableCommandForGuild(interaction, "loa");
+    }
+
+    if(response.data.status == 200){
+        const removedembed = new EmbedBuilder()
+        .setTitle("Staff Management")
+        .setDescription("Staff Management has been Enabled");
+
+        await interaction.update({
+            embeds: [removedembed],
+            ephemeral: true,
+            components: [],
+        });
+    } else {
+        await interaction.update({
+            embeds: [embedConnect.ErrorDatabase],
+            ephemeral: true,
+            components: [],
+        });
+    }
+}
+
+async function StartStaffManagement(interaction) {
+    data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
+    };
+
+    const response = await axios.post(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
+        data,
+        {
+            headers: {
+                Authorization: `${process.env.DATABASE_TOKEN}`,
+            },
+            withCredentials: true,
+        },
+    );
+
+    if(response.data.status == 200){
+        StaffManagementCommande(response, interaction);
     }
 }
