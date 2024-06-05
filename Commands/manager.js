@@ -1,13 +1,13 @@
 const {
+    Collection,
+    Routes,
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
     ActionRowBuilder,
 } = require("discord.js");
-const { Client, Collection, Routes } = require("discord.js");
-const { info, error } = require("../src/log.js");
-const { stat } = require("fs");
+const { info, warn, error } = require("../src/log.js");
 const { rest } = require("../src/loader.js");
 const axios = require("axios");
 
@@ -32,8 +32,8 @@ module.exports = {
         }
         try {
             ManagementCommand(interaction);
-        } catch (error) {
-            error(error);
+        } catch (e) {
+            error(e);
         }
     },
 };
@@ -104,7 +104,7 @@ async function ManagementCommand(interaction) {
             // Edit the Module
         }
     } catch (e) {
-        console.log(e);
+        warn(e);
         if (e.size === 0) {
             await interaction.editReply({
                 content:
@@ -185,7 +185,7 @@ async function ChangeManagement(status, interaction, old, reply) {
 
         // Check if the command exists
         if (!command) {
-            console.log(`Command with name "${commandName}" not found.`);
+            info(`Command with name "${commandName}" not found.`);
             return;
         }
 
