@@ -7,10 +7,10 @@ const {
     ChannelSelectMenuBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder
+    StringSelectMenuOptionBuilder 
 } = require("discord.js");
-const { info, error } = require("../src/log.js");
-const { embedInfo, embedConnect, embedPartnership } = require("../embeds.js");
+const { info, error, success } = require("../src/log.js");
+const { embedInfo, embedPartnership } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -31,14 +31,14 @@ module.exports = {
 async function IsServerAndOwnerCheck(interaction) {
     if (!interaction.guildId) {
         await interaction.reply({
-            embeds: [embedConnect.OutsideServer],
+            embeds: [embedPartnership.OutsideServer],
             ephemeral: true,
         });
         return;
     }
     if (interaction.member.id !== interaction.guild.ownerId) {
         await interaction.reply({
-            embeds: [embedConnect.ServerOwner],
+            embeds: [embedPartnership.ServerOwner],
             ephemeral: true,
         });
         return;

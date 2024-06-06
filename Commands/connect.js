@@ -6,13 +6,8 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle,
-} = require("discord.js");
-const { info, error } = require("../src/log.js");
-const {
-    embedInfoError,
-    embedInfoSuccess,
-} = require("../embeds.js");
+    ButtonStyle, } = require("discord.js");
+const { embedInfo, embedConnect } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -23,14 +18,14 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
-                embeds: [embedInfoError.ServerError],
+                embeds: [embedConnect.ServerError],
                 ephemeral: true,
             });
             return;
         }
         if (interaction.member.id !== interaction.guild.ownerId) {
             await interaction.reply({
-                embeds: [embedInfoError.ServerOwner],
+                embeds: [embedConnect.ServerOwner],
                 ephemeral: true,
             });
             return;
@@ -44,7 +39,7 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+    const removedembed = new EmbedBuilder(embedInfo.Success)
         .setTitle("Connect")
         .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
     
@@ -188,7 +183,7 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Add your community on our website.");
+        .setTitle("Add your community to the Connect website.");
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")

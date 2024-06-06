@@ -3,6 +3,8 @@ const { EmbedBuilder, Embed } = require('discord.js');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
+const messageServerOwner = 'Only the server owner can run this command.';
+const messageOutsideServer = 'You need to be in a server to use this command.';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
@@ -69,31 +71,27 @@ const embedConnect = {
         .setDescription('Your community has sucessfully been submitted and will now be processed.'),
     Error: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setDescription('Error'),
+    ServerError: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('Server Error'),
     OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this!'),
     ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ERROR`)
-        .setDescription('Only the server owner can run this command.'),
+        .setDescription(`${messageServerOwner}`),
     ModalSumbit: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
         .setTitle(`${iconSuccess} SERVER SUBMITTED`)
         .setDescription('Your server has sucessfully been submitted and will now be processed.'),
     ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your form.\n Please try again later.',
-        ),
+        .setDescription('An error occurred while processing your form.\n Please try again later.'),
     Process: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your request.\n Please try again later.',
-        ),
+        .setDescription('An error occurred while processing your request.\n Please try again later.'),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'Database could not be reached.\n Please try again later or contact support.',
-        ),
-
+        .setDescription('Database could not be reached.\n Please try again later or contact support.'),
     };
 
 
@@ -102,6 +100,15 @@ const embedPartnership = {
     Submitted: new EmbedBuilder(embedInfo.Error, embedPartnershipFooter)
         .setTitle(`${iconError} SERVER ERROR`)
         .setDescription('You need to be in a server to use this!'),
+    ServerError: new EmbedBuilder(embedInfo.Error, embedPartnershipFooter)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('Server Error'),
+    ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
+        .setTitle(`${iconError} ERROR`)
+        .setDescription(`${messageServerOwner}`),
+    OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`${messageOutsideServer}`),
     };
 
 
@@ -126,9 +133,6 @@ const embedInfoSuccess = {
             'Your server has sucessfully been submitted and will now be processed.',
         )
 };
-
-// Info Warn Embeds
-/*const embedInfoWarnTemplate = new EmbedBuilder().setColor(colorWarn).setFooter('Connect');*/
 
 // Info Error Embeds
 const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter({ text: "Connect" });
