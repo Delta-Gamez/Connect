@@ -17,8 +17,13 @@ https://deltagamez.ch/
 
 ## Deployment Notes:
 
-This section will quickly highlight the required files and variables needed to proceed.
+This section will quickly highlight the required files and variables needed to proceed. 
+
+### config.json
+A config.json file is required to start the bot. This file is kept internally. 
 
 ### Environment Variables
-- CLI_TOKEN: The discord bot token (can be found at discord.dev).
-- SIGNUP_FETCH_TOKEN: The token that the bot uses to send data over to a private database (you will need to ask an administrator of Connect's database to get one).
+- `DISCORD_TOKEN`: Discord App Token.  
+- `DATABASE_TOKEN`: Authentication token for database access.  
+- `STORAGE_PATH`: Path to the api stored files.
+- `DATABASE_URL`: Public URL to call the API. 
