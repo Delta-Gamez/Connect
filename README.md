@@ -14,6 +14,7 @@ https://deltagamez.ch/
 - **Leadership**: [DeltaGaming](https://github.com/DeltaGamingCH)
 - **Developer II**: [Jay B](https://github.com/kezza2k7)
 - **Developer I**: [Dmitri Gee](https://github.com/DmitriGee)
+- **Developer I**: [Djalanmixer](https://github.com/Djalanmixer)
 
 ## Deployment Notes:
 
