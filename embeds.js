@@ -15,6 +15,7 @@ const iconError = '<:DG_CO_Error:1142926009579094226> ';
 
 const embedConnectFooter = new EmbedBuilder().setFooter({ text: 'Connect' });
 const embedPartnershipFooter = new EmbedBuilder().setFooter({ text: 'Connect Partnership '});
+const embedManagementFooter = new EmbedBuilder().setFooter({ text: 'Connect Staff Management '});
 
 // Log Embeds
 const embedLog = {
@@ -45,7 +46,7 @@ const embedInfo = {
         .setTimestamp(), 
 
     Warn: new EmbedBuilder()
-        .setTitle('WARNING')
+        .setTitle(`${iconWarn} WARNING`)
         .setColor(colorWarn),
 
     Error: new EmbedBuilder()
@@ -96,7 +97,7 @@ const embedConnect = {
     };
 
 
-// Partnership Embeds /*This is still in work, please don't make any edits to it.*/
+// Partnership Embeds
 const embedPartnership = {
     Submitted: new EmbedBuilder(embedInfo.Error, embedPartnershipFooter)
         .setTitle(`${iconError} SERVER ERROR`)
@@ -104,6 +105,15 @@ const embedPartnership = {
     };
 
 
+// Staff Management Embeds
+const embedManagement = {
+    MinimumTime: new EmbedBuilder(embedInfo.Info, embedManagementFooter)
+        .setTitle('MINIMUM STAFF LEAVE TIME')
+        .setDescription('MinimumTime Embed'),
+    StaffLeaveRole: new EmbedBuilder(embedInfo.Info, embedManagementFooter)
+        .setTitle('STAFF LEAVE ROLE')
+        .setDescription('Select the role which should be assigned, as soon as a staff member is on leave.'),
+};
 
 
 // Info Success Embeds
@@ -153,6 +163,8 @@ module.exports = {
     embedLog,
     embedInfo,
     embedConnect,
+    embedPartnership,
+    embedManagement,
     embedInfoError,
     embedInfoSuccess
 };

@@ -10,7 +10,7 @@ const {
     StringSelectMenuOptionBuilder
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
-const { embedInfo, embedConnect } = require("../embeds.js");
+const { embedInfo, embedConnect, embedPartnership } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -93,12 +93,12 @@ async function PartnershipSubCommand(interaction) {
     try {
         const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
         if(confirmation.customId == 'xpartnership-enable'){
-            await PartnershipSubCommande(old, confirmation);
+            await PartnershipSubCommand(old, confirmation);
             await ChangePartnership(true, confirmation, old, false);
         } else if(confirmation.customId == 'xpartnership-disable'){
             await ChangePartnership(false, confirmation, old, true);
         } else if(confirmation.customId == 'xpartnership-edit'){
-            await PartnershipSubCommande(old, confirmation);
+            await PartnershipSubCommand(old, confirmation);
         }
     } catch (e) {
         console.log(e)
@@ -160,7 +160,7 @@ async function ChangePartnership(status, interaction, old, reply) {
     }
 }
 
-async function PartnershipSubCommande(old, interaction) {
+async function PartnershipSubCommand(old, interaction) {
     if (old.data.status != 200) {
         await StartPartnershipModal(interaction);
     } else {
@@ -192,7 +192,7 @@ async function StartPartnershipModal(interaction) {
     );
 
     if(response.data.status == 200){
-        PartnershipSubCommande(response, interaction);
+        PartnershipSubCommand(response, interaction);
     }
 }
 
