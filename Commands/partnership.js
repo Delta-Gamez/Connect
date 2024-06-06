@@ -15,6 +15,7 @@ const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
 module.exports = {
+    global: true,
     data: new SlashCommandBuilder()
         .setName("partnership")
         .setDescription("Setup Partnership"),

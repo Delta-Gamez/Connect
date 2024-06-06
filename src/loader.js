@@ -2,7 +2,7 @@ const { Client, Collection, Routes } = require("discord.js");
 const fs = require("fs");
 const { info, warn, error, nolog, success } = require("./log.js");
 const { REST } = require("@discordjs/rest");
-const { betacommands, betaserver, ignorecommands } = require("../config.json");
+const { betacommands, betaserver } = require("../config.json");
 require("dotenv").config();
 
 /**
@@ -39,12 +39,10 @@ async function load(client) {
 
             // Set a new item in the Collection with the key as the command name and the value as the exported module
             if ("data" in command && "execute" in command) {
-                if (ignorecommands.includes(file)) {
-                    client.commands.set(command.data.name, command);
-                } else {
+                if(command.global) {
                     client.globalcommands.set(command.data.name, command);
-                    client.commands.set(command.data.name, command);
                 }
+                client.commands.set(command.data.name, command);
             } else {
                 warn(
                     `The command at ${filePath} is missing a required "data" or "execute" property.`,

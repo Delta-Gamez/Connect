@@ -10,8 +10,8 @@ module.exports = {
             return interaction.reply({ content: `You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Decline/Close the Partnership Request`, ephemeral: true });
         }
         const form = new ModalBuilder()
-        .setCustomId("partnership-decline")
-        .setTitle("Decline Partnership Request");
+            .setCustomId("partnership-decline")
+            .setTitle("Decline Partnership Request");
 
         const descriptionInput = new TextInputBuilder()
             .setCustomId("partnership-decline-reason")

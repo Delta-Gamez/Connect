@@ -19,6 +19,7 @@ const UpdateDatabase = require("../utils/updateDatabase.js");
 const { data } = require("./partnership.js");
 
 module.exports = {
+    global: true,
     data: new SlashCommandBuilder()
         .setName("connect")
         .setDescription("Setup Connect"),

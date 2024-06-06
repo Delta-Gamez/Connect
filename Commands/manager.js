@@ -17,6 +17,7 @@ const disableCommandForGuild = require("../utils/disableCommandForGuild.js");
 const axios = require("axios");
 
 module.exports = {
+    global: true,
     data: new SlashCommandBuilder()
         .setName("manager")
         .setDescription("Staff Management Commands"),
