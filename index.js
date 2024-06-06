@@ -3,8 +3,6 @@ const { info, warn, success } = require("./src/log.js");
 const { load, register } = require("./src/loader.js");
 const { readdirSync } = require("fs");
 
-success("Connect is now starting.");
-
 intents = new IntentsBitField();
 intents.add(
     IntentsBitField.Flags.Guilds,
@@ -47,4 +45,4 @@ load(client).then(() => {
         register(client);
     });
 });
-success("Connect has now Started.");
+success("Connect has now started");

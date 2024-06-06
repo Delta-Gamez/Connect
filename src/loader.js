@@ -124,7 +124,7 @@ async function register(client) {
             );
         }
 
-        info(
+        success(
             `Successfully reloaded ${client.commands.size} application (/) commands.`,
         );
 
