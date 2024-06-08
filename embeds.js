@@ -103,6 +103,41 @@ const embedPartnership = {
         .setDescription('You need to be in a server to use this!'),
     };
 
+// Staff Management Embeds
+const embedManage = {
+    Management: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Please pick a Subcategory`)
+        .setDescription('These are the subcategories you can pick from.')
+        .setFields(
+            {name: 'Staff Leave', value: 'Staff Leave can help manage staff going on holiday etc.'},
+            {name: 'Promotion', value: 'Promotion is for helping u promote/demote staff members and keeping a log of these actions'}
+        ),
+    Promotion: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Promotion`)
+        .setDescription(`This is Promotion\nThis is for coolio people`),
+    PromotionDisabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Promotion`)
+        .setDescription(`This has been disabled`),
+    PromotionEdit: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Promotion`)
+        .setDescription(`This has been Edited`),
+    PromotionEnabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Promotion`)
+        .setDescription(`This has been Enabled`),
+    StaffLeave: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This is staff leave\nThis is for coolio people`),
+    StaffLeaveDisabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This has been disabled`),
+    StaffLeaveEdited: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This has been edited`),
+    StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This has been enabled`),
+
+};
 
 
 
@@ -153,6 +188,8 @@ module.exports = {
     embedLog,
     embedInfo,
     embedConnect,
+    embedPartnership,
+    embedManage,
     embedInfoError,
     embedInfoSuccess
 };

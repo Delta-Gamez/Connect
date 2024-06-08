@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js')
 
 /*
     * @param required {CommandInteraction} interaction The interaction object
@@ -6,10 +6,11 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
     * @param required {Boolean} If enabled there will have to be a selected {something} before the continue button is enabled
     * @param required {MessageEmbed} embed The embed to be sent with the menu
     * @param {Array} options The options for the select menu
+    * @param {Bool} if on it will use interaction.send instead of .update
     * @returns {Promise} A promise that resolves with the selected channel
 */
 
-async function sendMenuBuilders(interaction, component, requiremnet, embed, options) {
+async function sendMenuBuilders(interaction, component, requiremnet, embed, options, first) {
     let row1 = new ActionRowBuilder().addComponents(component);
 
     const continueButton = new ButtonBuilder()
@@ -20,11 +21,20 @@ async function sendMenuBuilders(interaction, component, requiremnet, embed, opti
 
     let row2 = new ActionRowBuilder().addComponents(continueButton);
 
-    const response = await interaction.update({
-        embeds: [embed],
-        components: [row1, row2],
-        ephemeral: true,
-    });
+    if(first){
+        interaction.reply({
+            embeds: [embed],
+            components: [row1, row2],
+            ephemeral: true,
+        });
+    } else {
+        await interaction.update({
+            embeds: [embed],
+            components: [row1, row2],
+            ephemeral: true,
+        });
+    }
+
 
     const collectorFilter = i => i.user.id === interaction.user.id;
 
@@ -38,9 +48,9 @@ async function sendMenuBuilders(interaction, component, requiremnet, embed, opti
                 collector.stop();
                 resolve([selectedChannel, i]); // Resolve the Promise with the selectedChannel
             } else {
+                row2 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
                 if(!options){
                     selectedChannel = i.values;
-                    row2 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
                     await i.update({ components: [row1, row2] });
                 } else {
                     selectedChannel = i.values[0]

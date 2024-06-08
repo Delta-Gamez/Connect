@@ -10,7 +10,8 @@ const {
     StringSelectMenuOptionBuilder
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
-const { embedConnect } = require("../embeds.js");
+const { embedPartnership, embedInfoError } = require("../embeds.js");
+const utils = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
@@ -22,20 +23,34 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
-                embeds: [embedConnect.OutsideServer],
+                embeds: [embedInfoError.ServerError],
                 ephemeral: true,
             });
             return;
         }
         if (interaction.member.id !== interaction.guild.ownerId) {
             await interaction.reply({
-                embeds: [embedConnect.ServerOwner],
+                embeds: [embedInfoError.ServerOwner],
                 ephemeral: true,
             });
             return;
         }
+        let old;
         try {
-            PartnershipSubCommand(interaction);
+            old = await axios.get(
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+                { timeout: 1000 } // Move the timeout configuration here
+            );
+        } catch (e) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerConnectionError],
+                ephemeral: true,
+                components: [],
+            });
+            return;
+        }
+        try {
+            PartnershipSubCommand(old, interaction);
         } catch (error) {
             error(error);
         }
@@ -43,19 +58,6 @@ module.exports = {
 };
 
 async function PartnershipSubCommand(interaction) {
-    let old;
-    try {
-        old = await axios.get(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-        );
-    } catch (e) {
-        await interaction.reply({
-            embeds: [embedConnect.ErrorDatabase],
-            ephemeral: true,
-            components: [],
-        });
-        return;
-    }
     
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Partnership")
@@ -135,25 +137,10 @@ async function ChangePartnership(status, interaction, old, reply) {
     }
 
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
-        MemberCount: interaction.guild.memberCount,
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         PartnerShip: status,
     };
 
-    let response = await axios.put(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    let response =  await utils.updateServer(data, interaction)
 
     console.log(response)
 

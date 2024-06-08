@@ -11,11 +11,12 @@ const {
 const { info, error } = require("../src/log.js");
 const {
     embedInfo,
+    embedInfoError,
     embedInfoSuccess,
     embedConnect,
 } = require("../embeds.js");
 const axios = require("axios");
-const UpdateDatabase = require("../utils/updateDatabase.js");
+const { updateServer } = require("../utils/utils.js");
 const { data } = require("./partnership.js");
 
 module.exports = {
@@ -39,8 +40,22 @@ module.exports = {
             });
             return;
         }
+        let old
         try {
-            DiscoverySubCommand(interaction);
+            old = await axios.get(
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+                { timeout: 1000 } // Move the timeout configuration here
+            );
+        } catch (e) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerConnectionError],
+                ephemeral: true,
+                components: [],
+            });
+            return;
+        }
+        try {
+            DiscoverySubCommand(old, interaction);
         } catch (error) {
             error(error);
         }
@@ -74,17 +89,11 @@ async function ChangeConnect(status, interaction, old, reply) {
     });
 
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
-        MemberCount: interaction.guild.memberCount,
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         Connect: status,
         ServerInvite: String(invite.url),
     };
 
-    let response = await UpdateDatabase(data)
+    let response = await updateServer(data, interaction)
 
     console.log(response)
 
@@ -98,21 +107,7 @@ async function ChangeConnect(status, interaction, old, reply) {
 }
 
 // Main Screen (Enable or Disable)
-async function DiscoverySubCommand(interaction) {
-    let old;
-    try {
-        old = await axios.get(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-        );
-    } catch (e) {
-        await interaction.reply({
-            embeds: [embedConnect.ErrorDatabase],
-            ephemeral: true,
-            components: [],
-        });
-        return;
-    }
-    
+async function DiscoverySubCommand(old, interaction) {
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Connect")
         .setDescription("Would you like to setup the Connect module?")

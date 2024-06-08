@@ -3,7 +3,7 @@ const { Interaction, EmbedBuilder } = require("discord.js");
 const { info, warn, error, nolog } = require("../src/log.js");
 const { embedConnect } = require("../embeds.js");
 const axios = require("axios");
-const UpdateDatabase = require("../utils/updateDatabase.js");
+const { updateServer, createServer, getServer } = require("../utils/utils.js");
 
 module.exports = {
     data: {
@@ -26,12 +26,10 @@ module.exports = {
             return;
         }
         
-        let old = await axios.get(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-        );
+        let old = await getServer(interaction)
 
-        if(old.data.exists){
-            if(old.data.server.ShortDesc > 19){
+        if(old.exists){
+            if(old.server.ShortDesc > 19){
                 await interaction.reply({
                     embeds: [embedConnect.DescriptionUpdated], 
                     ephemeral: true,
@@ -44,7 +42,7 @@ module.exports = {
             
             let data = await createData(interaction);
 
-            await UpdateDatabase(data);
+            await updateServer(data, interaction);
         } else {
             info("Modal addserver Submitted for Processing.");
             await interaction.reply({
@@ -63,7 +61,7 @@ module.exports = {
                 `A new server will be submitted for approval. The following server data will be sent: ${JSON.stringify(data)}`,
             );
             try {
-                createServer(interaction, data);
+                await createServer(data, interaction);
             } catch (e) {
                 // Catch synchronous errors
                 error(e);
@@ -82,46 +80,12 @@ async function createData(interaction) {
         unique: true,
     });
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
         ShortDesc: String(
             interaction.fields.getTextInputValue("addserver-set-description"),
         ),
-        MemberCount: interaction.guild.memberCount,
         ServerInvite: String(invite.url),
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         Connect: true,
     };
 
     return data;
-}
-async function createServer(interaction, data) {
-    await axios
-        .post(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-            data,
-            {
-                headers: {
-                    Authorization: `${process.env.DATABASE_TOKEN}`,
-                },
-                withCredentials: true,
-            },
-        )
-        .then((response) => {
-            if (response.status != 200) {
-                throw new Error(
-                    `Request failed with status ${response.status} and body ${response.body}`,
-                );
-            }
-        })
-        .catch((e) => {
-            error(e);
-            (async () => {
-                interaction.editReply({
-                    embeds: [embedConnect.ErrorDatabase],
-                });
-            })();
-        });
 }
