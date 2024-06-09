@@ -166,12 +166,12 @@ async function DiscoverySubCommand(old, interaction) {
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Change your community on our website.");
+        .setTitle('Update your Community description');
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`Describe your server to us.`)
+        .setLabel('YOUR COMMUNITY DESCRIPTION')
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
