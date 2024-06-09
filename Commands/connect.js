@@ -6,13 +6,11 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle,
-} = require("discord.js");
+    ButtonStyle} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
     embedInfo,
     embedInfoError,
-    embedInfoSuccess,
     embedConnect,
 } = require("../embeds.js");
 const axios = require("axios");
@@ -189,17 +187,17 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Add your community on our website.");
+        .setTitle("Create your Community description");
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`Describe your server to us.`)
+        .setLabel(`YOUR COMMUNITY DESCRIPTION`)
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write your description...");
+        .setPlaceholder("Write a few sentences about your community...");
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);
