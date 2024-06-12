@@ -1,5 +1,6 @@
 /*const { timeStamp } = require('console');*/
-const { EmbedBuilder, Embed } = require('discord.js');
+const { EmbedBuilder, Embed } = require('discord.js')
+const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
@@ -136,7 +137,43 @@ const embedManage = {
     StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been enabled`),
+    StaffLeavePost: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This has been posted`),
+    StaffLeaveReviewFormat: async function (interaction, StaffLeaveID){
+        let data
+        try {
+            const response = await axios.get(
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/staffleave/${StaffLeaveID}`,{
+                    timeout: 2500
+                }
+            );
+    
+            data = response.data.staffleave;
+        } catch (error) {
+            console.error(error)
+            if(interaction.customId){
+                await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
+            } else {
+                await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
+            }
+            return;
+        }
+        const startdate = new Date(data.StartDate);
+        const startdatetext = `<t:${Math.floor(startdate.getTime() / 1000)}:F>`
 
+        const enddate = new Date(data.EndDate);
+        const enddatetext = `<t:${Math.floor(enddate.getTime() / 1000)}:F>`
+
+        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+            .setTitle(`Staff Leave`)
+            .setDescription(`<@${data.UserID}> has requested leave for "${data.Reason}"\n from ${startdatetext} to ${enddatetext}.\nStatus: ${data.Status}`)
+            .setFooter({text: `LOA ID: ${data.StaffLeaveID} SERVER ID: ${data.ServerID}`})
+        return embed
+    },
+    StaffLeaveSubmitted: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`your Staff Leave Request has been submitted`),
 };
 
 
