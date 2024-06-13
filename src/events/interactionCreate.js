@@ -66,7 +66,10 @@ module.exports = {
             if (interaction.customId.startsWith("x")) {
                 return;
             }
-            const button = client.buttons.get(interaction.customId);
+            let customid = interaction.customId
+            if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
+            
+            const button = client.buttons.get(customid);
             if (!button) {
                 success(`Button Requested: ${interaction.customId} (Not Found)`);
                 await interaction.reply({
@@ -85,7 +88,9 @@ module.exports = {
                 );
             }
         } else if (interaction.isModalSubmit()) {
-            const modal = client.modals.get(interaction.customId);
+            let customid = interaction.customId
+            if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
+            const modal = client.modals.get(customid);
             if (!modal) {
                 success(`Modal Requested: ${interaction.customId} (Not Found)`);
                 await interaction.reply({

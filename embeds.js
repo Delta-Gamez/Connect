@@ -164,21 +164,54 @@ const embedManage = {
             }
             return;
         }
-        const startdate = new Date(data.StartDate);
-        const startdatetext = `<t:${Math.floor(startdate.getTime() / 1000)}:F>`
+        let desc = ""
+        if(data.UserID){
+            desc += `User: <@${data.UserID}>\n`;
+        }
+        if(data.Reason){
+            desc += `Reason: ${data.Reason}\n`;
+        }
+        if(data.StartDate){
+            const startTimestampInSeconds = Math.floor(new Date(data.StartDate).getTime() / 1000);
+            desc += `Start Date: <t:${startTimestampInSeconds}:D>\n`;
+        }
+        if (data.EndDate) {
+            const endTimestampInSeconds = Math.floor(new Date(data.EndDate).getTime() / 1000);
+            desc += `End Date: <t:${endTimestampInSeconds}:D>\n`;
+        }
+        if(data.Status){
+            desc += `Status: ${data.Status}\n`;
+        }
+        if(data.ApprovedBy){
+            desc += `${data.Status == "Approved" ? "Approved" : "Declined"} By: <@${data.ApprovedBy}>\n`;
+        }
+        if(data.ApprovedDate){
+            const approvedTimestampInSeconds = Math.floor(new Date(data.ApprovedDate).getTime() / 1000);
+            desc += `${data.Status == "Approved" ? "Approved" : "Declined"} Date: <t:${approvedTimestampInSeconds}:D>\n`;
+        }
+        if(data.DeclineReason !== "No Reason Provided"){
+            desc += `Decline Reason: ${data.DeclineReason}\n`;
+        }
 
-        const enddate = new Date(data.EndDate);
-        const enddatetext = `<t:${Math.floor(enddate.getTime() / 1000)}:F>`
 
         let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
             .setTitle(`Staff Leave`)
-            .setDescription(`<@${data.UserID}> has requested leave for "${data.Reason}"\n from ${startdatetext} to ${enddatetext}.\nStatus: ${data.Status}`)
-            .setFooter({text: `LOA ID: ${data.StaffLeaveID} SERVER ID: ${data.ServerID}`})
+            .setDescription(desc)
+            .setFooter({text: `Staff Leave ID: ${data.StaffLeaveID}`})
         return embed
     },
     StaffLeaveSubmitted: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
         .setTitle(`Staff Leave`)
         .setDescription(`your Staff Leave Request has been submitted`),
+    StaffLeaveApproved: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`You have approved this Staff Leave Request`),
+    StaffLeaveDeclined: async function StaffLeaveDeclined(reason){
+        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+            .setTitle(`Staff Leave`)
+            .setDescription(`You have declined this Staff Leave Request for ${reason}.`)
+        return embed
+    }
 };
 
 

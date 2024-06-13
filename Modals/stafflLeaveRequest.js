@@ -1,4 +1,5 @@
 const { checkDateFormat, createStaffLeave, getServer } = require("../utils/utils.js");
+const { ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const { embedManage } = require("../embeds.js");
 
 module.exports = {
@@ -26,8 +27,8 @@ module.exports = {
         }
 
 
-        const staffLeaveStartDateFormatted = new Date(convertDateFormat(staffLeaveStartDate));
-        const staffLeaveEndDateFormatted = new Date(convertDateFormat(staffLeaveEndDate));
+        const staffLeaveStartDateFormatted = new Date(convertDateFormat(staffLeaveStartDate)).toISOString();
+        const staffLeaveEndDateFormatted = new Date(convertDateFormat(staffLeaveEndDate)).toISOString();
         
         const data = {
             Reason: staffLeaveReason,
@@ -48,10 +49,22 @@ module.exports = {
             return interaction.reply({content: `Unable to find server.`, ephemeral: true})
         }
 
+        const approvebutton = new ButtonBuilder()
+            .setCustomId(`staffleaveapprove-${staffleave.StaffLeaveID}`)
+            .setLabel("Approve")
+            .setStyle(ButtonStyle.Success)
+
+        const declinebutton = new ButtonBuilder()
+            .setCustomId(`staffleavedecline-${staffleave.StaffLeaveID}`)
+            .setLabel("Decline")
+            .setStyle(ButtonStyle.Danger)
+
+        const row = new ActionRowBuilder().addComponents(approvebutton, declinebutton)
+
         if(server.server.RequestStaffLeaveChannel){
             channel = await interaction.guild.channels.cache.get(server.server.RequestStaffLeaveChannel)
             if(channel){
-                await channel.send({embeds: [embed]});
+                await channel.send({embeds: [embed], components: [row]});
             }
             await interaction.reply({embeds: [embedManage.StaffLeaveSubmitted], ephemeral: true});
         } else {

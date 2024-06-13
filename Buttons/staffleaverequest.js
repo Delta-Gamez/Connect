@@ -27,7 +27,7 @@ module.exports = {
             .setPlaceholder("12-06-2024")
             .setRequired(true)
             .setStyle(1)
-            .setPlaceholder("Input a data in the format of DD/MM/YYYY");
+            .setPlaceholder("Input a data in the format of DD/MM/YYYY UTC");
 
         const endDateInput = new TextInputBuilder()
             .setCustomId("staffleaverequest-enddate")
@@ -37,7 +37,7 @@ module.exports = {
             .setPlaceholder("12-06-2024")
             .setRequired(true)
             .setStyle(1)
-            .setPlaceholder("Input a data in the format of DD/MM/YYYY");
+            .setPlaceholder("Input a data in the format of DD/MM/YYYY UTC");
 
         const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
         const actionRow2 = new ActionRowBuilder().addComponents(startDateInput);
