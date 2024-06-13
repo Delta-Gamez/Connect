@@ -47,15 +47,21 @@ const embedInfo = {
 
     Warn: new EmbedBuilder()
         .setTitle('WARNING')
-        .setColor(colorWarn),
+        .setColor(colorWarn)
+        .setFooter({ text: 'Connect'})
+        .setTimestamp(),
 
     Error: new EmbedBuilder()
         .setTitle(`${iconError} ERROR`)
-        .setColor(colorError),
+        .setColor(colorError)
+        .setFooter({ text: 'Connect'})
+        .setTimestamp(),
 
     Info: new EmbedBuilder()
         .setTitle('INFO')
-        .setColor(colorInfo),
+        .setColor(colorInfo)
+        .setFooter({ text: 'Connect'})
+        .setTimestamp(),
 }
 
 
