@@ -7,48 +7,56 @@ const {
     ChannelSelectMenuBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder
-} = require("discord.js");
+    StringSelectMenuOptionBuilder} = require("discord.js");
 const { info, error } = require("../src/log.js");
-const { embedInfo, embedConnect } = require("../embeds.js");
+const { embedPartnership, embedInfoError } = require("../embeds.js");
+const utils = require("../utils/utils.js");
+const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
 module.exports = {
+    global: true,
     data: new SlashCommandBuilder()
         .setName("partnership")
         .setDescription("Setup Partnership"),
     async execute(interaction) {
-        await IsServerAndOwnerCheck(interaction);
+        if (!interaction.guildId) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerError],
+                ephemeral: true,
+            });
+            return;
+        }
+        if (interaction.member.id !== interaction.guild.ownerId) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerOwner],
+                ephemeral: true,
+            });
+            return;
+        }
+        let old;
         try {
-            PartnershipSubCommand(interaction);
+            old = await axios.get(
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+                { timeout: 1000 } // Move the timeout configuration here
+            );
+        } catch (e) {
+            await interaction.reply({
+                embeds: [embedInfoError.ServerConnectionError],
+                ephemeral: true,
+                components: [],
+            });
+            return;
+        }
+        try {
+            PartnershipSubCommand(old, interaction);
         } catch (error) {
             error(error);
         }
     },
 };
 
-// Checks that the user has permssions to run the command
-async function IsServerAndOwnerCheck(interaction) {
-    if (!interaction.guildId) {
-        await interaction.reply({
-            embeds: [embedConnect.OutsideServer],
-            ephemeral: true,
-        });
-        return;
-    }
-    if (interaction.member.id !== interaction.guild.ownerId) {
-        await interaction.reply({
-            embeds: [embedConnect.ServerOwner],
-            ephemeral: true,
-        });
-        return;
-    }
-}
-
 async function PartnershipSubCommand(interaction) {
-    let old = await axios.get(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    );
     
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Partnership")
@@ -101,7 +109,6 @@ async function PartnershipSubCommand(interaction) {
             await PartnershipSubCommande(old, confirmation);
         }
     } catch (e) {
-        console.log(e)
         if(e.size === 0){
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
         }
@@ -109,7 +116,7 @@ async function PartnershipSubCommand(interaction) {
 }
 
 async function ChangePartnership(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+    const removedembed = new EmbedBuilder()
         .setTitle("Partnership")
         .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
     
@@ -129,25 +136,10 @@ async function ChangePartnership(status, interaction, old, reply) {
     }
 
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
-        MemberCount: interaction.guild.memberCount,
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         PartnerShip: status,
     };
 
-    let response = await axios.put(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    let response =  await utils.updateServer(data, interaction)
 
     console.log(response)
 
@@ -176,8 +168,6 @@ async function StartPartnershipModal(interaction) {
         ServerIcon: interaction.guild.iconURL(),
         ServerBanner: interaction.guild.bannerURL(),
         ServerOwner: interaction.guild.ownerId,
-        Connect: false,
-        PartnerShip: true,
     };
 
     const response = await axios.post(
@@ -196,69 +186,6 @@ async function StartPartnershipModal(interaction) {
     }
 }
 
-async function coll(interaction, component, requiremnet, embed, options) {
-    let row1 = new ActionRowBuilder().addComponents(component);
-
-    const continueButton = new ButtonBuilder()
-    .setCustomId("xcontinue")
-    .setLabel(">")
-    .setStyle(ButtonStyle.Primary)
-    .setDisabled(requiremnet);
-
-    let row2 = new ActionRowBuilder().addComponents(continueButton);
-
-    const response = await interaction.update({
-        embeds: [embed],
-        components: [row1, row2],
-        ephemeral: true,
-    });
-
-    const collectorFilter = i => i.user.id === interaction.user.id;
-
-    const collector = interaction.channel.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
-
-    let selectedChannel = null;
-
-    return new Promise((resolve, reject) => {
-        collector.on('collect', async i => {
-            if (i.customId === 'xcontinue') {
-                collector.stop();
-                resolve([selectedChannel, i]); // Resolve the Promise with the selectedChannel
-            } else {
-                if(!options){
-                    selectedChannel = i.values;
-                    row2 = new ActionRowBuilder().addComponents(continueButton.setDisabled(false))
-                    await i.update({ components: [row1, row2] });
-                } else {
-                    selectedChannel = i.values[0]
-                    const updatedMemberRequirementOptions = options.map(option =>
-                        option.data.value === i.values[0] 
-                            ? { ...option.data, default: true } 
-                            : option.data
-                    );
-        
-                    row1 = new ActionRowBuilder().addComponents(
-                        new StringSelectMenuBuilder()
-                            .setCustomId('xmember-requirements')
-                            .setPlaceholder('Select a Member Requirement')
-                            .addOptions(updatedMemberRequirementOptions)
-                    );
-
-                    await i.update({ components: [row1, row2] });
-                }
-            }
-        });
-
-        collector.on('end', async collected => {
-            if (collected.size === 0) {
-                console.log(collected)
-                console.log(`RESET`)
-                await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-                reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
-            }
-        });
-    });
-}
 async function SendPartnerShipEmbed(interaction) {
 
     const select = new ChannelSelectMenuBuilder()
@@ -269,7 +196,7 @@ async function SendPartnerShipEmbed(interaction) {
     const selectembed = new EmbedBuilder()
     .setTitle("Pick a Channel");
 
-    let channelid = await coll(interaction, select, true, selectembed);
+    let channelid = await sendMenuBuilders(interaction, select, true, selectembed);
     interaction = channelid[1];
     channelid = channelid[0][0];
 
@@ -282,7 +209,7 @@ async function SendPartnerShipEmbed(interaction) {
     const roleembed = new EmbedBuilder()
     .setTitle("Pick a Role");
 
-    let roles = await coll(interaction, selectrole, false, roleembed);
+    let roles = await sendMenuBuilders(interaction, selectrole, false, roleembed);
     interaction = roles[1];
     roles = roles[0];
     let rolesText = ""
@@ -331,7 +258,7 @@ async function SendPartnerShipEmbed(interaction) {
     const memberRequirementembed = new EmbedBuilder()
         .setTitle('Member Requirements');
 
-    let memberRequirement = await coll(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+    let memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
     interaction = memberRequirement[1];
     memberRequirement = memberRequirement[0];
     if(memberRequirement[0] == 'none'){
