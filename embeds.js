@@ -61,6 +61,11 @@ const embedInfo = {
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
 
 const embedConnect = {
+    Connect: new EmbedBuilder(embedInfo.Info, embedConnectFooter)
+        .setTitle(`${iconSuccess} CONNECT`)
+        .setDescription(`Connect your community to the best advertising platform. 
+            \n\n
+            Setting up this module allows your community to be displayed on the [Connect platform](https://connect.deltagamez.ch).`),
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
         .setDescription('Your community description has been updated.'),

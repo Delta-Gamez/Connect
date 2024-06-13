@@ -95,11 +95,6 @@ async function DiscoverySubCommand(interaction) {
         `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
     );
     
-    const embedModulePartnership = new EmbedBuilder()
-        .setTitle("Connect")
-        .setDescription("Would you like to setup the Connect module?")
-        .setColor("#004898");
-    
     const Connect_Enable = new ButtonBuilder()
         .setCustomId("xconnect-enable")
         .setLabel("Enable")
@@ -129,7 +124,7 @@ async function DiscoverySubCommand(interaction) {
     }
 
     const response = await interaction.reply({
-        embeds: [embedModulePartnership],
+        embeds: [embedConnect.Connect],
         components: [row],
         ephemeral: true,
     });
