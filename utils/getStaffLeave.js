@@ -10,7 +10,7 @@ const timeout = 2500
 async function getStaffLeave(interaction, StaffLeaveID) {
     try {
         const response = await axios.get(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/staffleave/find/${StaffLeaveID}`,{
+            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/staffmanagement/staffleave/${StaffLeaveID}`,{
                 timeout: timeout
             }
         );

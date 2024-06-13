@@ -146,20 +146,24 @@ async function DiscoverySubCommand(old, interaction) {
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
-    try {
-        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
-        if(confirmation.customId == 'xconnect-enable'){
-            await StartDiscoveryModal(confirmation);
-        } else if(confirmation.customId == 'xconnect-disable'){
-            await ChangeConnect(false, confirmation, old, true);
-        } else if(confirmation.customId == 'xconnect-edit'){
-            await UpdateDiscoverModal(confirmation);
+    const collector = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+
+    collector.on('collect', async i => {
+        if(i.customId == 'xconnect-enable'){
+            await StartDiscoveryModal(i);
+        } else if(i.customId == 'xconnect-disable'){
+            collector.stop();
+            await ChangeConnect(false, i, old, true);
+        } else if(i.customId == 'xconnect-edit'){
+            await UpdateDiscoverModal(i);
         }
-    } catch (e) {
-        if(e.size === 0){
+    });
+
+    collector.on('end', async collected => {
+        if (collected.size === 0) {
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
         }
-    }
+    });
 }
 
 // Sends the Modal to the user for extra informaton

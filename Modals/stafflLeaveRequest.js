@@ -23,11 +23,17 @@ module.exports = {
             UserID: interaction.member.id,
         }
         staffleave = await createStaffLeave(data, interaction)
+        if(!staffleave){
+            return interaction.reply({content: `Unable to create StaffLeave.`, ephemeral: true})
+        }
         staffleave = staffleave.data.staffleave
         
         embed = await embedManage.StaffLeaveReviewFormat(interaction, staffleave.StaffLeaveID)
 
         server = await getServer(interaction)
+        if(!server){
+            return interaction.reply({content: `Unable to find server.`, ephemeral: true})
+        }
 
         if(server.server.RequestStaffLeaveChannel){
             channel = await interaction.guild.channels.cache.get(server.server.RequestStaffLeaveChannel)

@@ -14,7 +14,7 @@ async function createStaffLeave(data, interaction) {
 
     try {
         const response = await axios.post(
-            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/staffleave`,
+            `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/staffmanagement/staffleave`,
             data,
             {
                 headers: {

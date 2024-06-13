@@ -144,7 +144,7 @@ const embedManage = {
         let data
         try {
             const response = await axios.get(
-                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/staffleave/${StaffLeaveID}`,{
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/staffmanagement/staffleave/${StaffLeaveID}`,{
                     timeout: 2500
                 }
             );
