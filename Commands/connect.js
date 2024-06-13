@@ -6,19 +6,19 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle,
-} = require("discord.js");
+    ButtonStyle } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
     embedInfoError,
     embedInfoSuccess,
-} = require("../embeds.js");
+    embedConnect } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
+    global: true,
     data: new SlashCommandBuilder()
-        .setName("connect")
-        .setDescription("Advertise your community."),
+        .setName('connect')
+        .setDescription('Advertise your community.'),
 
     async execute(interaction) {
         await IsServerAndOwnerCheck(interaction);
@@ -38,7 +38,7 @@ async function ChangeConnect(status, interaction, old, reply) {
     if(reply) {
         if(!old.data.exists){
             await interaction.update({
-                embeds: [removedembed],
+                embeds: [embedConnect.ConnectEnabled(status)],
                 ephemeral: true,
                 components: [],
             });
