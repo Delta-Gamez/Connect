@@ -6,54 +6,24 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle} = require("discord.js");
+    ButtonStyle,
+} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
-    embedInfo,
     embedInfoError,
-    embedConnect,
+    embedInfoSuccess,
 } = require("../embeds.js");
 const axios = require("axios");
-const { updateServer } = require("../utils/utils.js");
-const { data } = require("./partnership.js");
 
 module.exports = {
-    global: true,
     data: new SlashCommandBuilder()
         .setName("connect")
-        .setDescription("Setup Connect"),
+        .setDescription("Connect your community to the best advertising platform."),
 
     async execute(interaction) {
-        if (!interaction.guildId) {
-            await interaction.reply({
-                embeds: [embedConnect.OutsideServer],
-                ephemeral: true,
-            });
-            return;
-        }
-        if (interaction.member.id !== interaction.guild.ownerId) {
-            await interaction.reply({
-                embeds: [embedConnect.ServerOwner],
-                ephemeral: true,
-            });
-            return;
-        }
-        let old
+        await IsServerAndOwnerCheck(interaction);
         try {
-            old = await axios.get(
-                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-                { timeout: 1000 } // Move the timeout configuration here
-            );
-        } catch (e) {
-            await interaction.reply({
-                embeds: [embedInfoError.ServerConnectionError],
-                ephemeral: true,
-                components: [],
-            });
-            return;
-        }
-        try {
-            DiscoverySubCommand(old, interaction);
+            DiscoverySubCommand(interaction);
         } catch (error) {
             error(error);
         }
@@ -61,7 +31,7 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfo.Success)
+    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
         .setTitle("Connect")
         .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
     
@@ -87,11 +57,26 @@ async function ChangeConnect(status, interaction, old, reply) {
     });
 
     data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
         Connect: status,
         ServerInvite: String(invite.url),
     };
 
-    let response = await updateServer(data, interaction)
+    let response = await axios.put(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
+        data,
+        {
+            headers: {
+                Authorization: `${process.env.DATABASE_TOKEN}`,
+            },
+            withCredentials: true,
+        },
+    );
 
     console.log(response)
 
@@ -105,7 +90,11 @@ async function ChangeConnect(status, interaction, old, reply) {
 }
 
 // Main Screen (Enable or Disable)
-async function DiscoverySubCommand(old, interaction) {
+async function DiscoverySubCommand(interaction) {
+    let old = await axios.get(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+    );
+    
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Connect")
         .setDescription("Would you like to setup the Connect module?")
@@ -156,9 +145,26 @@ async function DiscoverySubCommand(old, interaction) {
             await UpdateDiscoverModal(confirmation);
         }
     } catch (e) {
-        if(e.size === 0){
-            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
-        }
+        console.error(e)
+        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+    }
+}
+
+// Checks that the user has permssions to run the command
+async function IsServerAndOwnerCheck(interaction) {
+    if (!interaction.guildId) {
+        await interaction.reply({
+            embeds: [embedInfoError.ServerError],
+            ephemeral: true,
+        });
+        return;
+    }
+    if (interaction.member.id !== interaction.guild.ownerId) {
+        await interaction.reply({
+            embeds: [embedInfoError.ServerOwner],
+            ephemeral: true,
+        });
+        return;
     }
 }
 
@@ -166,12 +172,12 @@ async function DiscoverySubCommand(old, interaction) {
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle('Update your Community description');
+        .setTitle("Change your community on our website.");
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel('YOUR COMMUNITY DESCRIPTION')
+        .setLabel(`Describe your server to us.`)
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
@@ -187,17 +193,17 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Create your Community description");
+        .setTitle("Add your community on our website.");
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`YOUR COMMUNITY DESCRIPTION`)
+        .setLabel(`Describe your server to us.`)
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write a few sentences about your community...");
+        .setPlaceholder("Write your description...");
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);
