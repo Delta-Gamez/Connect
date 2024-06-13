@@ -8,22 +8,35 @@ module.exports = {
         description: "Process StaffLeave Requests.",
     },
     async execute(interaction) {
-        const staffLeaveReason = interaction.fields.getTextInputValue("staffleaverequest-reason")
-        const staffLeaveStartDate = interaction.fields.getTextInputValue("staffleaverequest-startdate")
-        const staffLeaveEndDate = interaction.fields.getTextInputValue("staffleaverequest-enddate")
-
-        if (!checkDateFormat(staffLeaveStartDate) || !checkDateFormat(staffLeaveEndDate)) {
-            return interaction.reply({ content: "Invalid date format. Please use DD/MM/YYYY", ephemeral: true });
+        const staffLeaveReason = await interaction.fields.getTextInputValue("staffleaverequest-reason")
+        const staffLeaveStartDate = await interaction.fields.getTextInputValue("staffleaverequest-startdate")
+        const staffLeaveEndDate = await interaction.fields.getTextInputValue("staffleaverequest-enddate")
+    
+        if (!staffLeaveReason || !staffLeaveStartDate || !staffLeaveEndDate) {
+            interaction.reply({ content: "Please fill in all fields.", ephemeral: true });
+            return;
         }
 
+        const leavestartformat = await checkDateFormat(staffLeaveStartDate)
+        const leaveendformat = await checkDateFormat(staffLeaveEndDate)
+
+        if (!leavestartformat || !leaveendformat) {
+            interaction.reply({ content: "Invalid date format. Please use DD/MM/YYYY", ephemeral: true });
+            return;
+        }
+
+
+        const staffLeaveStartDateFormatted = new Date(convertDateFormat(staffLeaveStartDate));
+        const staffLeaveEndDateFormatted = new Date(convertDateFormat(staffLeaveEndDate));
+        
         const data = {
             Reason: staffLeaveReason,
-            StartDate: staffLeaveStartDate,
-            EndDate: staffLeaveEndDate,
+            StartDate: new Date(staffLeaveStartDateFormatted),
+            EndDate: new Date(staffLeaveEndDateFormatted),
             UserID: interaction.member.id,
         }
         staffleave = await createStaffLeave(data, interaction)
-        if(!staffleave){
+        if(!staffleave.data.staffleave){
             return interaction.reply({content: `Unable to create StaffLeave.`, ephemeral: true})
         }
         staffleave = staffleave.data.staffleave
@@ -47,3 +60,8 @@ module.exports = {
         
     }
 };
+
+function convertDateFormat(inputDate) {
+    let [day, month, year] = inputDate.split("/");
+    return `${month}/${day}/${year}`;
+}

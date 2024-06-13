@@ -157,7 +157,6 @@ const embedManage = {
     
             data = response.data.staffleave;
         } catch (error) {
-            console.error(error)
             if(interaction.customId){
                 await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
             } else {

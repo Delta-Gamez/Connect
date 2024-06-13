@@ -6,6 +6,7 @@ config.json
 .breakpoints
 replit_zip_error_log.txt
 cookie
+notes
 
 # Packager files
 .local

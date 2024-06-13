@@ -6,7 +6,8 @@ const {
     StringSelectMenuOptionBuilder,
     ChannelSelectMenuBuilder,
     ActionRowBuilder,
-    ButtonBuilder
+    ButtonBuilder,
+    PermissionFlagsBits
 } = require("discord.js");
 const { embedInfoError, embedManage } = require("../embeds.js");
 const { info, warn, error } = require("../src/log.js");
@@ -17,7 +18,8 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName("manager")
-        .setDescription("Staff Management Commands"),
+        .setDescription("Staff Management Commands")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({

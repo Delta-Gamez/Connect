@@ -7,7 +7,8 @@ const {
     ChannelSelectMenuBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder
+    StringSelectMenuOptionBuilder,
+    PermissionFlagsBits
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError } = require("../embeds.js");
@@ -19,7 +20,8 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName("partnership")
-        .setDescription("Setup Partnership"),
+        .setDescription("Setup Partnership")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({

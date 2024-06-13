@@ -6,7 +6,8 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle} = require("discord.js");
+    ButtonStyle,
+    PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
     embedInfo,
@@ -21,7 +22,8 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName("connect")
-        .setDescription("Setup Connect"),
+        .setDescription("Setup Connect")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
         if (!interaction.guildId) {
