@@ -18,7 +18,7 @@ const axios = require("axios");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("connect")
-        .setDescription("Connect your community to the best advertising platform."),
+        .setDescription("Advertise your community."),
 
     async execute(interaction) {
         await IsServerAndOwnerCheck(interaction);
