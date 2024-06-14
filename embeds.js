@@ -99,10 +99,12 @@ const embedConnect = {
         .setDescription('Error'),
     OutsideServer: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('You need to be in a server to use this!'),
+        .setDescription('You need to be in a server to use this command.'),
     ServerOwner: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ERROR`)
-        .setDescription('Only the server owner can run this command.'),
+        .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
+        .setTimestamp()
+        .setFooter(connectFooter),
     ModalSumbit: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} COMMUNITY SUBMITTED`)
         .setDescription('Your community has sucessfully been submitted and will now be processed.'),
@@ -122,9 +124,9 @@ const embedConnect = {
             'Database could not be reached.\n Please try again later or contact support.',
         ),
     ConnectEnabled: async function ConnectEnabled(status){
-        const embed = new EmbedBuilder(embedInfo.Info)
+        const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`)
+            .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.`)
             .setTimestamp()
             .setFooter(connectFooter)
         return embed

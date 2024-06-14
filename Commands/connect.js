@@ -31,10 +31,10 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfoSuccess.Template)
+    /*onst removedembed = new EmbedBuilder(embedInfoSuccess.Template)
         .setTitle("Connect")
         .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
-    
+    */
     if(reply) {
         if(!old.data.exists){
             await interaction.update({
@@ -82,7 +82,7 @@ async function ChangeConnect(status, interaction, old, reply) {
 
     if(reply){
         await interaction.update({
-            embeds: [removedembed],
+            embeds: [embedConnect.ConnectEnabled(status)],
             ephemeral: true,
             components: [],
         });
@@ -124,7 +124,7 @@ async function DiscoverySubCommand(interaction) {
     }
 
     const response = await interaction.reply({
-        embeds: [embedConnect.ConnectExpanded],
+        embeds: [embedConnect.Connect],
         components: [row],
         ephemeral: true,
     });
@@ -149,14 +149,14 @@ async function DiscoverySubCommand(interaction) {
 async function IsServerAndOwnerCheck(interaction) {
     if (!interaction.guildId) {
         await interaction.reply({
-            embeds: [embedInfoError.ServerError],
+            embeds: [embedConnect.ServerError],
             ephemeral: true,
         });
         return;
     }
     if (interaction.member.id !== interaction.guild.ownerId) {
         await interaction.reply({
-            embeds: [embedInfoError.ServerOwner],
+            embeds: [embedConnect.ServerOwner],
             ephemeral: true,
         });
         return;
@@ -167,7 +167,7 @@ async function IsServerAndOwnerCheck(interaction) {
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId('addserver-submit')
-        .setTitle('Edit Community description');
+        .setTitle('Edit community description');
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId('addserver-set-description')
@@ -188,7 +188,7 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle('Set a Community description');
+        .setTitle('Set a community description');
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
