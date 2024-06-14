@@ -46,20 +46,22 @@ const embedInfo = {
     Success: new EmbedBuilder()
         .setTitle('SUCCESS')
         .setColor(colorSuccess)
-        .setFooter({ text: 'Connect'})
         .setTimestamp(), 
 
     Warn: new EmbedBuilder()
         .setTitle('WARNING')
-        .setColor(colorWarn),
+        .setColor(colorWarn)
+        .setTimestamp(), 
 
     Error: new EmbedBuilder()
         .setTitle(`${iconError} ERROR`)
-        .setColor(colorError),
+        .setColor(colorError)
+        .setTimestamp(), 
 
     Info: new EmbedBuilder()
         .setTitle('INFO')
-        .setColor(colorInfo),
+        .setColor(colorInfo)
+        .setTimestamp()
 }
 
 
@@ -75,7 +77,6 @@ const embedConnect = {
             \u200B
             `)
         .addFields(moduleDisabled)
-        .setTimestamp()
         .setFooter(connectFooter),
     ConnectExpanded: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconConnect} CONNECT`)
@@ -89,45 +90,50 @@ const embedConnect = {
             { name: 'COMMUNITY INFORMATION', 
                 value: `**<guildName>**
                 **<description>**
-                **MEMBERS**: <memberCount> \n\u200B` }, moduleEnabled)
-        .setTimestamp()
+                **MEMBERS**: <memberCount>
+                **INVITE**: <invite-link>\n\u200B` }, moduleEnabled)
         .setFooter(connectFooter),
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-        .setDescription('Your community description has been updated.'),
+        .setDescription('Your community description has been updated.')
+        .setFooter(connectFooter),
     Error: new EmbedBuilder(embedInfo.Error)
-        .setDescription('Error'),
+        .setDescription('Error')
+        .setFooter(connectFooter),
     OutsideServer: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('You need to be in a server to use this command.'),
+        .setDescription('You need to be in a server to use this command.')
+        .setFooter(connectFooter),
     ServerOwner: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ERROR`)
         .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
-        .setTimestamp()
         .setFooter(connectFooter),
-    ModalSumbit: new EmbedBuilder(embedInfo.Success)
+    ModalSumbit: new EmbedBuilder(embedInfo.Success) //Modal submit should be replaced with ConnectEnabled
         .setTitle(`${iconSuccess} COMMUNITY SUBMITTED`)
-        .setDescription('Your community has sucessfully been submitted and will now be processed.'),
+        .setDescription('Your community has sucessfully been submitted and will now be processed.')
+        .setFooter(connectFooter),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your form.\n Please try again later.',
-        ),
+        .setDescription('An error occurred while processing your form.\n Please try again later.')
+        .setFooter(connectFooter),
     Process: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your request.\n Please try again later.',
-        ),
+        .setDescription('An error occurred while processing your request.\n Please try again later.')
+        .setFooter(connectFooter),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'Database could not be reached.\n Please try again later or contact support.',
-        ),
+        .setDescription('Database could not be reached.\n Please try again later or contact support.')
+        .setFooter(connectFooter),
     ConnectEnabled: async function ConnectEnabled(status){
         const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.`)
-            .setTimestamp()
+            .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.\n\u200B`)
+            .addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**<guildName>**
+                **<description>**
+                **MEMBERS**: <memberCount>
+                **INVITE**: <invite-link>`})
             .setFooter(connectFooter)
         return embed
     }
@@ -136,9 +142,11 @@ const embedConnect = {
 
 // Partnership Embeds /*This is still in work, please don't make any edits to it.*/
 const embedPartnership = {
-    Submitted: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} SERVER ERROR`)
-        .setDescription('You need to be in a server to use this!'),
+    Submitted: new EmbedBuilder(embedInfo.Success)
+        .setTitle(`${iconSuccess} ENABLED`)
+        .setDescription('Partnerships has successfully been set up and enabled\n')
+        .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
+        .setFooter(connectFooter),
     };
 
 // Staff Management Embeds
