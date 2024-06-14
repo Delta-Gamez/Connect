@@ -3,15 +3,14 @@ const {
     EmbedBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder
-} = require("discord.js");
+    StringSelectMenuOptionBuilder} = require("discord.js");
 const { embedInfoError, embedManage } = require("../embeds.js");
 const { info, warn, error } = require("../src/log.js");
 const { sendMenuBuilders, enableDisablePrompt, enableCommandForGuild, disableCommandForGuild, getServer, createServer, updateServer } = require("../utils/utils.js");
 const axios = require("axios");
 
 module.exports = {
-    global: true,
+    global: false,
     data: new SlashCommandBuilder()
         .setName("manager")
         .setDescription("Staff Management Commands"),
