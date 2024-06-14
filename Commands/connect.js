@@ -124,7 +124,7 @@ async function DiscoverySubCommand(interaction) {
     }
 
     const response = await interaction.reply({
-        embeds: [embedConnect.Connect],
+        embeds: [embedConnect.ConnectExpanded],
         components: [row],
         ephemeral: true,
     });
@@ -141,7 +141,7 @@ async function DiscoverySubCommand(interaction) {
         }
     } catch (e) {
         console.error(e)
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        await interaction.editReply({ content: '`Confirmation not received within 1 minute, cancelling. To edit the module, please use /connect again.`', components: [] });
     }
 }
 
@@ -166,18 +166,18 @@ async function IsServerAndOwnerCheck(interaction) {
 // Sends the Modal to the user for extra informaton
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
-        .setCustomId("addserver-submit")
-        .setTitle("Change your community on our website.");
+        .setCustomId('addserver-submit')
+        .setTitle('Edit Community description');
 
     const descriptionInput = new TextInputBuilder()
-        .setCustomId("addserver-set-description")
+        .setCustomId('addserver-set-description')
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`Describe your server to us.`)
+        .setLabel('COMMUNITY DESCRIPTION')
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write your description...");
+        .setPlaceholder('Write a few sentences about your community...');
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);
@@ -188,17 +188,17 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Add your community on our website.");
+        .setTitle('Set a Community description');
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`Describe your server to us.`)
+        .setLabel('COMMUNITY DESCRIPTION')
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write your description...");
+        .setPlaceholder('Write a few sentences about your community...');
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);
