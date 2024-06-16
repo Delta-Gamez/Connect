@@ -2,8 +2,8 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
     data: {
-        name: "partnership-decline",
-        customId: "partnership-decline",
+        name: "partnershipdecline",
+        customId: "partnershipdecline",
         description: "Process partnerships decline.",
     },
     async execute(interaction) {

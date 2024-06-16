@@ -6,7 +6,8 @@ const {
     SlashCommandBuilder,
     EmbedBuilder,
     ButtonBuilder,
-    ButtonStyle } = require("discord.js");
+    ButtonStyle,
+    PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
     embedInfoError,
@@ -19,9 +20,23 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('connect')
         .setDescription('Advertise your community.'),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
-        await IsServerAndOwnerCheck(interaction);
+      if (!interaction.guildId) {
+          await interaction.reply({
+              embeds: [embedConnect.ServerError],
+              ephemeral: true,
+          });
+          return;
+      }
+      if (interaction.member.id !== interaction.guild.ownerId) {
+          await interaction.reply({
+              embeds: [embedConnect.ServerOwner],
+              ephemeral: true,
+          });
+          return;
+      }
         try {
             DiscoverySubCommand(interaction);
         } catch (error) {
@@ -130,37 +145,24 @@ async function DiscoverySubCommand(interaction) {
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
-    try {
-        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
-        if(confirmation.customId == 'xconnect-enable'){
-            await StartDiscoveryModal(confirmation);
-        } else if(confirmation.customId == 'xconnect-disable'){
-            await ChangeConnect(false, confirmation, old, true);
-        } else if(confirmation.customId == 'xconnect-edit'){
-            await UpdateDiscoverModal(confirmation);
-        }
-    } catch (e) {
-        console.error(e)
-        await interaction.editReply({ content: '`Confirmation not received within 1 minute, cancelling. To edit the module, please use /connect again.`', components: [] });
-    }
-}
+    const collector = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
 
-// Checks that the user has permssions to run the command
-async function IsServerAndOwnerCheck(interaction) {
-    if (!interaction.guildId) {
-        await interaction.reply({
-            embeds: [embedConnect.ServerError],
-            ephemeral: true,
-        });
-        return;
-    }
-    if (interaction.member.id !== interaction.guild.ownerId) {
-        await interaction.reply({
-            embeds: [embedConnect.ServerOwner],
-            ephemeral: true,
-        });
-        return;
-    }
+    collector.on('collect', async i => {
+        if(i.customId == 'xconnect-enable'){
+            await StartDiscoveryModal(i);
+        } else if(i.customId == 'xconnect-disable'){
+            collector.stop();
+            await ChangeConnect(false, i, old, true);
+        } else if(i.customId == 'xconnect-edit'){
+            await UpdateDiscoverModal(i);
+        }
+    });
+
+    collector.on('end', async collected => {
+        if (collected.size === 0) {
+            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        }
+    });
 }
 
 // Sends the Modal to the user for extra informaton

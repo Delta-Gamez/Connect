@@ -1,5 +1,6 @@
 /*const { timeStamp } = require('console');*/
-const { EmbedBuilder, Embed } = require('discord.js');
+const { EmbedBuilder, Embed } = require('discord.js')
+const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
@@ -182,7 +183,75 @@ const embedManage = {
     StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been enabled`),
+    StaffLeavePost: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`This has been posted`),
+    StaffLeaveReviewFormat: async function (interaction, StaffLeaveID){
+        let data
+        try {
+            const response = await axios.get(
+                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/staffmanagement/staffleave/${StaffLeaveID}`,{
+                    timeout: 2500
+                }
+            );
+    
+            data = response.data.staffleave;
+        } catch (error) {
+            if(interaction.customId){
+                await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
+            } else {
+                await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
+            }
+            return;
+        }
+        let desc = ""
+        if(data.UserID){
+            desc += `User: <@${data.UserID}>\n`;
+        }
+        if(data.Reason){
+            desc += `Reason: ${data.Reason}\n`;
+        }
+        if(data.StartDate){
+            const startTimestampInSeconds = Math.floor(new Date(data.StartDate).getTime() / 1000);
+            desc += `Start Date: <t:${startTimestampInSeconds}:D>\n`;
+        }
+        if (data.EndDate) {
+            const endTimestampInSeconds = Math.floor(new Date(data.EndDate).getTime() / 1000);
+            desc += `End Date: <t:${endTimestampInSeconds}:D>\n`;
+        }
+        if(data.Status){
+            desc += `Status: ${data.Status}\n`;
+        }
+        if(data.ApprovedBy){
+            desc += `${data.Status == "Approved" ? "Approved" : "Declined"} By: <@${data.ApprovedBy}>\n`;
+        }
+        if(data.ApprovedDate){
+            const approvedTimestampInSeconds = Math.floor(new Date(data.ApprovedDate).getTime() / 1000);
+            desc += `${data.Status == "Approved" ? "Approved" : "Declined"} Date: <t:${approvedTimestampInSeconds}:D>\n`;
+        }
+        if(data.DeclineReason !== "No Reason Provided"){
+            desc += `Decline Reason: ${data.DeclineReason}\n`;
+        }
 
+
+        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+            .setTitle(`Staff Leave`)
+            .setDescription(desc)
+            .setFooter({text: `Staff Leave ID: ${data.StaffLeaveID}`})
+        return embed
+    },
+    StaffLeaveSubmitted: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`your Staff Leave Request has been submitted`),
+    StaffLeaveApproved: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        .setTitle(`Staff Leave`)
+        .setDescription(`You have approved this Staff Leave Request`),
+    StaffLeaveDeclined: async function StaffLeaveDeclined(reason){
+        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+            .setTitle(`Staff Leave`)
+            .setDescription(`You have declined this Staff Leave Request for ${reason}.`)
+        return embed
+    }
 };
 
 

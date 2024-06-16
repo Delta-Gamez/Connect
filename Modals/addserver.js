@@ -29,16 +29,10 @@ module.exports = {
         let old = await getServer(interaction)
 
         if(old.exists){
-            if(old.server.ShortDesc > 19){
-                await interaction.reply({
-                    embeds: [embedConnect.DescriptionUpdated], 
-                    ephemeral: true,
-                });
-            } else {
-                await interaction.reply({
-                    embeds: [embedConnect.ModalSumbit],
-                });
-            }
+            await interaction.reply({
+                embeds: [embedConnect.DescriptionUpdated], 
+                ephemeral: true,
+            });
             
             let data = await createData(interaction);
 

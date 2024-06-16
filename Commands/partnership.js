@@ -7,7 +7,8 @@ const {
     ChannelSelectMenuBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder
+    StringSelectMenuOptionBuilder,
+    PermissionFlagsBits
 } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError } = require("../embeds.js");
@@ -19,7 +20,8 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName("partnership")
-        .setDescription("Setup Partnership"),
+        .setDescription("Setup Partnership")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
@@ -57,7 +59,7 @@ module.exports = {
     },
 };
 
-async function PartnershipSubCommand(interaction) {
+async function PartnershipSubCommand(old, interaction) {
     
     const embedModulePartnership = new EmbedBuilder()
         .setTitle("Partnership")
@@ -99,21 +101,25 @@ async function PartnershipSubCommand(interaction) {
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
-    try {
-        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+    const collector = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+
+    collector.on('collect', async confirmation => {
         if(confirmation.customId == 'xpartnership-enable'){
             await PartnershipSubCommande(old, confirmation);
             await ChangePartnership(true, confirmation, old, false);
         } else if(confirmation.customId == 'xpartnership-disable'){
+            collector.stop();
             await ChangePartnership(false, confirmation, old, true);
         } else if(confirmation.customId == 'xpartnership-edit'){
             await PartnershipSubCommande(old, confirmation);
         }
-    } catch (e) {
-        if(e.size === 0){
+    });
+
+    collector.on('end', async collected => {
+        if (collected.size === 0) {
             await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
         }
-    }
+    });
 }
 
 async function ChangePartnership(status, interaction, old, reply) {
