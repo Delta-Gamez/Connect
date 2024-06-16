@@ -15,7 +15,7 @@ const { sendMenuBuilders, enableDisablePrompt, enableCommandForGuild, disableCom
 const axios = require("axios");
 
 module.exports = {
-    global: true,
+    global: false,
     data: new SlashCommandBuilder()
         .setName("manager")
         .setDescription("Staff Management Commands")

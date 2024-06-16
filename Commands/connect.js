@@ -10,52 +10,35 @@ const {
     PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
-    embedInfo,
     embedInfoError,
-    embedConnect,
-} = require("../embeds.js");
+    embedInfoSuccess,
+    embedConnect } = require("../embeds.js");
 const axios = require("axios");
-const { updateServer } = require("../utils/utils.js");
-const { data } = require("./partnership.js");
 
 module.exports = {
     global: true,
     data: new SlashCommandBuilder()
-        .setName("connect")
-        .setDescription("Setup Connect")
+        .setName('connect')
+        .setDescription('Advertise your community.'),
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
-        if (!interaction.guildId) {
-            await interaction.reply({
-                embeds: [embedConnect.OutsideServer],
-                ephemeral: true,
-            });
-            return;
-        }
-        if (interaction.member.id !== interaction.guild.ownerId) {
-            await interaction.reply({
-                embeds: [embedConnect.ServerOwner],
-                ephemeral: true,
-            });
-            return;
-        }
-        let old
+      if (!interaction.guildId) {
+          await interaction.reply({
+              embeds: [embedConnect.ServerError],
+              ephemeral: true,
+          });
+          return;
+      }
+      if (interaction.member.id !== interaction.guild.ownerId) {
+          await interaction.reply({
+              embeds: [embedConnect.ServerOwner],
+              ephemeral: true,
+          });
+          return;
+      }
         try {
-            old = await axios.get(
-                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-                { timeout: 1000 } // Move the timeout configuration here
-            );
-        } catch (e) {
-            await interaction.reply({
-                embeds: [embedInfoError.ServerConnectionError],
-                ephemeral: true,
-                components: [],
-            });
-            return;
-        }
-        try {
-            DiscoverySubCommand(old, interaction);
+            DiscoverySubCommand(interaction);
         } catch (error) {
             error(error);
         }
@@ -63,14 +46,14 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder(embedInfo.Success)
+    /*onst removedembed = new EmbedBuilder(embedInfoSuccess.Template)
         .setTitle("Connect")
         .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
-    
+    */
     if(reply) {
         if(!old.data.exists){
             await interaction.update({
-                embeds: [removedembed],
+                embeds: [embedConnect.ConnectEnabled(status)],
                 ephemeral: true,
                 components: [],
             });
@@ -89,17 +72,32 @@ async function ChangeConnect(status, interaction, old, reply) {
     });
 
     data = {
+        ServerID: interaction.guild.id,
+        ServerName: interaction.guild.name,
+        MemberCount: interaction.guild.memberCount,
+        ServerIcon: interaction.guild.iconURL(),
+        ServerBanner: interaction.guild.bannerURL(),
+        ServerOwner: interaction.guild.ownerId,
         Connect: status,
         ServerInvite: String(invite.url),
     };
 
-    let response = await updateServer(data, interaction)
+    let response = await axios.put(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
+        data,
+        {
+            headers: {
+                Authorization: `${process.env.DATABASE_TOKEN}`,
+            },
+            withCredentials: true,
+        },
+    );
 
     console.log(response)
 
     if(reply){
         await interaction.update({
-            embeds: [removedembed],
+            embeds: [embedConnect.ConnectEnabled(status)],
             ephemeral: true,
             components: [],
         });
@@ -107,11 +105,10 @@ async function ChangeConnect(status, interaction, old, reply) {
 }
 
 // Main Screen (Enable or Disable)
-async function DiscoverySubCommand(old, interaction) {
-    const embedModulePartnership = new EmbedBuilder()
-        .setTitle("Connect")
-        .setDescription("Would you like to setup the Connect module?")
-        .setColor("#004898");
+async function DiscoverySubCommand(interaction) {
+    let old = await axios.get(
+        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
+    );
     
     const Connect_Enable = new ButtonBuilder()
         .setCustomId("xconnect-enable")
@@ -142,7 +139,7 @@ async function DiscoverySubCommand(old, interaction) {
     }
 
     const response = await interaction.reply({
-        embeds: [embedModulePartnership],
+        embeds: [embedConnect.Connect],
         components: [row],
         ephemeral: true,
     });
@@ -171,18 +168,18 @@ async function DiscoverySubCommand(old, interaction) {
 // Sends the Modal to the user for extra informaton
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
-        .setCustomId("addserver-submit")
-        .setTitle('Update your Community description');
+        .setCustomId('addserver-submit')
+        .setTitle('Edit community description');
 
     const descriptionInput = new TextInputBuilder()
-        .setCustomId("addserver-set-description")
+        .setCustomId('addserver-set-description')
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel('YOUR COMMUNITY DESCRIPTION')
+        .setLabel('COMMUNITY DESCRIPTION')
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write your description...");
+        .setPlaceholder('Write a few sentences about your community...');
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);
@@ -193,17 +190,17 @@ async function UpdateDiscoverModal(interaction) {
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
         .setCustomId("addserver-submit")
-        .setTitle("Create your Community description");
+        .setTitle('Set a community description');
 
     const descriptionInput = new TextInputBuilder()
         .setCustomId("addserver-set-description")
         // NOTE: If you want to modify the Label below, we believe it needs to be under 50 characters. Any more, and it will throw an error.
-        .setLabel(`YOUR COMMUNITY DESCRIPTION`)
+        .setLabel('COMMUNITY DESCRIPTION')
         .setRequired(true)
         .setMinLength(20)
         .setMaxLength(400)
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder("Write a few sentences about your community...");
+        .setPlaceholder('Write a few sentences about your community...');
 
     const actionRow1 = new ActionRowBuilder().addComponents(descriptionInput);
     form.addComponents(actionRow1);

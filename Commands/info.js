@@ -10,7 +10,7 @@ module.exports = {
         const pingingEmbed = new EmbedBuilder()
             .setColor("#004898")
             .setTitle("Infomation")
-            .setDescription("Connect is cool")
+            .setDescription('')
 
         interaction.reply({ embeds: [pingingEmbed] });
     },

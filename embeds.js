@@ -13,9 +13,14 @@ const colorInfo = '#00469F';
 const iconSuccess = '<:DG_CO_Check:1028309734450806815> ';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536> ';
 const iconError = '<:DG_CO_Error:1142926009579094226> ';
+const iconConnect = '<:DG_CO_Connect:1249377684962803794> ';
+const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>'
 
-const embedConnectFooter = new EmbedBuilder().setFooter({ text: 'Connect' });
-const embedPartnershipFooter = new EmbedBuilder().setFooter({ text: 'Connect Partnership '});
+const connectFooter = { text: 'Connect' };
+const partnershipFooter = { text: 'Connect Partnership '};
+
+const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
+const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
 
 // Log Embeds
 const embedLog = {
@@ -42,105 +47,140 @@ const embedInfo = {
     Success: new EmbedBuilder()
         .setTitle('SUCCESS')
         .setColor(colorSuccess)
-        .setFooter({ text: 'Connect'})
         .setTimestamp(), 
 
     Warn: new EmbedBuilder()
         .setTitle('WARNING')
         .setColor(colorWarn)
-        .setFooter({ text: 'Connect'})
-        .setTimestamp(),
+        .setTimestamp(), 
 
     Error: new EmbedBuilder()
         .setTitle(`${iconError} ERROR`)
         .setColor(colorError)
-        .setFooter({ text: 'Connect'})
-        .setTimestamp(),
+        .setTimestamp(), 
 
     Info: new EmbedBuilder()
         .setTitle('INFO')
         .setColor(colorInfo)
-        .setFooter({ text: 'Connect'})
-        .setTimestamp(),
+        .setTimestamp()
 }
 
 
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
 
 const embedConnect = {
-    DescriptionUpdated: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
-        .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-        .setDescription('Your community description has been updated.'),
-    ModalSubmit: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
-        .setDescription('Your community has sucessfully been submitted and will now be processed.'),
-    Error: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setDescription('Error'),
-    OutsideServer: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('You need to be in a server to use this!'),
-    ServerOwner: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} ERROR`)
-        .setDescription('Only the server owner can run this command.'),
-    ModalSumbit: new EmbedBuilder(embedInfo.Success, embedConnectFooter)
-        .setTitle(`${iconSuccess} SERVER SUBMITTED`)
-        .setDescription('Your server has sucessfully been submitted and will now be processed.'),
-    ModalProcess: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your form.\n Please try again later.',
-        ),
-    Process: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your request.\n Please try again later.',
-        ),
-    ErrorDatabase: new EmbedBuilder(embedInfo.Error, embedConnectFooter)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'Database could not be reached.\n Please try again later or contact support.',
-        ),
+    Connect: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`${iconConnect} CONNECT`)
+        .setDescription(`Connect your community to the best advertising platform.
 
-    };
+            This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
+            Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
+            \u200B
+            `)
+        .addFields(moduleDisabled)
+        .setFooter(connectFooter),
+    ConnectExpanded: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`${iconConnect} CONNECT`)
+        .setDescription(`Connect your community to the best advertising platform.
+
+            This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
+            Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
+            \u200B
+            `)
+        .addFields(
+            { name: 'COMMUNITY INFORMATION', 
+                value: `**<guildName>**
+                **<description>**
+                **MEMBERS**: <memberCount>
+                **INVITE**: <invite-link>\n\u200B` }, moduleEnabled)
+        .setFooter(connectFooter),
+    DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
+        .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
+        .setDescription('Your community description has been updated.')
+        .setFooter(connectFooter),
+    Error: new EmbedBuilder(embedInfo.Error)
+        .setDescription('Error')
+        .setFooter(connectFooter),
+    OutsideServer: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('You need to be in a server to use this command.')
+        .setFooter(connectFooter),
+    ServerOwner: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ERROR`)
+        .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
+        .setFooter(connectFooter),
+    ModalSumbit: new EmbedBuilder(embedInfo.Success) //Modal submit should be replaced with ConnectEnabled
+        .setTitle(`${iconSuccess} COMMUNITY SUBMITTED`)
+        .setDescription('Your community has sucessfully been submitted and will now be processed.')
+        .setFooter(connectFooter),
+    ModalProcess: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('An error occurred while processing your form.\n Please try again later.')
+        .setFooter(connectFooter),
+    Process: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('An error occurred while processing your request.\n Please try again later.')
+        .setFooter(connectFooter),
+    ErrorDatabase: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('Database could not be reached.\n Please try again later or contact support.')
+        .setFooter(connectFooter),
+    ConnectEnabled: async function ConnectEnabled(status){
+        const embed = new EmbedBuilder(embedInfo.Success)
+            .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
+            .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.\n\u200B`)
+            .addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**<guildName>**
+                **<description>**
+                **MEMBERS**: <memberCount>
+                **INVITE**: <invite-link>`})
+            .setFooter(connectFooter)
+        return embed
+    }
+};
 
 
 // Partnership Embeds /*This is still in work, please don't make any edits to it.*/
 const embedPartnership = {
-    Submitted: new EmbedBuilder(embedInfo.Error, embedPartnershipFooter)
-        .setTitle(`${iconError} SERVER ERROR`)
-        .setDescription('You need to be in a server to use this!'),
+    Submitted: new EmbedBuilder(embedInfo.Success)
+        .setTitle(`${iconSuccess} ENABLED`)
+        .setDescription('Partnerships has successfully been set up and enabled\n')
+        .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
+        .setFooter(connectFooter),
     };
 
 // Staff Management Embeds
 const embedManage = {
-    Management: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    Management: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Please pick a Subcategory`)
         .setDescription('These are the subcategories you can pick from.')
         .setFields(
             {name: 'Staff Leave', value: 'Staff Leave can help manage staff going on holiday etc.'},
             {name: 'Promotion', value: 'Promotion is for helping u promote/demote staff members and keeping a log of these actions'}
         ),
-    Promotion: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    Promotion: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Promotion`)
         .setDescription(`This is Promotion\nThis is for coolio people`),
-    PromotionDisabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    PromotionDisabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Promotion`)
         .setDescription(`This has been disabled`),
-    PromotionEdit: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    PromotionEdit: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Promotion`)
         .setDescription(`This has been Edited`),
-    PromotionEnabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    PromotionEnabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Promotion`)
         .setDescription(`This has been Enabled`),
-    StaffLeave: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeave: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This is staff leave\nThis is for coolio people`),
-    StaffLeaveDisabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeaveDisabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been disabled`),
-    StaffLeaveEdited: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeaveEdited: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been edited`),
-    StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been enabled`),
     StaffLeavePost: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
