@@ -4,14 +4,11 @@ const {
     TextInputStyle,
     ActionRowBuilder,
     SlashCommandBuilder,
-    EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
     PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const {
-    embedInfoError,
-    embedInfoSuccess,
     embedConnect } = require("../embeds.js");
 const axios = require("axios");
 
@@ -19,7 +16,7 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName('connect')
-        .setDescription('Advertise your community.'),
+        .setDescription('Advertise your community.')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
@@ -46,20 +43,6 @@ module.exports = {
 };
 
 async function ChangeConnect(status, interaction, old, reply) {
-    /*onst removedembed = new EmbedBuilder(embedInfoSuccess.Template)
-        .setTitle("Connect")
-        .setDescription(`Connect has been ${status ? "Enabled" : "Disabled"}`);
-    */
-    if(reply) {
-        if(!old.data.exists){
-            await interaction.update({
-                embeds: [embedConnect.ConnectEnabled(status)],
-                ephemeral: true,
-                components: [],
-            });
-            return;
-        }
-    }
 
     if(!old.data.exists){
         return;
@@ -93,11 +76,9 @@ async function ChangeConnect(status, interaction, old, reply) {
         },
     );
 
-    console.log(response)
-
     if(reply){
         await interaction.update({
-            embeds: [embedConnect.ConnectEnabled(status)],
+            embeds: [embedConnect.ConnectEnabled(status, response.data.server)],
             ephemeral: true,
             components: [],
         });

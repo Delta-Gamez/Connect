@@ -39,9 +39,6 @@ module.exports = {
             await updateServer(data, interaction);
         } else {
             info("Modal addserver Submitted for Processing.");
-            await interaction.reply({
-                embeds: [embedConnect.ModalSumbit],
-            });
             try {
                 let data = await createData(interaction);
             } catch (e) {
@@ -52,7 +49,7 @@ module.exports = {
                 return;
             }
             info(
-                `A new server will be submitted for approval. The following server data will be sent: ${JSON.stringify(data)}`,
+                `A new server will be for approval. The following server data will be sent: ${JSON.stringify(data)}`,
             );
             try {
                 await createServer(data, interaction);
@@ -63,6 +60,9 @@ module.exports = {
                     embeds: [embedConnect.ErrorDatabase],
                 });
             }
+            await interaction.reply({
+                embeds: [embedConnect.ConnectEnabled(true, data)],
+            });
         }
     },
 };

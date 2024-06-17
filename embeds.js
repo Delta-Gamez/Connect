@@ -79,21 +79,28 @@ const embedConnect = {
             `)
         .addFields(moduleDisabled)
         .setFooter(connectFooter),
-    ConnectExpanded: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`${iconConnect} CONNECT`)
-        .setDescription(`Connect your community to the best advertising platform.
+    ConnectExpanded : async function ConnectExpanded(status, server){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} CONNECT`)
+            .setDescription(`Connect your community to the best advertising platform.
 
-            This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-            Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
-            \u200B
-            `)
-        .addFields(
-            { name: 'COMMUNITY INFORMATION', 
-                value: `**<guildName>**
-                **<description>**
-                **MEMBERS**: <memberCount>
-                **INVITE**: <invite-link>\n\u200B` }, moduleEnabled)
-        .setFooter(connectFooter),
+                This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
+                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
+                \u200B
+                `)
+            .setFooter(connectFooter)
+
+        if (server.Connect) {
+            embed.addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**${server.SeverName}**
+                **${server.ShortDesc}**
+                **MEMBERS**: ${server.MemberCount}
+                **INVITE**: ${server.ServerInvite}\n\u200B`})
+        }
+
+        return embed
+    },
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
         .setDescription('Your community description has been updated.')
@@ -109,10 +116,6 @@ const embedConnect = {
         .setTitle(`${iconError} ERROR`)
         .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
         .setFooter(connectFooter),
-    ModalSumbit: new EmbedBuilder(embedInfo.Success) //Modal submit should be replaced with ConnectEnabled
-        .setTitle(`${iconSuccess} COMMUNITY SUBMITTED`)
-        .setDescription('Your community has sucessfully been submitted and will now be processed.')
-        .setFooter(connectFooter),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('An error occurred while processing your form.\n Please try again later.')
@@ -125,17 +128,20 @@ const embedConnect = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('Database could not be reached.\n Please try again later or contact support.')
         .setFooter(connectFooter),
-    ConnectEnabled: async function ConnectEnabled(status){
-        const embed = new EmbedBuilder(embedInfo.Success)
+    ConnectEnabled: async function ConnectEnabled(status, server){
+        let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
             .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.\n\u200B`)
-            .addFields( 
-                { name: 'COMMUNITY INFORMATION', 
-                value: `**<guildName>**
-                **<description>**
-                **MEMBERS**: <memberCount>
-                **INVITE**: <invite-link>`})
             .setFooter(connectFooter)
+
+        if (server.Connect) {
+            embed.addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**${server.SeverName}**
+                **${server.ShortDesc}**
+                **MEMBERS**: ${server.MemberCount}
+                **INVITE**: ${server.ServerInvite}`})
+        }
         return embed
     }
 };
@@ -143,12 +149,22 @@ const embedConnect = {
 
 // Partnership Embeds /*This is still in work, please don't make any edits to it.*/
 const embedPartnership = {
-    Submitted: new EmbedBuilder(embedInfo.Success)
-        .setTitle(`${iconSuccess} ENABLED`)
-        .setDescription('Partnerships has successfully been set up and enabled\n')
-        .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
-        .setFooter(connectFooter),
-    };
+    Submitted : async function Submitted(status, server){
+        let embed = new EmbedBuilder(embedInfo.Success)
+            .setTitle(`${iconSuccess} ENABLED`)
+            .setDescription(`Partnerships has successfully ${status ? "been setup and enabled" : ""}been set up and enabled\n`)
+            .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
+            .setFooter(connectFooter)
+
+        if (server.PartnerShip) {
+            embed.addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**${server.SeverName}**`})
+        }
+
+        return embed
+    }
+}
 
 // Staff Management Embeds
 const embedManage = {
