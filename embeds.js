@@ -199,7 +199,7 @@ const embedManage = {
     StaffLeaveEnabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been enabled`),
-    StaffLeavePost: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeavePost: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`This has been posted`),
     StaffLeaveReviewFormat: async function (interaction, StaffLeaveID){
@@ -250,20 +250,20 @@ const embedManage = {
         }
 
 
-        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`Staff Leave`)
             .setDescription(desc)
             .setFooter({text: `Staff Leave ID: ${data.StaffLeaveID}`})
         return embed
     },
-    StaffLeaveSubmitted: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeaveSubmitted: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`your Staff Leave Request has been submitted`),
-    StaffLeaveApproved: new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+    StaffLeaveApproved: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Staff Leave`)
         .setDescription(`You have approved this Staff Leave Request`),
     StaffLeaveDeclined: async function StaffLeaveDeclined(reason){
-        let embed = new EmbedBuilder(embedInfo.Info, embedPartnershipFooter)
+        let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`Staff Leave`)
             .setDescription(`You have declined this Staff Leave Request for ${reason}.`)
         return embed
