@@ -4,7 +4,7 @@ const { embedManage } = require("../embeds.js");
 
 module.exports = {
     data: {
-        name: "staffleaverequest-submit",
+        name: "staffleaverequestsubmit",
         customId: "staffleaverequest-submit",
         description: "Process StaffLeave Requests.",
     },

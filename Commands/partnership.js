@@ -101,7 +101,7 @@ async function PartnershipSubCommand(old, interaction) {
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
-    const collector = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+    const collector = response.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
 
     collector.on('collect', async confirmation => {
         if(confirmation.customId == 'xpartnership-enable'){
@@ -291,7 +291,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         .setColor("#004898");
 
     let button = new ButtonBuilder()
-        .setCustomId("partnership-request")
+        .setCustomId("partnershiprequest")
         .setLabel("Open")
         .setStyle(ButtonStyle.Primary);
 

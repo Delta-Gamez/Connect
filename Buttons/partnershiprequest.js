@@ -3,7 +3,7 @@ const { embedInfoSuccess } = require("../embeds.js");
 
 module.exports = {
     data: {
-        customId: "partnership-request",
+        customId: "partnershiprequest",
     },
     async execute(interaction) {
         const description = interaction.message.embeds[0].data.description;
@@ -45,12 +45,12 @@ module.exports = {
             );
         
         let approve = new ButtonBuilder()
-            .setCustomId("partnership-accept")
+            .setCustomId("partnershipaccept")
             .setLabel("Approve")
             .setStyle(ButtonStyle.Primary);
 
         let decline = new ButtonBuilder()
-            .setCustomId("partnership-decline")
+            .setCustomId("partnershipdecline")
             .setLabel("Decline")
             .setStyle(ButtonStyle.Danger);
 

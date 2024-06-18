@@ -3,7 +3,7 @@ const { embedInfoSuccess } = require("../embeds.js");
 
 module.exports = {
     data: {
-        customId: "partnership-accept",
+        customId: "partnershipaccept",
     },
     async execute(interaction) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {

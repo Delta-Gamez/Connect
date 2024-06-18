@@ -6,7 +6,7 @@ module.exports = {
     },
     async execute(interaction) {
         const form = new ModalBuilder()
-            .setCustomId("staffleaverequest-submit")
+            .setCustomId("staffleaverequestsubmit")
             .setTitle('Sumbit a Staff Leave Request');
 
         const descriptionInput = new TextInputBuilder()

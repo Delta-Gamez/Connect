@@ -15,7 +15,7 @@ const { sendMenuBuilders, enableDisablePrompt, enableCommandForGuild, disableCom
 const axios = require("axios");
 
 module.exports = {
-    global: false,
+    global: true,
     data: new SlashCommandBuilder()
         .setName("manager")
         .setDescription("Staff Management Commands")
@@ -93,12 +93,20 @@ async function askForSubModule(interaction) {
 
         if (result == 1){
             // Enable
-            interaction = await SendStaffLeaveQuestions(interaction)
+            try {
+                interaction = await SendStaffLeaveQuestions(interaction)
+            } catch (e) {
+                return;
+            }
             
             await interaction.update({ embeds: [embedManage.PromotionEnabled], components: []})
         } else if (result == 2){
             // Edit
-            interaction = await SendStaffLeaveQuestions(interaction)
+            try {
+                interaction = await SendStaffLeaveQuestions(interaction)
+            } catch (e) {
+                return;
+            }
             
             await interaction.update({ embeds: [embedManage.PromotionEdit], components: []})
         } else if (result == 3){

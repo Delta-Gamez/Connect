@@ -77,11 +77,18 @@ async function ChangeConnect(status, interaction, old, reply) {
     );
 
     if(reply){
-        await interaction.update({
-            embeds: [embedConnect.ConnectEnabled(status, response.data.server)],
-            ephemeral: true,
-            components: [],
-        });
+        const embed = await embedConnect.ConnectEnabled(status, response.data.server)
+        try {
+            await interaction.update({
+                embeds: [embed],
+                components: [],
+            });
+        } catch (error) {
+            await interaction.reply({
+                embeds: [embed],
+                components: [],
+            });
+        }
     }
 }
 
@@ -119,14 +126,15 @@ async function DiscoverySubCommand(interaction) {
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
 
+    const embed = await embedConnect.Connect(old.data.server.Connect, old.data.server);
     const response = await interaction.reply({
-        embeds: [embedConnect.Connect],
+        embeds: [embed],
         components: [row],
         ephemeral: true,
     });
 
     const collectorFilter = i => i.user.id === interaction.user.id;
-    const collector = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+    const collector = response.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
 
     collector.on('collect', async i => {
         if(i.customId == 'xconnect-enable'){
@@ -149,7 +157,7 @@ async function DiscoverySubCommand(interaction) {
 // Sends the Modal to the user for extra informaton
 async function UpdateDiscoverModal(interaction) {
     const form = new ModalBuilder()
-        .setCustomId('addserver-submit')
+        .setCustomId('addserver')
         .setTitle('Edit community description');
 
     const descriptionInput = new TextInputBuilder()
@@ -170,7 +178,7 @@ async function UpdateDiscoverModal(interaction) {
 // Sends the Modal to the user for extra informaton
 async function StartDiscoveryModal(interaction) {
     const form = new ModalBuilder()
-        .setCustomId("addserver-submit")
+        .setCustomId("addserver")
         .setTitle('Set a community description');
 
     const descriptionInput = new TextInputBuilder()

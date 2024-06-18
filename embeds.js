@@ -69,17 +69,7 @@ const embedInfo = {
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
 
 const embedConnect = {
-    Connect: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`${iconConnect} CONNECT`)
-        .setDescription(`Connect your community to the best advertising platform.
-
-            This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-            Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
-            \u200B
-            `)
-        .addFields(moduleDisabled)
-        .setFooter(connectFooter),
-    ConnectExpanded : async function ConnectExpanded(status, server){
+        Connect : async function Connect(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} CONNECT`)
             .setDescription(`Connect your community to the best advertising platform.
@@ -93,7 +83,7 @@ const embedConnect = {
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**${server.SeverName}**
+                value: `**${server.ServerName}**
                 **${server.ShortDesc}**
                 **MEMBERS**: ${server.MemberCount}
                 **INVITE**: ${server.ServerInvite}\n\u200B`})

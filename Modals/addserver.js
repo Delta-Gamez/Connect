@@ -8,7 +8,7 @@ const { updateServer, createServer, getServer } = require("../utils/utils.js");
 module.exports = {
     data: {
         name: "addserver modal submit",
-        customId: "addserver-submit",
+        customId: "addserver",
         description: "Process submitted addserver modals.",
     },
     async execute(interaction) {
