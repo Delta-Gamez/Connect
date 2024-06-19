@@ -61,11 +61,6 @@ module.exports = {
 
 async function PartnershipSubCommand(old, interaction) {
     
-    const embedModulePartnership = new EmbedBuilder()
-        .setTitle("Partnership")
-        .setDescription("Would you like to setup the partnership module?")
-        .setColor("#004898");
-    
     const PartnerShip_Enable = new ButtonBuilder()
         .setCustomId("xpartnership-enable")
         .setLabel("Enable")
@@ -94,8 +89,9 @@ async function PartnershipSubCommand(old, interaction) {
         row = new ActionRowBuilder().addComponents(PartnerShip_Enable, PartnerShip_Disable);
     }
 
+    const embed = await embedPartnership.Partnership(old.data.server.PartnerShip,old.data.server);
     const response = await interaction.reply({
-        embeds: [embedModulePartnership],
+        embeds: [],
         components: [row],
         ephemeral: true,
     });

@@ -146,14 +146,19 @@ const embedPartnership = {
             .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
             .setFooter(connectFooter)
 
-        if (server.PartnerShip) {
-            embed.addFields( 
-                { name: 'COMMUNITY INFORMATION', 
-                value: `**${server.SeverName}**`})
-        }
+        return embed
+    },
+    Partnership : async function Partnership(status, server){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} PARTNERSHIP`)
+            .setDescription(`This module allows you to set up partnerships with other communities.
+                Modal is ${status ? "enabled" : "disabled"}.
+                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
+                \u200B`)
+            .setFooter(connectFooter)
 
         return embed
-    }
+    },
 }
 
 // Staff Management Embeds
