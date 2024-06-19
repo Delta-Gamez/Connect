@@ -16,7 +16,7 @@ module.exports = {
                 **Server Owner**: ${user.user.username}(${guild.ownerId})
                 **Members:** ${guild.memberCount}`)
             .setTimestamp()
-            .setFooter('Connect Logs');
+            .setFooter({text: 'Connect Logs'});
 
         if (guild.iconURL()) {
             embed.setThumbnail(guild.iconURL());
