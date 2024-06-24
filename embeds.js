@@ -4,6 +4,7 @@ const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
+const messageButtonTimeout = '`Confirmation not received within 1 minute, cancelling. `';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
@@ -14,10 +15,10 @@ const iconSuccess = '<:DG_CO_Check:1028309734450806815> ';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536> ';
 const iconError = '<:DG_CO_Error:1142926009579094226> ';
 const iconConnect = '<:DG_CO_Connect:1249377684962803794> ';
-const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>'
+const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150> '
 
 const connectFooter = { text: 'Connect' };
-const partnershipFooter = { text: 'Connect Partnership '};
+const partnershipFooter = { text: 'Connect Partnership'};
 
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
