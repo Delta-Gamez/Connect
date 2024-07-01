@@ -22,6 +22,12 @@ const partnershipFooter = { text: 'Connect Partnership '};
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
 
+// This is used in /info
+const InfomationEmbed = new EmbedBuilder()
+    .setColor(colorInfo)
+    .setTitle("Infomation")
+    .setDescription('')
+
 // Log Embeds
 const embedLog = {
     Success: {
@@ -159,6 +165,92 @@ const embedPartnership = {
 
         return embed
     },
+    statusChange : async function statusChange(status){
+        const statusChange = new EmbedBuilder()
+            .setTitle("Partnership")
+            .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
+        return statusChange;
+    },
+    channelPicker: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Channel Picker`)
+        .setDescription(`Please pick a channel to post the Partnership Requests Button.`),
+    selectRolePicker: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Role Picker`)
+        .setDescription(`Please pick a role to mention when Partnership Tickets are made.`),
+    memberRequirementPicker: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Member Requirement`)
+        .setDescription(`Please pick a member requirement for the Partnership Tickets.`),
+    embedMessage: async function embedMessage(memberRequirement, roleMention){
+        partnerShipEmbedDescription = "Press Open to request a partnership with this server."
+        if(memberRequirement){
+            partnerShipEmbedDescription += `\nRequirements: ${memberRequirement}`;
+        }
+        if (roleMention) {
+            partnerShipEmbedDescription += `\nThis would ping the role(s) : ${roleMention}`;
+        } 
+        
+        const PartnerShipEmbed = new EmbedBuilder()
+            .setTitle("Partnership")
+            .setDescription(partnerShipEmbedDescription)
+            .setColor("#004898");
+
+        return PartnerShipEmbed;
+    },
+    partnershipOpener: async function partnershipOpener(channel){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Partnership`)
+            .setDescription(`Partnership has been sent in <#${channel}>`)
+        return embed
+    },
+    partershipAccepted: async function partershipAccepted(user){
+        if (!user) {
+            const embed = new EmbedBuilder(embedInfoSuccess.Template)
+                .setTitle("Partnership Accepted")
+                .setDescription("Your partnership request has been accepted.")
+                .setFooter(`Failed to Ping user`)
+                .setTimestamp();
+            return embed
+        }
+        
+        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+            .setTitle("<:DG_CO_Check:1028309734450806815>⠀Partnership Accepted")
+            .setDescription(`<@${user.user.id}>, your partnership has been accepted. Please wait for further instructions by the staff team to complete the partnership. \n⠀`)
+            .setThumbnail('https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless')
+            .setFooter({ text: 'Connect', iconURL: 'https://cdn.discordapp.com/emojis/1203623412271022150.webp?size=80&quality=lossless' })
+            .setTimestamp();
+        return embed
+    },
+    threadOpened: async function threadOpened(thread){
+        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+            .setTitle("Partnership Thread Already Open")
+            .setDescription(`[Click here to view it](${existingThread.url})`)
+            .setTimestamp();
+        return embed
+    },
+    threadOpener: new EmbedBuilder(embedInfoSuccess.Template)
+                .setTitle(`Partnership Request`)
+                .setDescription(
+                    `This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`,
+                ),
+    threadOpen: async function threadOpen(url){
+        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+            .setTitle("Partnership Request")
+            .setDescription(`Your partnership request thread has been opened. [Click here to view it](${url})`)
+            .setTimestamp();
+        return embed
+    },
+    partnershipDeclineReason: async function partnershipDeclineReason(reason){
+        const embed = new EmbedBuilder(embedInfoError.Template)
+            .setTitle("Partnership Declined")
+            .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
+            .setTimestamp();
+        return embed
+    },
+    partnershipFailedtoPingUser: async function partnershipFailedtoPingUser(embed){
+        const embed2 = new EmbedBuilder(embed)
+                .setFooter("Failed to Ping user")
+        return embed2;
+    }
 }
 
 // Staff Management Embeds
@@ -262,7 +354,21 @@ const embedManage = {
             .setTitle(`Staff Leave`)
             .setDescription(`You have declined this Staff Leave Request for ${reason}.`)
         return embed
-    }
+    },
+    // The channel that the Staff Leaves get posted to
+    channelSelect: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Channel Select`)
+        .setDescription(`Select a Channel to post the Staff Leave Requests in for review.`),
+    // The channel that the button to request staff leave gets posted in
+    postChannelSelect: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Post Channel Select`)
+        .setDescription(`Select a Channel to post the Staff Leave Requests in for review.`),
+    selectManageRoles: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Select Management Roles`)
+        .setDescription(`Select the roles that can manage staff leave requests.`),
+    selectModeraterRoles: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Select Moderation Roles`)
+        .setDescription(`Select the roles that can moderate staff leave requests.`),
 };
 
 
@@ -317,5 +423,6 @@ module.exports = {
     embedPartnership,
     embedManage,
     embedInfoError,
-    embedInfoSuccess
+    embedInfoSuccess,
+    InfomationEmbed
 };
