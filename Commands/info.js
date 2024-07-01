@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { info } = require("../src/log.js");
+const { InfomationEmbed } = require("../embeds.js");
 
 module.exports = {
     global: true,
@@ -7,11 +8,6 @@ module.exports = {
         .setName("info")
         .setDescription("Provides Infomation about Connect."),
     async execute(interaction) {
-        const pingingEmbed = new EmbedBuilder()
-            .setColor("#004898")
-            .setTitle("Infomation")
-            .setDescription('')
-
-        interaction.reply({ embeds: [pingingEmbed] });
+        interaction.reply({ embeds: [InfomationEmbed] });
     },
 };

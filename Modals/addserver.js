@@ -1,8 +1,6 @@
 require("dotenv").config();
-const { Interaction, EmbedBuilder } = require("discord.js");
 const { info, warn, error, nolog } = require("../src/log.js");
 const { embedConnect } = require("../embeds.js");
-const axios = require("axios");
 const { updateServer, createServer, getServer } = require("../utils/utils.js");
 
 module.exports = {

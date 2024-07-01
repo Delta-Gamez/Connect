@@ -1,6 +1,5 @@
 const {
     SlashCommandBuilder,
-    EmbedBuilder,
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
@@ -83,6 +82,8 @@ async function askForSubModule(interaction) {
         true
     );
 
+
+
     interaction = Selected[1];
     Selected = Selected[0];
 
@@ -158,7 +159,7 @@ async function SendStaffLeaveQuestions(interaction) {
         .setCustomId("channel")
         .setPlaceholder("Select a Channel to post the Staff Leave Requests in for review.");
 
-    const selectembed = new EmbedBuilder().setTitle("Select a Channel to post the Staff Leave Requests in for review.");
+    const selectembed = embedManage.channelSelect;
 
     let channel = await sendMenuBuilders(
         interaction,
@@ -166,6 +167,9 @@ async function SendStaffLeaveQuestions(interaction) {
         true,
         selectembed,
     );
+    if (!channel) {
+        return;
+    }
 
     interaction = channel[1];
     channelText = channel[0][0];
@@ -174,7 +178,7 @@ async function SendStaffLeaveQuestions(interaction) {
         .setCustomId("postchannel")
         .setPlaceholder("Select a Channel to post the Staff Leave Requests in for review.");
 
-    const postembed = new EmbedBuilder().setTitle("Select a Channel to post the Staff Leave Requests in for review.");
+    const postembed = embedManage.postChannelSelect;
 
     let postchannel = await sendMenuBuilders(
         interaction,
@@ -182,6 +186,9 @@ async function SendStaffLeaveQuestions(interaction) {
         true,
         postembed,
     );
+    if (!postchannel) {
+        return;
+    }
 
     interaction = postchannel[1];
     postchannel = postchannel[0][0];
@@ -219,7 +226,7 @@ async function SendPromtionQuestions(interaction) {
         .setMinValues(1)
         .setMaxValues(5);
 
-    const selectembed = new EmbedBuilder().setTitle("Select Management Roles");
+    const selectembed = embedManage.selectManageRoles;
 
     let ManRoles = await sendMenuBuilders(
         interaction,
@@ -227,6 +234,9 @@ async function SendPromtionQuestions(interaction) {
         true,
         selectembed,
     );
+    if (!ManRoles) {
+        return;
+    }
     interaction = ManRoles[1];
     ManRoles = ManRoles[0];
     let rolesManText = [];
@@ -240,7 +250,7 @@ async function SendPromtionQuestions(interaction) {
         .setMinValues(1)
         .setMaxValues(5);
 
-    const roleembed = new EmbedBuilder().setTitle("Select Moderater Roles");
+    const roleembed = embedManage.selectModeraterRoles;
 
     let roles = await sendMenuBuilders(
         interaction,
@@ -248,6 +258,9 @@ async function SendPromtionQuestions(interaction) {
         true,
         roleembed,
     );
+    if (!roles) {
+        return;
+    }
     interaction = roles[1];
     roles = roles[0];
     let rolesModText = [];

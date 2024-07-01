@@ -1,7 +1,6 @@
 const {
     ActionRowBuilder,
     SlashCommandBuilder,
-    EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
     ChannelSelectMenuBuilder,
@@ -91,7 +90,7 @@ async function PartnershipSubCommand(old, interaction) {
 
     const embed = await embedPartnership.Partnership(old.data.server.PartnerShip,old.data.server);
     const response = await interaction.reply({
-        embeds: [],
+        embeds: [embed],
         components: [row],
         ephemeral: true,
     });
@@ -119,21 +118,7 @@ async function PartnershipSubCommand(old, interaction) {
 }
 
 async function ChangePartnership(status, interaction, old, reply) {
-    const removedembed = new EmbedBuilder()
-        .setTitle("Partnership")
-        .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
-    
-    if(reply) {
-        if(!old.data.exists){
-            await interaction.update({
-                embeds: [removedembed],
-                ephemeral: true,
-                components: [],
-            });
-            return;
-        }
-    }
-
+    const removedembed = await embedPartnership.statusChange(status);
     if(!old.data.exists){
         return;
     }
@@ -196,10 +181,12 @@ async function SendPartnerShipEmbed(interaction) {
     .setPlaceholder("Pick a Channel")
     .setChannelTypes(0);
 
-    const selectembed = new EmbedBuilder()
-    .setTitle("Pick a Channel");
+    const selectembed = embedPartnership.channelPicker;
 
     let channelid = await sendMenuBuilders(interaction, select, true, selectembed);
+    if (!channelid) {
+        return;
+    }
     interaction = channelid[1];
     channelid = channelid[0][0];
 
@@ -209,10 +196,12 @@ async function SendPartnerShipEmbed(interaction) {
     .setMinValues(1)
     .setMaxValues(5);
 
-    const roleembed = new EmbedBuilder()
-    .setTitle("Pick a Role");
+    const roleembed = embedPartnership.selectRolePicker;
 
     let roles = await sendMenuBuilders(interaction, selectrole, false, roleembed);
+    if (!roles) {
+        return;
+    }
     interaction = roles[1];
     roles = roles[0];
     let rolesText = ""
@@ -258,10 +247,12 @@ async function SendPartnerShipEmbed(interaction) {
         .setPlaceholder('Select a Member Requirement')
         .addOptions(memberRequirementoptions);
 
-    const memberRequirementembed = new EmbedBuilder()
-        .setTitle('Member Requirements');
+    const memberRequirementembed = embedPartnership.memberRequirementPicker;
 
     let memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+    if (!memberRequirement) {
+        return;
+    }
     interaction = memberRequirement[1];
     memberRequirement = memberRequirement[0];
     if(memberRequirement[0] == 'none'){
@@ -273,18 +264,8 @@ async function SendPartnerShipEmbed(interaction) {
 
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement){
     const channel = await interaction.guild.channels.cache.get(channelid);
-    partnerShipEmbedDescription = "Press Open to request a partnership with this server."
-    if(memberRequirement){
-        partnerShipEmbedDescription += `\nRequirements: ${memberRequirement}`;
-    }
-    if (roleMention) {
-        partnerShipEmbedDescription += `\nThis would ping the role(s) : ${roleMention}`;
-    }
 
-    const PartnerShipEmbed = new EmbedBuilder()
-        .setTitle("Partnership")
-        .setDescription(partnerShipEmbedDescription)
-        .setColor("#004898");
+    const PartnerShipEmbed = await embedPartnership.embedMessage(memberRequirement, roleMention)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
@@ -298,9 +279,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         components: [actionRow],
     });
 
-    let embed = new EmbedBuilder()
-        .setTitle("Setup Partnership")
-        .setDescription(`PartnerShip Openner message sent to: ${channel}`);
+    let embed = await embedPartnership.partnershipOpener(channelid)
 
     await interaction.update({
         embeds: [embed],

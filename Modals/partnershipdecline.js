@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { embedPartnership } = require("../embeds.js");
 
 module.exports = {
     data: {
@@ -20,14 +20,10 @@ module.exports = {
         }
 
 
-        const embed = new EmbedBuilder()
-        .setTitle("Partnership Declined")
-        .setDescription(`Your partnership request has been denied by a staff member for: ${partnershipDeclineReason}`)
-        .setTimestamp();
+        const embed = await embedPartnership.partnershipDeclineReason(partnershipDeclineReason);
 
         if(!user) {
-            const embed2 = new EmbedBuilder(embed)
-                .setFooter("Failed to Ping user")
+            const embed2 = embedPartnership.partnershipFailedtoPingUser(embed);
             return interaction.reply({embeds: [embed2]});
         }
 

@@ -1,5 +1,5 @@
-const { ChannelType, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const { embedInfoSuccess } = require("../embeds.js");
+const { ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const { embedInfoSuccess, embedPartnership } = require("../embeds.js");
 
 module.exports = {
     data: {
@@ -15,11 +15,7 @@ module.exports = {
         const existingThread = threads.threads.find(thread => thread.name.startsWith(`${interaction.user.id}:`));
     
         if (existingThread) {
-            const embed = new EmbedBuilder(embedInfoSuccess.Template)
-            .setTitle(`You already have a thread open.`)
-            .setDescription(
-                `[Click here to view it](${existingThread.url})`,
-            );
+            const embed = await embedPartnership.threadOpened(existingThread)
             await interaction.reply({ embeds: [embed], ephemeral: true });
             return;
         }
@@ -38,11 +34,7 @@ module.exports = {
 
         thread.members.add(interaction.user.id);
         
-        const embed = new EmbedBuilder(embedInfoSuccess.Template)
-            .setTitle(`Partnership Request`)
-            .setDescription(
-                `This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`,
-            );
+        const embed = embedPartnership.threadOpener;
         
         let approve = new ButtonBuilder()
             .setCustomId("partnershipaccept")
@@ -72,11 +64,8 @@ module.exports = {
 
 
 
-        const replyEmbed = new EmbedBuilder(embedInfoSuccess.Template)
-            .setTitle(`PartnerShip Thread Created`)
-            .setDescription(
-                `https://discord.com/channels/${interaction.guild.id}/${thread.id}`,
-            );
+        const replyEmbed = await embedPartnership.threadOpen(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
+        
         interaction.reply({ 
             embeds: [replyEmbed], 
             ephemeral: true

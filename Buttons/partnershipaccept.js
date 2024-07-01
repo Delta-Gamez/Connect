@@ -1,5 +1,5 @@
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
-const { embedInfoSuccess } = require("../embeds.js");
+const { PermissionsBitField } = require("discord.js");
+const { embedPartnership } = require("../embeds.js");
 
 module.exports = {
     data: {
@@ -15,23 +15,10 @@ module.exports = {
             user = await interaction.guild.members.fetch(userId);
         }
         
-        if (!user) {
-            const embed = new EmbedBuilder(embedInfoSuccess.Template)
-                .setTitle("Partnership Accepted")
-                .setDescription("Your partnership request has been accepted.")
-                .setFooter(`Failed to Ping user`)
-                .setTimestamp();
-            return interaction.reply("User not found.");
-        }
-        
-        const embed = new EmbedBuilder(embedInfoSuccess.Template)
-            .setTitle("<:DG_CO_Check:1028309734450806815>⠀Partnership Accepted")
-            .setDescription(`<@${user.user.id}>, your partnership has been accepted. Please wait for further instructions by the staff team to complete the partnership. \n⠀`)
-            .setThumbnail('https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless')
-            .setFooter({ text: 'Connect', iconURL: 'https://cdn.discordapp.com/emojis/1203623412271022150.webp?size=80&quality=lossless' })
-            .setTimestamp();
+       const embed = embedPartnership.partershipAccepted(user)
 
-        await interaction.channel.setName(`${user.user.username} - Accepted`);
-        await interaction.reply({ content: `<@${user.user.id}>`, embeds: [embed] });
+        await interaction.channel.setName(`${user ? user.user.username : "User not defined"} - Accepted`);
+        
+        await interaction.reply({ content: `<@${user ? user.user.id : "User not pinged"}>`, embeds: [embed] });
     },
 };
