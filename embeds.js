@@ -23,12 +23,6 @@ const footerPartnership = { text: 'Connect Partnership'};
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
 
-// This is used in /info
-const InfomationEmbed = new EmbedBuilder()
-    .setColor(colorInfo)
-    .setTitle("Infomation")
-    .setDescription('test')
-
 // Log Embeds
 const embedLog = {
     Success: {
@@ -72,6 +66,17 @@ const embedInfo = {
         .setTimestamp()
 }
 
+
+
+const embedAbout = {
+    About: new EmbedBuilder(embedInfo.Success)
+        .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
+        .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.`)
+        .setFooter(footerConnect),
+    GetStarted: new EmbedBuilder(embedInfo.Success)
+        .setDescription('Sucess')
+        .setFooter(footerConnect)
+}
 
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
 
@@ -425,5 +430,5 @@ module.exports = {
     embedManage,
     embedInfoError,
     embedInfoSuccess,
-    InfomationEmbed
+    embedAbout
 };
