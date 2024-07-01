@@ -18,7 +18,7 @@ const iconConnect = '<:DG_CO_Connect:1249377684962803794> ';
 const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150> ';
 
 const footerConnect = { text: 'Connect' };
-const footerPartnership = { text: 'Connect Partnership'};
+const footerPartnership = { text: 'Connect Partnership' };
 
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
@@ -74,7 +74,20 @@ const embedAbout = {
         .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.`)
         .setFooter(footerConnect),
     GetStarted: new EmbedBuilder(embedInfo.Success)
-        .setDescription('Sucess')
+        .setDescription(`Thanks for inviting <:DG_CO_ConnectBlack:1203623412271022150> **Connect**! 
+            
+            Connect your community to the best advertising platform for Discord communities. Connect is an easy-to-use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.
+            \u200B`)
+        .addFields( 
+            { name: 'COMMUNITY INFORMATION', 
+            value: `Connect uses only minimal commands to get you where you want to be. Here are the commands to help you get started. 
+            
+            \`/connect\` • Advertise your community on the Connect [web-platform](https://connect.deltagamez.ch).
+            `/partnership` • Manage partnerships inside your community. 
+            `/about` • Learn more about us, our terms and privacy policy.
+            
+            [Join our Discord](https://sYpmUFQ) for more help, updates, and our road-map.
+            \u200B`})
         .setFooter(footerConnect)
 }
 
