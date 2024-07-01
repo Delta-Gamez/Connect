@@ -15,10 +15,10 @@ const iconSuccess = '<:DG_CO_Check:1028309734450806815> ';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536> ';
 const iconError = '<:DG_CO_Error:1142926009579094226> ';
 const iconConnect = '<:DG_CO_Connect:1249377684962803794> ';
-const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150> '
+const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150> ';
 
-const connectFooter = { text: 'Connect' };
-const partnershipFooter = { text: 'Connect Partnership'};
+const footerConnect = { text: 'Connect' };
+const footerPartnership = { text: 'Connect Partnership'};
 
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
@@ -27,7 +27,7 @@ const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DIS
 const InfomationEmbed = new EmbedBuilder()
     .setColor(colorInfo)
     .setTitle("Infomation")
-    .setDescription('')
+    .setDescription('test')
 
 // Log Embeds
 const embedLog = {
@@ -85,13 +85,13 @@ const embedConnect = {
                 Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
                 \u200B
                 `)
-            .setFooter(connectFooter)
+            .setFooter(footerConnect)
 
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                 value: `**${server.ServerName}**
-                **${server.ShortDesc}**
+                **DESCRIPTION:** ${server.ShortDesc}
                 **MEMBERS**: ${server.MemberCount}
                 **INVITE**: ${server.ServerInvite}\n\u200B`})
         }
@@ -101,35 +101,35 @@ const embedConnect = {
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
         .setDescription('Your community description has been updated.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     Error: new EmbedBuilder(embedInfo.Error)
         .setDescription('Error')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     OutsideServer: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this command.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     ServerOwner: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ERROR`)
         .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('An error occurred while processing your form.\n Please try again later.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     Process: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('An error occurred while processing your request.\n Please try again later.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('Database could not be reached.\n Please try again later or contact support.')
-        .setFooter(connectFooter),
+        .setFooter(footerConnect),
     ConnectEnabled: async function ConnectEnabled(status, server){
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
             .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.\n\u200B`)
-            .setFooter(connectFooter)
+            .setFooter(footerConnect)
 
         if (server.Connect) {
             embed.addFields( 
@@ -151,7 +151,7 @@ const embedPartnership = {
             .setTitle(`${iconSuccess} ENABLED`)
             .setDescription(`Partnerships has successfully ${status ? "been setup and enabled" : ""}been set up and enabled\n`)
             .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
-            .setFooter(connectFooter)
+            .setFooter(footerConnect)
 
         return embed
     },
@@ -159,10 +159,10 @@ const embedPartnership = {
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIP`)
             .setDescription(`This module allows you to set up partnerships with other communities.
-                Modal is ${status ? "enabled" : "disabled"}.
+                Module is ${status ? "enabled" : "disabled"}.
                 Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
                 \u200B`)
-            .setFooter(connectFooter)
+            .setFooter(footerPartnership)
 
         return embed
     },
@@ -205,7 +205,7 @@ const embedPartnership = {
     },
     partershipAccepted: async function partershipAccepted(user){
         if (!user) {
-            const embed = new EmbedBuilder(embedInfoSuccess.Template)
+            const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle("Partnership Accepted")
                 .setDescription("Your partnership request has been accepted.")
                 .setFooter(`Failed to Ping user`)
@@ -213,7 +213,7 @@ const embedPartnership = {
             return embed
         }
         
-        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+        const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("<:DG_CO_Check:1028309734450806815>⠀Partnership Accepted")
             .setDescription(`<@${user.user.id}>, your partnership has been accepted. Please wait for further instructions by the staff team to complete the partnership. \n⠀`)
             .setThumbnail('https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless')
@@ -222,26 +222,26 @@ const embedPartnership = {
         return embed
     },
     threadOpened: async function threadOpened(thread){
-        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+        const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("Partnership Thread Already Open")
             .setDescription(`[Click here to view it](${existingThread.url})`)
             .setTimestamp();
         return embed
     },
-    threadOpener: new EmbedBuilder(embedInfoSuccess.Template)
+    threadOpener: new EmbedBuilder(embedInfo.Success)
                 .setTitle(`Partnership Request`)
                 .setDescription(
                     `This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`,
                 ),
     threadOpen: async function threadOpen(url){
-        const embed = new EmbedBuilder(embedInfoSuccess.Template)
+        const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("Partnership Request")
             .setDescription(`Your partnership request thread has been opened. [Click here to view it](${url})`)
             .setTimestamp();
         return embed
     },
     partnershipDeclineReason: async function partnershipDeclineReason(reason){
-        const embed = new EmbedBuilder(embedInfoError.Template)
+        const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle("Partnership Declined")
             .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
             .setTimestamp();
