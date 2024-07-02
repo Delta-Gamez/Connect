@@ -179,7 +179,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     .setPlaceholder("Pick a Channel")
     .setChannelTypes(0);
 
-    const selectembed = embedPartnership.channelPicker;
+    const selectembed = embedPartnership.ChannelSelection;
     
     let channelid;
     try {
@@ -200,7 +200,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     .setMinValues(1)
     .setMaxValues(5);
 
-    const roleembed = embedPartnership.selectRolePicker;
+    const roleembed = embedPartnership.RoleSelection;
     let roles;
     try {
         roles = await sendMenuBuilders(interaction, selectrole, false, roleembed);
@@ -261,8 +261,8 @@ async function SendPartnerShipEmbed(interaction, enable) {
         .setPlaceholder('Select a Member Requirement')
         .addOptions(memberRequirementOptions);
 
-    const memberRequirementembed = embedPartnership.memberRequirementPicker;
-
+    const memberRequirementembed = embedPartnership.MemberRequirementSelection;
+    
     let memberRequirement;
     try {
         memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementOptions);
