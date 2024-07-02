@@ -73,14 +73,19 @@ async function askForSubModule(interaction) {
         .setPlaceholder('Choose a SubCategory!')
         .addOptions(options);
 
-    let Selected = await sendMenuBuilders(
-        interaction,
-        subCategorySelect,
-        true,
-        embedManage.Management,
-        options,
-        true
-    );
+    let Selected;
+    try{
+        Selected = await sendMenuBuilders(
+            interaction,
+            subCategorySelect,
+            true,
+            embedManage.Management,
+            options,
+            true
+        );
+    } catch (e) {
+        return;
+    }
 
 
 
@@ -161,12 +166,18 @@ async function SendStaffLeaveQuestions(interaction) {
 
     const selectembed = embedManage.channelSelect;
 
-    let channel = await sendMenuBuilders(
-        interaction,
-        selectManagementRoles,
-        true,
-        selectembed,
-    );
+    let channel;
+    try {
+        channel = await sendMenuBuilders(
+            interaction,
+            selectManagementRoles,
+            true,
+            selectembed,
+        );
+    } catch (error) {
+        return;
+    }
+
     if (!channel) {
         return;
     }
@@ -179,13 +190,18 @@ async function SendStaffLeaveQuestions(interaction) {
         .setPlaceholder("Select a Channel to post the Staff Leave Requests in for review.");
 
     const postembed = embedManage.postChannelSelect;
+    let postchannel;
+    try {
+        postchannel = await sendMenuBuilders(
+            interaction,
+            SelectChanneltoPost,
+            true,
+            postembed,
+        );
+    } catch (error) {
+        return;
+    }
 
-    let postchannel = await sendMenuBuilders(
-        interaction,
-        SelectChanneltoPost,
-        true,
-        postembed,
-    );
     if (!postchannel) {
         return;
     }
@@ -227,13 +243,18 @@ async function SendPromtionQuestions(interaction) {
         .setMaxValues(5);
 
     const selectembed = embedManage.selectManageRoles;
+    let ManRoles;
+    try {
+        ManRoles = await sendMenuBuilders(
+            interaction,
+            selectManagementRoles,
+            true,
+            selectembed,
+        );
+    } catch (error) {
+        return;
+    }
 
-    let ManRoles = await sendMenuBuilders(
-        interaction,
-        selectManagementRoles,
-        true,
-        selectembed,
-    );
     if (!ManRoles) {
         return;
     }
@@ -251,13 +272,17 @@ async function SendPromtionQuestions(interaction) {
         .setMaxValues(5);
 
     const roleembed = embedManage.selectModeraterRoles;
-
-    let roles = await sendMenuBuilders(
-        interaction,
-        selectModeraterRoles,
-        true,
-        roleembed,
-    );
+    let roles 
+    try {
+        roles = await sendMenuBuilders(
+            interaction,
+            selectModeraterRoles,
+            true,
+            roleembed,
+        );
+    } catch (error) {
+        return;
+    } 
     if (!roles) {
         return;
     }

@@ -182,8 +182,14 @@ async function SendPartnerShipEmbed(interaction) {
     .setChannelTypes(0);
 
     const selectembed = embedPartnership.channelPicker;
+    
+    let channelid;
+    try {
+        channelid = await sendMenuBuilders(interaction, select, true, selectembed);
+    } catch (error) {
+        return;
+    }
 
-    let channelid = await sendMenuBuilders(interaction, select, true, selectembed);
     if (!channelid) {
         return;
     }
@@ -197,8 +203,13 @@ async function SendPartnerShipEmbed(interaction) {
     .setMaxValues(5);
 
     const roleembed = embedPartnership.selectRolePicker;
-
-    let roles = await sendMenuBuilders(interaction, selectrole, false, roleembed);
+    let roles;
+    try {
+        roles = await sendMenuBuilders(interaction, selectrole, false, roleembed);
+    } catch (error) {
+        return;
+    }
+    
     if (!roles) {
         return;
     }
@@ -249,10 +260,17 @@ async function SendPartnerShipEmbed(interaction) {
 
     const memberRequirementembed = embedPartnership.memberRequirementPicker;
 
-    let memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+    let memberRequirement;
+    try {
+        memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+    } catch (error) {
+        return;
+    }
+    
     if (!memberRequirement) {
         return;
     }
+
     interaction = memberRequirement[1];
     memberRequirement = memberRequirement[0];
     if(memberRequirement[0] == 'none'){
