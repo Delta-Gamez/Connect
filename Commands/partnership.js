@@ -127,9 +127,7 @@ async function ChangePartnership(status, interaction, old, reply) {
         PartnerShip: status,
     };
 
-    let response =  await utils.updateServer(data, interaction)
-
-    console.log(response)
+    await utils.updateServer(data, interaction)
 
     if(reply){
         await interaction.update({
@@ -216,9 +214,14 @@ async function SendPartnerShipEmbed(interaction) {
     interaction = roles[1];
     roles = roles[0];
     let rolesText = ""
-    for (let i = 0; i < roles.length; i++) {
-        rolesText += `<@&${roles[i]}> `;
+    if(roles){
+        for (let i = 0; i < roles.length; i++) {
+            rolesText += `<@&${roles[i]}> `;
+        }
+    } else {
+        rolesText = null;
     }
+
 
     const memberRequirementOptions =[
         new StringSelectMenuOptionBuilder()
@@ -273,8 +276,10 @@ async function SendPartnerShipEmbed(interaction) {
 
     interaction = memberRequirement[1];
     memberRequirement = memberRequirement[0];
-    if(memberRequirement[0] == 'none'){
-        memberRequirement = null;
+    if(memberRequirement){
+        if(memberRequirement[0] == 'none'){
+            memberRequirement = null;
+        }
     }
 
     await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement)

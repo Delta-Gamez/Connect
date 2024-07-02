@@ -1,4 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js')
+const { messageButtonTimeout } = require('../embeds.js')
 
 /*
     * @param required {CommandInteraction} interaction The interaction object
@@ -74,7 +75,7 @@ async function sendMenuBuilders(interaction, component, requiremnet, embed, opti
 
         collector.on('end', async collected => {
             if (collected.size === 0) {
-                await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+                await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
                 reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
             }
         });
