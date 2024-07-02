@@ -7,8 +7,7 @@ const {
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
-    PermissionFlagsBits
-} = require("discord.js");
+    PermissionFlagsBits } = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError } = require("../embeds.js");
 const utils = require("../utils/utils.js");
@@ -18,8 +17,8 @@ const axios = require("axios");
 module.exports = {
     global: true,
     data: new SlashCommandBuilder()
-        .setName("partnership")
-        .setDescription("Setup Partnership")
+        .setName('partnership')
+        .setDescription('Manage your partnerships')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     async execute(interaction) {
         if (!interaction.guildId) {

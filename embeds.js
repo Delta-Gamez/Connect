@@ -71,12 +71,26 @@ const embedInfo = {
         .setTimestamp()
 }
 
-
+/*Add this to embedAbout.About
+\`•\` [Privacy Policy](https://connect.deltagamez.ch/privacy)
+\`•\` [Terms of Service](https://connect.deltagamez.ch/terms)
+*/
 
 const embedAbout = {
     About: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconConnect} CONNECT`)
-        .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.`)
+        .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, filled with features for partnerships, advertising and more.\n\u200B`)
+        .addFields({ name: 'CONNECT', 
+            value: `\`•\` [Connect Web](https://connect.deltagamez.ch/)
+            \`•\` [Discord Community Support](https://discord.gg/sYpmUFQ)
+            \`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC)`, 
+            inline: true },
+            { name: `LEGAL`, 
+                value: `\`•\` Privacy Policy
+                \`•\` Terms of Service`, inline: true}, 
+            { name: 'NOTE', value: `
+                Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms.
+                \u200B`})
         .setFooter(footerConnect),
     GetStarted: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} SUCCESSFULLY CONNECTED`)

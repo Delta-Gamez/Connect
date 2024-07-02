@@ -16,9 +16,8 @@ module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName('connect')
-        .setDescription('Advertise your community.')
+        .setDescription('Advertise your community on the web.')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
-
     async execute(interaction) {
       if (!interaction.guildId) {
           await interaction.reply({
