@@ -79,12 +79,12 @@ const embedAbout = {
             Connect your community to the best advertising platform for Discord communities. Connect is an easy-to-use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.
             \u200B`)
         .addFields( 
-            { name: 'COMMUNITY INFORMATION', 
+            { name: `COMMUNITY INFORMATION`, 
             value: `Connect uses only minimal commands to get you where you want to be. Here are the commands to help you get started. 
             
             \`/connect\` • Advertise your community on the Connect [web-platform](https://connect.deltagamez.ch).
-            `/partnership` • Manage partnerships inside your community. 
-            `/about` • Learn more about us, our terms and privacy policy.
+            \`/partnership\` • Manage partnerships inside your community. 
+            \`/about\` • Learn more about us, our terms and privacy policy.
             
             [Join our Discord](https://sYpmUFQ) for more help, updates, and our road-map.
             \u200B`})
