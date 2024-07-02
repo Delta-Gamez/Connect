@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         const serverData = await getServer(interaction);
 
-        const embed = await embedAbout.serverInfo(serverData, interaction.guild);
+        const embed = await embedAbout.ServerInfo(serverData, interaction.guild);
         interaction.reply({ embeds: [embed] });
     },
 };

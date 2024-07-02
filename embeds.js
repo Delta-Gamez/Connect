@@ -109,7 +109,7 @@ const embedAbout = {
             [Join our Discord](https://sYpmUFQ) for more help, updates, and our road-map.
             \u200B`})
         .setFooter(footerConnect),
-    serverInfo: async function serverInfo(serverData, guild){
+    ServerInfo: async function ServerInfo(serverData, guild){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} SERVER INFORMATION`)
             .setDescription(`This is the information about your server on the Connect platform. 
