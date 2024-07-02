@@ -462,5 +462,6 @@ module.exports = {
     embedManage,
     embedInfoError,
     embedInfoSuccess,
-    embedAbout
+    embedAbout,
+    messageButtonTimeout
 };
