@@ -34,12 +34,12 @@ module.exports = {
 
         thread.members.add(interaction.user.id);
         
-        const embed = embedPartnership.threadOpener;
+        const embed = embedPartnership.ThreadOpener;
         
         let approve = new ButtonBuilder()
             .setCustomId("partnershipaccept")
             .setLabel("Approve")
-            .setStyle(ButtonStyle.Primary);
+            .setStyle(ButtonStyle.Success);
 
         let decline = new ButtonBuilder()
             .setCustomId("partnershipdecline")
