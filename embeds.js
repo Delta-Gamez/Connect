@@ -186,23 +186,37 @@ const embedPartnership = {
 
         return embed
     },
-    statusChange : async function statusChange(status){
-        const statusChange = new EmbedBuilder()
+    /*Awaiting Review*/
+    StatusChange : async function StatusChange(status){
+        const StatusChange = new EmbedBuilder()
             .setTitle("Partnership")
             .setDescription(`Partnership has been ${status ? "Enabled" : "Disabled"}`);
-        return statusChange;
+        return StatusChange;
     },
     channelPicker: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Channel Picker`)
-        .setDescription(`Please pick a channel to post the Partnership Requests Button.`),
+        .setTitle(`${iconConnectB} CHANNEL SELECTION`)
+        .setDescription(`Select the channel users can create a partnership request in.\n\u200B`)
+        .addFields({ name: `HOW IT WORKS`, 
+            value: `Users can create a partnership request through pressing the \`Request Partnership\` button. 
+            We suggest your selected channel is called \`#request-partnership\` and make sure it is public to \`@everyone\`.
+            We will post the message, in which users can request a partnership with you.\n\u200B` })
+        .setFooter(footerPartnership),
     selectRolePicker: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Role Picker`)
-        .setDescription(`Please pick a role to mention when Partnership Tickets are made.`),
+        .setTitle(`${iconConnectB} ROLE SELECTION`)
+        .setDescription(`Select the roles which should be mentioned for new partnership requests.\n\u200B`)
+        .addFields({ name: `HOW IT WORKS`, 
+            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .setFooter(footerPartnership),
     memberRequirementPicker: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Member Requirement`)
-        .setDescription(`Please pick a member requirement for the Partnership Tickets.`),
-    embedMessage: async function embedMessage(memberRequirement, roleMention){
-        partnerShipEmbedDescription = "Press Open to request a partnership with this server."
+        .setTitle(`${iconConnectB} MEMBER REQUIREMENTS`)
+        .setDescription(`Select the minimum members a community needs to partner with you.`)
+        .addFields({ name: `HOW IT WORKS`, 
+            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .setFooter(footerPartnership),
+    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
+        partnerShipEmbedDescription = `Press the button below to request a partnership`
+        
+        
         if(memberRequirement){
             partnerShipEmbedDescription += `\nRequirements: ${memberRequirement}`;
         }
@@ -222,6 +236,8 @@ const embedPartnership = {
             .setTitle(`Partnership`)
             .setDescription(`Partnership has been sent in <#${channel}>`)
         return embed
+
+
     },
     partershipAccepted: async function partershipAccepted(user){
         if (!user) {
@@ -241,10 +257,11 @@ const embedPartnership = {
             .setTimestamp();
         return embed
     },
-    threadOpened: async function threadOpened(thread){
-        const embed = new EmbedBuilder(embedInfo.Success)
-            .setTitle("Partnership Thread Already Open")
-            .setDescription(`[Click here to view it](${existingThread.url})`)
+    ThreadOpened: async function ThreadOpened(existingThread){
+        const embed = new EmbedBuilder(embedInfo.Warn)
+            .setTitle(`${iconWarn} PARTNERSHIP REQUEST PENDING`)
+            .setDescription(`Your partnership request has already been sent and is pending. Please wait until a member of staff is getting back to you.
+                [Click here to view it](${existingThread.url})`)
             .setTimestamp();
         return embed
     },

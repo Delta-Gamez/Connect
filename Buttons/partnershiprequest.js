@@ -15,7 +15,7 @@ module.exports = {
         const existingThread = threads.threads.find(thread => thread.name.startsWith(`${interaction.user.id}:`));
     
         if (existingThread) {
-            const embed = await embedPartnership.threadOpened(existingThread)
+            const embed = await embedPartnership.ThreadOpened(existingThread)
             await interaction.reply({ embeds: [embed], ephemeral: true });
             return;
         }
