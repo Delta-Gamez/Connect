@@ -149,7 +149,7 @@ async function DiscoverySubCommand(interaction) {
 
     collector.on('end', async collected => {
         if (collected.size === 0) {
-            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+            await interaction.editReply({ content: '`Confirmation not received within 1 minute, cancelling`', components: [] });
         }
     });
 }

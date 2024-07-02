@@ -118,7 +118,7 @@ async function PartnershipSubCommand(old, interaction) {
 }
 
 async function ChangePartnership(status, interaction, old, reply) {
-    const removedembed = await embedPartnership.statusChange(status);
+    const removedembed = await embedPartnership.StatusChange(status);
     if(!old.data.exists){
         return;
     }
@@ -220,53 +220,53 @@ async function SendPartnerShipEmbed(interaction) {
         rolesText += `<@&${roles[i]}> `;
     }
 
-    const memberRequirementoptions =[
+    const memberRequirementOptions =[
         new StringSelectMenuOptionBuilder()
             .setLabel('None')
             .setValue('none')
-            .setDescription('No Member Requirement')
+            .setDescription('No member requirement')
             .setEmoji('🚫'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('25+ Members')
+            .setLabel('25 Members')
             .setValue('25+ Members')
-            .setDescription('25+ Members Requirment'),
+            .setDescription('25 members minimum'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('50+ Members')
+            .setLabel('50 Members')
             .setValue('50+ Members')
-            .setDescription('50+ Members Requirment'),
+            .setDescription('50 members minimum'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('100+ Members')
+            .setLabel('100 Members')
             .setValue('100+ Members')
-            .setDescription('100+ Members Requirment'),
+            .setDescription('100 members minimum'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('250+ Members')
+            .setLabel('250 Members')
             .setValue('250+ Members')
-            .setDescription('250+ Members Requirment'),
+            .setDescription('250 members minimum'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('500+ Members')
+            .setLabel('500 Members')
             .setValue('500+ Members')
-            .setDescription('500+ Members Requirment'),
+            .setDescription('500 members minimum'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('1,000+ Members')
+            .setLabel('1,000 Members')
             .setValue('1,000+ Members')
-            .setDescription('1,000+ Members Requirment')
+            .setDescription('1,000 member minimum')
         ]
 
 
     const memberRequirements = new StringSelectMenuBuilder()
         .setCustomId('xmember-requirements')
         .setPlaceholder('Select a Member Requirement')
-        .addOptions(memberRequirementoptions);
+        .addOptions(memberRequirementOptions);
 
     const memberRequirementembed = embedPartnership.memberRequirementPicker;
-
+    
     let memberRequirement;
     try {
-        memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementoptions);
+        memberRequirement = await sendMenuBuilders(interaction, memberRequirements, false, memberRequirementembed, memberRequirementOptions);
     } catch (error) {
         return;
     }
-    
+
     if (!memberRequirement) {
         return;
     }
@@ -283,11 +283,11 @@ async function SendPartnerShipEmbed(interaction) {
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement){
     const channel = await interaction.guild.channels.cache.get(channelid);
 
-    const PartnerShipEmbed = await embedPartnership.embedMessage(memberRequirement, roleMention)
+    const PartnerShipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
-        .setLabel("Open")
+        .setLabel("Request")
         .setStyle(ButtonStyle.Primary);
 
     let actionRow = new ActionRowBuilder().addComponents(button);
