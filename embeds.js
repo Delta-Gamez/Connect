@@ -74,6 +74,7 @@ const embedAbout = {
         .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.`)
         .setFooter(footerConnect),
     GetStarted: new EmbedBuilder(embedInfo.Success)
+        .setTitle(`${iconSuccess} SUCCESSFULLY CONNECTED`)
         .setDescription(`Thanks for inviting <:DG_CO_ConnectBlack:1203623412271022150> **Connect**! 
             
             Connect your community to the best advertising platform for Discord communities. Connect is an easy-to-use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.
@@ -119,6 +120,7 @@ const embedConnect = {
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
         .setDescription('Your community description has been updated.')
+        /*LOGIC SIMILAR TO THE embedConnect.Connect SHOULD BE IMPLEMENTED HERE, SHOWING THE WHOLE COMMUNITY INFORMATION AFTER UPDATING THE DESCRIPTION*/ 
         .setFooter(footerConnect),
     Error: new EmbedBuilder(embedInfo.Error)
         .setDescription('Error')
