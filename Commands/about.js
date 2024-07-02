@@ -11,3 +11,4 @@ module.exports = {
         interaction.reply({ embeds: [embedAbout.About] });
     },
 };
+
