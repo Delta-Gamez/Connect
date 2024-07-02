@@ -26,40 +26,42 @@ module.exports = {
         
         let old = await getServer(interaction)
 
-        if(old.exists){
-            await interaction.reply({
-                embeds: [embedConnect.DescriptionUpdated], 
-                ephemeral: true,
-            });
-            
+        let oldenable = old.server.Connect
+
+        if(old.exists){            
             let data = await createData(interaction);
 
             await updateServer(data, interaction);
         } else {
-            info("Modal addserver Submitted for Processing.");
+            let data
             try {
-                let data = await createData(interaction);
+                data = await createData(interaction);
             } catch (e) {
                 error(`Error while creating server data: ${e}`);
-                await interaction.editReply({
+                await interaction.reply({
                     embeds: [embedConnect.ModalProcess],
                 });
                 return;
             }
-            info(
-                `A new server will be for approval. The following server data will be sent: ${JSON.stringify(data)}`,
-            );
+
             try {
                 await createServer(data, interaction);
             } catch (e) {
-                // Catch synchronous errors
-                error(e);
-                await interaction.editReply({
+                await interaction.reply({
                     embeds: [embedConnect.ErrorDatabase],
                 });
+                return;
             }
-            await interaction.reply({
-                embeds: [embedConnect.ConnectEnabled(true, data)],
+
+        }
+
+        if(oldenable){
+            await interaction.update({
+                embeds: [embedConnect.DescriptionUpdated], 
+            });
+        } else {
+            await interaction.update({
+                embeds: [await embedConnect.ConnectEnabled(true, data)],
             });
         }
     },

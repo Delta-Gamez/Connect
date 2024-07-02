@@ -100,13 +100,13 @@ async function PartnershipSubCommand(old, interaction) {
 
     collector.on('collect', async confirmation => {
         if(confirmation.customId == 'xpartnership-enable'){
-            await PartnershipSubCommande(old, confirmation);
+            await PartnershipSubCommande(old, confirmation, true);
             await ChangePartnership(true, confirmation, old, false);
         } else if(confirmation.customId == 'xpartnership-disable'){
             collector.stop();
             await ChangePartnership(false, confirmation, old, true);
         } else if(confirmation.customId == 'xpartnership-edit'){
-            await PartnershipSubCommande(old, confirmation);
+            await PartnershipSubCommande(old, confirmation, false);
         }
     });
 
@@ -138,15 +138,15 @@ async function ChangePartnership(status, interaction, old, reply) {
     }
 }
 
-async function PartnershipSubCommande(old, interaction) {
+async function PartnershipSubCommande(old, interaction, enable) {
     if (old.data.status != 200) {
-        await StartPartnershipModal(interaction);
+        await StartPartnershipModal(interaction, enable);
     } else {
-        await SendPartnerShipEmbed(interaction);
+        await SendPartnerShipEmbed(interaction, enable);
     }
 }
 
-async function StartPartnershipModal(interaction) {
+async function StartPartnershipModal(interaction, enable) {
     data = {
         ServerID: interaction.guild.id,
         ServerName: interaction.guild.name,
@@ -168,11 +168,11 @@ async function StartPartnershipModal(interaction) {
     );
 
     if(response.data.status == 200){
-        PartnershipSubCommande(response, interaction);
+        PartnershipSubCommande(response, interaction, enable);
     }
 }
 
-async function SendPartnerShipEmbed(interaction) {
+async function SendPartnerShipEmbed(interaction, enable) {
 
     const select = new ChannelSelectMenuBuilder()
     .setCustomId("channels")
@@ -282,13 +282,15 @@ async function SendPartnerShipEmbed(interaction) {
         }
     }
 
-    await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement)
+    await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, enable)
 }
 
-async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement){
+async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, enable){
     const channel = await interaction.guild.channels.cache.get(channelid);
-
-    const PartnerShipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
+    let PartnerShipEmbed;
+    if (enable){
+        PartnerShipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
+    }
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
@@ -302,7 +304,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         components: [actionRow],
     });
 
-    let embed = await embedPartnership.partnershipOpener(channelid)
+    let embed = await embedPartnership.partnershipOpener(channelid, enable, memberRequirement, roleMention)
 
     await interaction.update({
         embeds: [embed],

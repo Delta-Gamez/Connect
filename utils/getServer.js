@@ -17,12 +17,12 @@ async function getServer(interaction) {
 
         return response.data;
     } catch (error) {
-        console.error(error)
         if(interaction.customId){
             await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
         } else {
             await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
         }
+        return null;
     }
 }
 

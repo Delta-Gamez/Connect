@@ -1,11 +1,20 @@
 const { ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const { embedInfoSuccess, embedPartnership } = require("../embeds.js");
+const { embedInfoError, embedPartnership } = require("../embeds.js");
+const { getServer } = require("../utils/utils.js");
 
 module.exports = {
     data: {
         customId: "partnershiprequest",
     },
     async execute(interaction) {
+        const server = await getServer(interaction)
+        if(!server) return;
+
+        if(!server.PartnerShip){
+            interaction.reply({embeds: [embedPartnership.PartnershipDisabled], ephemeral: true})
+            return;
+        }
+
         const description = interaction.message.embeds[0].data.description;
 
         // Fetch active threads

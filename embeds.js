@@ -89,7 +89,21 @@ const embedAbout = {
             
             [Join our Discord](https://sYpmUFQ) for more help, updates, and our road-map.
             \u200B`})
-        .setFooter(footerConnect)
+        .setFooter(footerConnect),
+    serverInfo: async function serverInfo(serverData, guild){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} SERVER INFORMATION`)
+            .setDescription(`This is the information about your server on the Connect platform. 
+                \u200B`)
+            .addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**${guild.name}**
+                **DESCRIPTION:** ${serverData.ShortDesc}
+                **MEMBERS**: ${serverData.MemberCount}
+                **INVITE**: ${serverData.ServerInvite}\n\u200B`})
+            .setFooter(footerConnect)
+        return embed;
+    }
 }
 
 // Connect Embeds /*This is still in work, please don't make any edits to it.*/
@@ -154,7 +168,7 @@ const embedConnect = {
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**${server.SeverName}**
+                value: `**${server.ServerName}**
                 **${server.ShortDesc}**
                 **MEMBERS**: ${server.MemberCount}
                 **INVITE**: ${server.ServerInvite}`})
@@ -231,7 +245,8 @@ const embedPartnership = {
 
         return PartnerShipEmbed;
     },
-    partnershipOpener: async function partnershipOpener(channel){
+    partnershipOpener: async function partnershipOpener(channel, enable, memberRequirement, roleMention){
+        // Enable is true if the partnership module is enabled, False if edited
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`Partnership`)
             .setDescription(`Partnership has been sent in <#${channel}>`)
@@ -288,7 +303,10 @@ const embedPartnership = {
         const embed2 = new EmbedBuilder(embed)
                 .setFooter("Failed to Ping user")
         return embed2;
-    }
+    },
+    PartnershipDisabled: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Partnership`)
+        .setDescription(`You can not use the Button for Partnership Requests as the Partnership Module is disabled.`),
 }
 
 // Staff Management Embeds
