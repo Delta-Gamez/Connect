@@ -446,18 +446,6 @@ const embedManage = {
 };
 
 
-
-// Info Success Embeds
-const embedInfoSuccessTemplate = new EmbedBuilder().setColor(colorSuccess).setFooter({ text: "Connect" });
-const embedInfoSuccess = {
-    Template: embedInfoSuccessTemplate,
-    ModalSumbit: new EmbedBuilder(embedInfoSuccessTemplate)
-        .setTitle(`${iconSuccess} SERVER SUBMITTED`)
-        .setDescription(
-            'Your server has sucessfully been submitted and will now be processed.',
-        )
-};
-
 // Info Warn Embeds
 /*const embedInfoWarnTemplate = new EmbedBuilder().setColor(colorWarn).setFooter('Connect');*/
 
@@ -497,7 +485,6 @@ module.exports = {
     embedPartnership,
     embedManage,
     embedInfoError,
-    embedInfoSuccess,
     embedAbout,
     messageButtonTimeout
 };
