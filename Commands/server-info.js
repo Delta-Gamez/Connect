@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { embedAbout } = require("../embeds.js");
+const { getServer } = require("../utils/utils.js");
 
 module.exports = {
     global: true,

@@ -1,5 +1,5 @@
 /*const { timeStamp } = require('console');*/
-const { EmbedBuilder, Embed } = require('discord.js')
+const { EmbedBuilder, Embed, userMention } = require('discord.js')
 const axios = require('axios');
 
 // Styling Variables
@@ -11,11 +11,12 @@ const colorWarn = '#FFB53E';
 const colorError = '#F14647';
 const colorInfo = '#00469F';
 
-const iconSuccess = '<:DG_CO_Check:1028309734450806815> ';
-const iconWarn = '<:DG_CO_Warn:1142925963668238536> ';
-const iconError = '<:DG_CO_Error:1142926009579094226> ';
-const iconConnect = '<:DG_CO_Connect:1249377684962803794> ';
-const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150> ';
+const iconSuccess = '<:DG_CO_Check:1028309734450806815>';
+const iconWarn = '<:DG_CO_Warn:1142925963668238536>';
+const iconError = '<:DG_CO_Error:1142926009579094226>';
+const iconDisable = '<:DG_CO_Cross:1163377608025702410>';
+const iconConnect = '<:DG_CO_Connect:1249377684962803794>';
+const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>';
 const iconMembers = '<:DG_CO_Members:1257658527426674731>';
 
 const iconURLConnect = 'https://cdn.discordapp.com/emojis/1249377684962803794.webp?size=22&quality=lossless'
@@ -110,16 +111,23 @@ const embedAbout = {
             \u200B`})
         .setFooter(footerConnect),
     ServerInfo: async function ServerInfo(serverData, guild){
+        let guildName = guild.name.toUpperCase();
+        let mentionOwner = userMention(guild.ownerId);
         let embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`${iconConnect} SERVER INFORMATION`)
-            .setDescription(`This is the information about your server on the Connect platform. 
-                \u200B`)
-            .addFields( 
-                { name: 'COMMUNITY INFORMATION', 
-                value: `**${guild.name}**
-                **DESCRIPTION:** ${serverData.ShortDesc}
-                **MEMBERS**: ${serverData.MemberCount}
-                **INVITE**: ${serverData.ServerInvite}\n\u200B`})
+            .setTitle(`${guildName} INFORMATION`)
+            .setDescription(`Information about your community.\n\u200B`)
+            .setThumbnail(`${guild.iconURL()}`)
+            .addFields(
+                { name: `GUILD ID`, value: `${guild.id}`, inline: true },
+                { name: `MEMBERS`, value: `${guild.memberCount}\u200B`, inline: true },
+                { name: `OWNER`, value: `${mentionOwner}\n\u200B`, inline: true },
+                { name: `CREATED`, value: `<t:${guild.createdTimestamp}:D>\n\u200B`}, 
+                { name: `MODULES`, 
+                    value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
+                    ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`
+                    `, inline: true },
+                { name: `CONNECT PLUS`, value: `${serverData.server.Premiumlevel ?? false ? `${iconSuccess}` : `${iconDisable}`}`, inline: true }
+            )
             .setFooter(footerConnect)
         return embed;
     }
