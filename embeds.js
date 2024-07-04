@@ -119,13 +119,14 @@ const embedAbout = {
             .setThumbnail(`${guild.iconURL()}`)
             .addFields(
                 { name: `GUILD ID`, value: `${guild.id}`, inline: true },
-                { name: `MEMBERS`, value: `${guild.memberCount}\u200B`, inline: true },
-                { name: `OWNER`, value: `${mentionOwner}\n\u200B`, inline: true },
-                { name: `CREATED`, value: `<t:${guild.createdTimestamp}:D>\n\u200B`}, 
+                { name: `MEMBERS`, value: `${guild.memberCount}`, inline: true },
+                { name: `\u200B`, value: `\u200B`, inline: true },
+                { name: `OWNER`, value: `${mentionOwner}`, inline: true },
+                { name: `CREATED`, value: `<t:${guild.createdTimestamp}:D>\n\u200B`, inline: true }, 
+                { name: `\u200B`, value: `\u200B`, inline: true },
                 { name: `MODULES`, 
                     value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
-                    ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`
-                    `, inline: true },
+                    ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
                 { name: `CONNECT PLUS`, value: `${serverData.server.Premiumlevel ?? false ? `${iconSuccess}` : `${iconDisable}`}`, inline: true }
             )
             .setFooter(footerConnect)
@@ -135,23 +136,24 @@ const embedAbout = {
 
 const embedConnect = {
         Connect : async function Connect(status, server){
-        let embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`${iconConnect} CONNECT`)
-            .setDescription(`Connect your community to the best advertising platform.
+            let guildName = server.ServerName.toUpperCase();
+            let embed = new EmbedBuilder(embedInfo.Info)
+                .setTitle(`${iconConnect} CONNECT`)
+                .setDescription(`Connect your community to the best advertising platform.
 
-                This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online. 
-                \u200B
-                `)
+                    This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
+                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online. 
+                    \u200B
+                    `)
 
-        if (server.Connect) {
-            embed.addFields( 
-                { name: 'COMMUNITY INFORMATION', 
-                value: `**${server.ServerName}**
-                **DESCRIPTION:** ${server.ShortDesc}
-                **MEMBERS**: ${server.MemberCount}
-                **INVITE**: ${server.ServerInvite}\n\u200B`})
-        }
+            if (server.Connect) {
+                embed.addFields( 
+                    { name: 'COMMUNITY INFORMATION', 
+                    value: `**NAME**: ${guildName}
+                    **DESCRIPTION**: ${server.ShortDesc}
+                    **MEMBERS**: ${server.MemberCount}
+                    **INVITE**: ${server.ServerInvite}\n\u200B`})
+            }
             embed.setFooter(footerConnect)
 
         return embed
@@ -185,6 +187,7 @@ const embedConnect = {
         .setDescription('Database could not be reached.\n Please try again later or contact support.')
         .setFooter(footerConnect),
     StatusChange: async function StatusChange(status, server){
+        let guildName = guild.name.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
             .setDescription(`Connect has successfully been ${status ? 'enabled' : 'disabled'}.\n\u200B`)
@@ -193,7 +196,7 @@ const embedConnect = {
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**${server.ServerName}**
+                value: `**${guildName}**
                 **${server.ShortDesc}**
                 **MEMBERS**: ${server.MemberCount}
                 **INVITE**: ${server.ServerInvite}`})

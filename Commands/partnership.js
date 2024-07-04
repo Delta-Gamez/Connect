@@ -9,7 +9,7 @@ const {
     StringSelectMenuOptionBuilder,
     PermissionFlagsBits } = require("discord.js");
 const { info, error } = require("../src/log.js");
-const { embedPartnership, embedInfoError } = require("../embeds.js");
+const { embedPartnership, embedInfoError, messageButtonTimeout } = require("../embeds.js");
 const utils = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
@@ -111,7 +111,7 @@ async function PartnershipSubCommand(old, interaction) {
 
     collector.on('end', async collected => {
         if (collected.size === 0) {
-            await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+            await interaction.editReply({ content: messageButtonTimeout, components: [] });
         }
     });
 }
