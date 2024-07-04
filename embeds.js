@@ -177,7 +177,7 @@ const embedConnect = {
                 value: `**${guildName}**
                 **${server.ShortDesc}**
                 **MEMBERS**: ${server.MemberCount}
-                **INVITE**: ${server.ServerInvite}`})
+                **INVITE**: ${server.ServerInvite}\n\u200B`})
         }
         return embed
     },
