@@ -160,37 +160,15 @@ const embedConnect = {
     },
     DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-        .setDescription('Your community description has been updated.')
-        /*LOGIC SIMILAR TO THE embedConnect.Connect SHOULD BE IMPLEMENTED HERE, SHOWING THE WHOLE COMMUNITY INFORMATION AFTER UPDATING THE DESCRIPTION*/ 
-        .setFooter(footerConnect),
-    Error: new EmbedBuilder(embedInfo.Error)
-        .setDescription('Error')
-        .setFooter(footerConnect),
-    OutsideServer: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('You need to be in a server to use this command.')
-        .setFooter(footerConnect),
-    ServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ERROR`)
-        .setDescription('Only the server owner can run this command. Please contact the server owner to use this command.')
-        .setFooter(footerConnect),
-    ModalProcess: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('An error occurred while processing your form.\n Please try again later.')
-        .setFooter(footerConnect),
-    Process: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('An error occurred while processing your request.\n Please try again later.')
-        .setFooter(footerConnect),
-    ErrorDatabase: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription('Database could not be reached.\n Please try again later or contact support.')
+        .setDescription(`Your community description has been updated.\n\u200B`)
+        /*CHECK NOTION TASK, EDITING THIS EMBED TO "embedConnect.Edited" and adding whole community information as in "embedConnect.StatusChange"*/ 
         .setFooter(footerConnect),
     StatusChange: async function StatusChange(status, server){
-        let guildName = guild.name.toUpperCase();
+        let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`Connect has successfully been ${status ? 'enabled' : 'disabled'}.\n\u200B`)
+            .setDescription(`The Connect module has successfully been ${status ? 'enabled' : 'disabled'}.
+                Check which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
             .setFooter(footerConnect)
 
         if (server.Connect) {
@@ -202,7 +180,30 @@ const embedConnect = {
                 **INVITE**: ${server.ServerInvite}`})
         }
         return embed
-    }
+    },
+    Error: new EmbedBuilder(embedInfo.Error)
+        .setDescription('Error performing this task. Please try again later.\n\u200B')
+        .setFooter(footerConnect),
+    OutsideServer: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`You need to be in a server to use this command.\n\u200B`)
+        .setFooter(footerConnect),
+    ServerOwner: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ERROR`)
+        .setDescription(`Only the server owner can run this command. Please contact the server owner to use this command.\n\u200B`)
+        .setFooter(footerConnect),
+    ModalProcess: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`An error occurred while processing your form.\n Please try again later.\n\u200B`)
+        .setFooter(footerConnect),
+    Process: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`An error occurred while processing your request.\n Please try again later.\n\u200B`)
+        .setFooter(footerConnect),
+    ErrorDatabase: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`Database could not be reached.\n Please try again later or contact support.\n\u200B`)
+        .setFooter(footerConnect),
 };
 
 
@@ -229,8 +230,8 @@ const embedPartnership = {
     },
     StatusChange : async function StatusChange(status){
         const StatusChange = new EmbedBuilder(embedInfo.Success)
-            .setTitle(`${iconSuccess} PARTNERSHIP MODULE ${status ? "ENABLED" : "DISABLED"} `)
-            .setDescription(`The Partnership module has sucessfully been ${status ? "Enabled" : "Disabled"}.\n\u200B`)
+            .setTitle(`${iconSuccess} PARTNERSHIP MODULE ${status ? 'ENABLED' : 'DISABLED'} `)
+            .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}.\n\u200B`)
             .setFooter(footerPartnership);
         return StatusChange;
     },
