@@ -76,7 +76,7 @@ async function ChangeConnect(status, interaction, old, reply) {
     );
 
     if(reply){
-        const embed = await embedConnect.ConnectEnabled(status, response.data.server)
+        const embed = await embedConnect.StatusChange(status, response.data.server)
         try {
             await interaction.update({
                 embeds: [embed],

@@ -61,7 +61,7 @@ module.exports = {
             });
         } else {
             await interaction.update({
-                embeds: [await embedConnect.ConnectEnabled(true, data)],
+                embeds: [await embedConnect.StatusChange(true, data)],
             });
         }
     },

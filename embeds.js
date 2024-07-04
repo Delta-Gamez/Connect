@@ -184,10 +184,10 @@ const embedConnect = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('Database could not be reached.\n Please try again later or contact support.')
         .setFooter(footerConnect),
-    ConnectEnabled: async function ConnectEnabled(status, server){
+    StatusChange: async function StatusChange(status, server){
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`Connect has successfully been ${status ? 'Enabled' : 'Disabled'}.\n\u200B`)
+            .setDescription(`Connect has successfully been ${status ? 'enabled' : 'disabled'}.\n\u200B`)
             .setFooter(footerConnect)
 
         if (server.Connect) {
