@@ -87,7 +87,7 @@ async function PartnershipSubCommand(old, interaction) {
         row = new ActionRowBuilder().addComponents(PartnerShip_Enable, PartnerShip_Disable);
     }
 
-    const embed = await embedPartnership.Partnership(old.data.server.PartnerShip,old.data.server);
+    const embed = await embedPartnership.ModuleInfo(old.data.server.PartnerShip,old.data.server);
     const response = await interaction.reply({
         embeds: [embed],
         components: [row],

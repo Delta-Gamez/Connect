@@ -125,7 +125,7 @@ async function DiscoverySubCommand(interaction) {
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
 
-    const embed = await embedConnect.Connect(old.data.server.Connect, old.data.server);
+    const embed = await embedConnect.ModuleInfo(old.data.server.Connect, old.data.server);
     const response = await interaction.reply({
         embeds: [embed],
         components: [row],

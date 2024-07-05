@@ -127,7 +127,7 @@ const embedAbout = {
                 { name: `MODULES`, 
                     value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
                     ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
-                { name: `CONNECT PLUS`, value: `${serverData.server.Premiumlevel ?? false ? `${iconSuccess}` : `${iconDisable}`}`, inline: true }
+                { name: `CONNECT PLUS`, value: `${serverData.server.Premiumlevel ?? false ? `${iconSuccess} (Plus)` : `${iconDisable} (Free)`}`, inline: true }
             )
             .setFooter(footerConnect)
         return embed;
@@ -135,7 +135,7 @@ const embedAbout = {
 }
 
 const embedConnect = {
-        Connect : async function Connect(status, server){
+        ModuleInfo : async function ModuleInfo(status, server){
             let guildName = server.ServerName.toUpperCase();
             let embed = new EmbedBuilder(embedInfo.Info)
                 .setTitle(`${iconConnect} CONNECT`)
@@ -208,6 +208,7 @@ const embedConnect = {
 
 
 const embedPartnership = {
+    /*Awaiting Review*/
     Submitted : async function Submitted(status, server){
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} ENABLED`)
@@ -217,10 +218,12 @@ const embedPartnership = {
 
         return embed
     },
-    Partnership : async function Partnership(status, server){
+    ModuleInfo : async function ModuleInfo(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`PARTNERSHIPS MODULE`)
-            .setDescription(`This module allows you to set up partnerships with other communities.
+            .setTitle(`${iconConnect} PARTNERSHIPS`)
+            .setDescription(`Connect your community to other communities across Discord. 
+                
+                This module allows you to set up partnerships with other communities.
                 Module is ${status ? "enabled" : "disabled"}.
                 Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
                 \u200B`)
@@ -231,7 +234,8 @@ const embedPartnership = {
     StatusChange : async function StatusChange(status){
         const StatusChange = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIP MODULE ${status ? 'ENABLED' : 'DISABLED'} `)
-            .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}.\n\u200B`)
+            .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}.
+                Check which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
             .setFooter(footerPartnership);
         return StatusChange;
     },
