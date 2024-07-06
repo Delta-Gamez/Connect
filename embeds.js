@@ -1,5 +1,5 @@
 /*const { timeStamp } = require('console');*/
-const { EmbedBuilder, Embed, userMention } = require('discord.js')
+const { EmbedBuilder, Embed } = require('discord.js')
 const axios = require('axios');
 
 // Styling Variables
