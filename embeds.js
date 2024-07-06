@@ -106,6 +106,7 @@ const embedAbout = {
             \`/connect\` • Advertise your community on the Connect [web-platform](https://connect.deltagamez.ch).
             \`/partnership\` • Manage partnerships inside your community. 
             \`/about\` • Learn more about us, our terms and privacy policy.
+            \`/serverinfo\` • Get information about your community.
             
             [Join our Discord](https://discord.gg/sYpmUFQ) for more help, updates, and our road-map.
             \u200B`})
@@ -173,17 +174,17 @@ const embedConnect = {
 
         return embed
     },
-    Edited:  async function Edited(server){
+    Edited: async function Edited(server){
         let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-            .setDescription(`Your community description has been updated.\n\u200B`)
+            .setDescription(`Your community description has been updated and is now displayed on Connect accordingly.\n\u200B`)
             .addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**${guildName}**
-                **${server.ShortDesc}**
-                **MEMBERS**: ${server.MemberCount}
-                **INVITE**: ${server.ServerInvite}\n\u200B`})
+                    value: `**NAME**: ${guildName}
+                    **DESCRIPTION**: ${server.ShortDesc}
+                    **MEMBERS**: ${server.MemberCount}
+                    **INVITE**: ${server.ServerInvite}\n\u200B`})
             .setFooter(footerConnect)
 
         return embed;
@@ -199,8 +200,8 @@ const embedConnect = {
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**${guildName}**
-                **${server.ShortDesc}**
+                value: `**NAME**: ${guildName}
+                **DESCRIPTION**: ${server.ShortDesc}
                 **MEMBERS**: ${server.MemberCount}
                 **INVITE**: ${server.ServerInvite}\n\u200B`})
         }
