@@ -10,7 +10,7 @@ module.exports = {
         const server = await getServer(interaction)
         if(!server) return;
 
-        if(!server.PartnerShip){
+        if(!server.server.PartnerShip){
             interaction.reply({embeds: [embedPartnership.PartnershipDisabled], ephemeral: true})
             return;
         }

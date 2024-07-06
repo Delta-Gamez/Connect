@@ -20,6 +20,7 @@ module.exports = {
         ) {
             await interaction.reply({
                 embeds: [embedConnect.ServerOwner],
+                components: [],
             });
             return;
         }
@@ -40,6 +41,7 @@ module.exports = {
                 error(`Error while creating server data: ${e}`);
                 await interaction.reply({
                     embeds: [embedConnect.ModalProcess],
+                    components: [],
                 });
                 return;
             }
@@ -49,6 +51,7 @@ module.exports = {
             } catch (e) {
                 await interaction.reply({
                     embeds: [embedConnect.ErrorDatabase],
+                    components: [],
                 });
                 return;
             }
@@ -59,10 +62,12 @@ module.exports = {
             const embed = await embedConnect.Edited(data);
             await interaction.update({
                 embeds: [embed], 
+                components: [],
             });
         } else {
             await interaction.update({
                 embeds: [await embedConnect.StatusChange(true, data)],
+                components: [],
             });
         }
     },

@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, PermissionsBitField  } = require("discord.js");
-const { embedInfoSuccess } = require("../embeds.js");
+const { embedInfoSuccess, embedPartnership } = require("../embeds.js");
 
 module.exports = {
     data: {
@@ -7,8 +7,11 @@ module.exports = {
     },
     async execute(interaction) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-            return interaction.reply({ content: `You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Decline/Close the Partnership Request`, ephemeral: true });
+            return interaction.reply({ embeds: [embedPartnership.buttonApproveDeclinePermission], ephemeral: true });
         }
+
+        if(interaction.channel.name.endsWith("- Declined")) return interaction.reply({embeds: [embedPartnership.partnershipAlreadyDeclined], ephemeral: true});
+        
         const form = new ModalBuilder()
             .setCustomId("partnershipdecline")
             .setTitle("Decline Partnership Request");

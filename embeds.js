@@ -117,6 +117,7 @@ const embedAbout = {
         if( serverData.server.Premiumlevel && serverData.server.Premiumlevel == 1){
             connectPlus = `${iconSuccess} (Plus)`
         }
+        console.log(serverData.server)
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${guildName} INFORMATION`)
             .setDescription(`Information about your community.\n\u200B`)
@@ -130,7 +131,7 @@ const embedAbout = {
                 { name: `\u200B`, value: `\u200B`, inline: true },
                 { name: `MODULES`, 
                     value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
-                    ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
+                    ${serverData.server.PartnerShip ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
                 { name: `CONNECT PLUS`, value: connectPlus, inline: true }
             )
             .setFooter(footerConnect)
@@ -307,7 +308,7 @@ const embedPartnership = {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
                 .setDescription(`Your partnership request has been accepted.`)
-                .setFooter(`Note for Staff: The user couldn't be found, and hasn't been pinged. Please mention the user manually.`)
+                .setFooter({text: `Note for Staff: The user couldn't be found, and hasn't been pinged. Please mention the user manually.`})
             return embed
         }
         
@@ -355,6 +356,15 @@ const embedPartnership = {
     PartnershipDisabled: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Partnership`)
         .setDescription(`You can not use the Button for Partnership Requests as the Partnership Module is disabled.`),
+    buttonApproveDeclinePermission: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Partnership`)
+        .setDescription(`You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Accept/Decline the Partnership Request.`),
+    partnershipAlreadyDeclined: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Partnership`)
+        .setDescription(`This Partnership Request has already been declined.`),
+    partnershipAlreadyAccepted: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`Partnership`)
+        .setDescription(`This Partnership Request has already been accepted.`),
 }
 
 // Staff Management Embeds
