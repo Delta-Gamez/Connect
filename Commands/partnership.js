@@ -275,10 +275,8 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
     interaction = memberRequirement[1];
     memberRequirement = memberRequirement[0];
-    if(memberRequirement){
-        if(memberRequirement[0] == 'none'){
-            memberRequirement = null;
-        }
+    if(!memberRequirement){
+        memberRequirement = 'none';
     }
 
     await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, enable)
