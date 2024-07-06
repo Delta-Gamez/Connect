@@ -4,7 +4,7 @@ const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
-const messageButtonTimeout = '`Button confirmation not received within 60s, please run the command again.`';
+const messageButtonTimeout = '`Button confirmation not received within 60s, cancelling request.`';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
