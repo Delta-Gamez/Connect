@@ -111,13 +111,22 @@ const embedAbout = {
             \u200B`})
         .setFooter(footerConnect),
     ServerInfo: async function ServerInfo(serverData, guild){
+
+        if(!serverData.exists){
+            serverData.server = {
+                Connect: false,
+                PartnerShip: false,
+                Premiumlevel: 0
+            }
+        }
+
         const guildName = guild.name.toUpperCase();
         const date = Math.floor(guild.createdTimestamp / 1000);
         let connectPlus = `${iconDisable} (Free)`
         if(serverData.server.Premiumlevel && serverData.server.Premiumlevel == 1){
             connectPlus = `${iconSuccess} (Plus)`
         }
-        console.log(serverData.server)
+
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${guildName} INFORMATION`)
             .setDescription(`Information about your community.\n\u200B`)
