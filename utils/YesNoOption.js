@@ -1,4 +1,5 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { messageButtonTimeout } = require('../embeds');
 
 /*
     * @param required {CommandInteraction} interaction The interaction object
@@ -44,7 +45,7 @@ async function YesNoOption(interaction, embed) {
 
         collector.on('end', async collected => {
             if (collected.size === 0) {
-                await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+                await interaction.editReply({ content: messageButtonTimeout, components: [] });
                 reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
             }
         });

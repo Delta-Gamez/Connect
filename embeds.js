@@ -1,10 +1,10 @@
 /*const { timeStamp } = require('console');*/
-const { EmbedBuilder, Embed, userMention } = require('discord.js')
+const { EmbedBuilder, Embed } = require('discord.js')
 const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
-const messageButtonTimeout = '`Confirmation not received within 60s, cancelling request.`';
+const messageButtonTimeout = '`Button confirmation not received within 60s, cancelling request.`';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
@@ -114,7 +114,7 @@ const embedAbout = {
         const guildName = guild.name.toUpperCase();
         const date = Math.floor(guild.createdTimestamp / 1000);
         let connectPlus = `${iconDisable} (Free)`
-        if( serverData.server.Premiumlevel && serverData.server.Premiumlevel == 1){
+        if(serverData.server.Premiumlevel && serverData.server.Premiumlevel == 1){
             connectPlus = `${iconSuccess} (Plus)`
         }
         console.log(serverData.server)
@@ -147,7 +147,7 @@ const embedConnect = {
                 .setDescription(`Connect your community to the best advertising platform.
 
                     This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online. 
+                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online.                     
                     \u200B
                     `)
 
@@ -159,6 +159,7 @@ const embedConnect = {
                     **MEMBERS**: ${server.MemberCount}
                     **INVITE**: ${server.ServerInvite}\n\u200B`})
             }
+            embed.addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             embed.setFooter(footerConnect)
 
         return embed
@@ -223,16 +224,6 @@ const embedConnect = {
 
 
 const embedPartnership = {
-    /*Awaiting Review*/
-    Submitted : async function Submitted(status, server){
-        let embed = new EmbedBuilder(embedInfo.Success)
-            .setTitle(`${iconSuccess} ENABLED`)
-            .setDescription(`Partnerships has successfully ${status ? "been setup and enabled" : ""}been set up and enabled\n`)
-            .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
-            .setFooter(footerConnect)
-
-        return embed
-    },
     ModuleInfo : async function ModuleInfo(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIPS`)
@@ -242,13 +233,24 @@ const embedPartnership = {
                 Module is ${status ? "enabled" : "disabled"}.
                 Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
                 \u200B`)
+            .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             .setFooter(footerPartnership)
+
+        return embed
+    },
+    //Submitted was replaced by StatusChange
+    Submitted : async function Submitted(status, server){
+        let embed = new EmbedBuilder(embedInfo.Success)
+            .setTitle(`${iconSuccess} ENABLED`)
+            .setDescription(`Partnerships has successfully ${status ? "been setup and enabled" : ""}been set up and enabled\n`)
+            .addFields( { name: 'PARTNERSHIPS INFORMATION', value: 'Values set during the setup displayed here as in connect module'})
+            .setFooter(footerConnect)
 
         return embed
     },
     StatusChange : async function StatusChange(status){
         const StatusChange = new EmbedBuilder(embedInfo.Success)
-            .setTitle(`${iconSuccess} PARTNERSHIP MODULE ${status ? 'ENABLED' : 'DISABLED'} `)
+            .setTitle(`${iconSuccess} PARTNERSHIPS ${status ? 'ENABLED' : 'DISABLED'} `)
             .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}.
                 Check which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
             .setFooter(footerPartnership);
@@ -258,7 +260,7 @@ const embedPartnership = {
         .setTitle(`CHANNEL SELECTION`)
         .setDescription(`Select the channel users can create a partnership request in.\n\u200B`)
         .addFields({ name: `HOW IT WORKS`, 
-            value: `Users can create a partnership request through pressing the \`Request Partnership\` button. 
+            value: `PUsers can create a partnership request through pressing the \`Request Partnership\` button. 
             We suggest your selected channel is called \`#request-partnership\` and make sure it is public to \`@everyone\`.
             We will post the message, in which users can request a partnership with you.\n\u200B` })
         .setFooter(footerPartnership),
@@ -275,33 +277,26 @@ const embedPartnership = {
             value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
 
-    /*PARTNERSHIP REQUEST*/
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
-        partnerShipEmbedDescription = `Press the button below to request a partnership`
-        
-        
+        partnerShipEmbedDescription = `Press the button below to request a partnership`      
         if(memberRequirement){
             partnerShipEmbedDescription += `\n${iconMembers} **Member Requirements**: ${memberRequirement}`;
         }
         if (roleMention) {
             partnerShipEmbedDescription += `\nThis would ping the role(s) : ${roleMention}`;
         }
-        
         const PartnerShipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnectB} REQUEST PARTNERSHIP`)
             .setDescription(partnerShipEmbedDescription)
             .setFooter(footerPartnership)
         return PartnerShipEmbed;
     },
-    /*END*/
     partnershipOpener: async function partnershipOpener(channel, enable, memberRequirement, roleMention){
         // Enable is true if the partnership module is enabled, False if edited
         let embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`Partnership`)
+            .setTitle(`${iconSuccess} PARTNERSHIPS ENABLED`)
             .setDescription(`Partnership has been sent in <#${channel}>`)
         return embed
-
-
     },
     partershipAccepted: async function partershipAccepted(user){
         if (!user) {
@@ -331,31 +326,32 @@ const embedPartnership = {
 
     ThreadOpener: new EmbedBuilder(embedInfo.Success)
         .setTitle(`Partnership Request`)
-        .setDescription(
-            `This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`,
-        ),
+        .setDescription(`This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`)
+        .setFooter(footerPartnership),
     threadOpen: async function threadOpen(url){
         const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("Partnership Request")
             .setDescription(`Your partnership request thread has been opened. [Click here to view it](${url})`)
-            .setTimestamp();
+            .setFooter(footerPartnership)
         return embed
     },
     partnershipDeclineReason: async function partnershipDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle("Partnership Declined")
             .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
-            .setTimestamp();
+            .setFooter(footerPartnership)
         return embed
     },
     partnershipFailedtoPingUser: async function partnershipFailedtoPingUser(embed){
         const embed2 = new EmbedBuilder(embed)
-                .setFooter("Failed to Ping user")
+            .setFooter("Failed to Ping user")
         return embed2;
     },
-    PartnershipDisabled: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Partnership`)
-        .setDescription(`You can not use the Button for Partnership Requests as the Partnership Module is disabled.`),
+    PartnershipDisabled: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
+        .setDescription(`We are sorry, but we are currently not accepting any partnership requests.
+            The Partnership Module is currently ${iconDisable}\`disabled\`\n\u200B`)
+        .setFooter(footerPartnership),
     buttonApproveDeclinePermission: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Partnership`)
         .setDescription(`You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Accept/Decline the Partnership Request.`),

@@ -8,8 +8,7 @@ const {
     ButtonStyle,
     PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
-const {
-    embedConnect } = require("../embeds.js");
+const { embedConnect, messageButtonTimeout } = require("../embeds.js");
 const axios = require("axios");
 
 module.exports = {
@@ -148,7 +147,7 @@ async function DiscoverySubCommand(interaction) {
 
     collector.on('end', async collected => {
         if (collected.size === 0) {
-            await interaction.editReply({ content: '`Confirmation not received within 1 minute, cancelling`', components: [] });
+            await interaction.editReply({ content: messageButtonTimeout, components: [] });
         }
     });
 }
