@@ -335,14 +335,14 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    partnershipDeclineReason: async function partnershipDeclineReason(reason){
+    PartnershipDeclineReason: async function PartnershipDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle("Partnership Declined")
             .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
             .setFooter(footerPartnership)
         return embed
     },
-    partnershipFailedtoPingUser: async function partnershipFailedtoPingUser(embed){
+    PartnershipFailedtoPingUser: async function PartnershipFailedtoPingUser(embed){
         const embed2 = new EmbedBuilder(embed)
             .setFooter("Failed to Ping user")
         return embed2;
@@ -352,7 +352,7 @@ const embedPartnership = {
         .setDescription(`We are sorry, but we are currently not accepting any partnership requests.
             The Partnership Module is currently ${iconDisable}\`disabled\`\n\u200B`)
         .setFooter(footerPartnership),
-    buttonApproveDeclinePermission: new EmbedBuilder(embedInfo.Info)
+    ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Partnership`)
         .setDescription(`You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Accept/Decline the Partnership Request.`),
     partnershipAlreadyDeclined: new EmbedBuilder(embedInfo.Info)

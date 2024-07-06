@@ -7,7 +7,7 @@ module.exports = {
     },
     async execute(interaction) {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-            return interaction.reply({ embeds: [embedPartnership.buttonApproveDeclinePermission], ephemeral: true });
+            return interaction.reply({ embeds: [embedPartnership.ButtonApproveDeclinePermission], ephemeral: true });
         }
 
         if(interaction.channel.name.endsWith("- Declined")) return interaction.reply({embeds: [embedPartnership.partnershipAlreadyDeclined], ephemeral: true});
