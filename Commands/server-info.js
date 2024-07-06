@@ -8,9 +8,15 @@ module.exports = {
         .setName("serverinfo")
         .setDescription("Provides Infomation about your server."),
     async execute(interaction) {
-        const serverData = await getServer(interaction);
+        try{
+            const serverData = await getServer(interaction);
 
-        const embed = await embedAbout.ServerInfo(serverData, interaction.guild);
-        interaction.reply({ embeds: [embed] });
+            const embed = await embedAbout.ServerInfo(serverData, interaction.guild);
+            interaction.reply({ embeds: [embed] });
+        } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
+        }
+
     },
 };

@@ -56,8 +56,9 @@ module.exports = {
         }
 
         if(oldenable){
+            const embed = await embedConnect.Edited(data);
             await interaction.update({
-                embeds: [embedConnect.DescriptionUpdated], 
+                embeds: [embed], 
             });
         } else {
             await interaction.update({

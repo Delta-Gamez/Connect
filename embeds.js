@@ -107,27 +107,31 @@ const embedAbout = {
             \`/partnership\` • Manage partnerships inside your community. 
             \`/about\` • Learn more about us, our terms and privacy policy.
             
-            [Join our Discord](https://sYpmUFQ) for more help, updates, and our road-map.
+            [Join our Discord](https://discord.gg/sYpmUFQ) for more help, updates, and our road-map.
             \u200B`})
         .setFooter(footerConnect),
     ServerInfo: async function ServerInfo(serverData, guild){
-        let guildName = guild.name.toUpperCase();
-        let mentionOwner = userMention(guild.ownerId);
+        const guildName = guild.name.toUpperCase();
+        const date = Math.floor(guild.createdTimestamp / 1000);
+        let connectPlus = `${iconDisable} (Free)`
+        if( serverData.server.Premiumlevel && serverData.server.Premiumlevel == 1){
+            connectPlus = `${iconSuccess} (Plus)`
+        }
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${guildName} INFORMATION`)
             .setDescription(`Information about your community.\n\u200B`)
-            .setThumbnail(`${guild.iconURL()}`)
+            .setThumbnail(guild.iconURL() ? `${guild.iconURL()}` : null)
             .addFields(
                 { name: `GUILD ID`, value: `${guild.id}`, inline: true },
                 { name: `MEMBERS`, value: `${guild.memberCount}`, inline: true },
                 { name: `\u200B`, value: `\u200B`, inline: true },
-                { name: `OWNER`, value: `${mentionOwner}`, inline: true },
-                { name: `CREATED`, value: `<t:${guild.createdTimestamp}:D>\n\u200B`, inline: true }, 
+                { name: `OWNER`, value: `<@${guild.ownerId}>`, inline: true },
+                { name: `CREATED`, value: `<t:${date}:D>\n\u200B`, inline: true }, 
                 { name: `\u200B`, value: `\u200B`, inline: true },
                 { name: `MODULES`, 
                     value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
                     ${serverData.server.Partnership ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
-                { name: `CONNECT PLUS`, value: `${serverData.server.Premiumlevel ?? false ? `${iconSuccess} (Plus)` : `${iconDisable} (Free)`}`, inline: true }
+                { name: `CONNECT PLUS`, value: connectPlus, inline: true }
             )
             .setFooter(footerConnect)
         return embed;
@@ -158,11 +162,21 @@ const embedConnect = {
 
         return embed
     },
-    DescriptionUpdated: new EmbedBuilder(embedInfo.Success)
-        .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-        .setDescription(`Your community description has been updated.\n\u200B`)
-        /*CHECK NOTION TASK, EDITING THIS EMBED TO "embedConnect.Edited" and adding whole community information as in "embedConnect.StatusChange"*/ 
-        .setFooter(footerConnect),
+    Edited:  async function Edited(server){
+        let guildName = server.ServerName.toUpperCase();
+        let embed = new EmbedBuilder(embedInfo.Success)
+            .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
+            .setDescription(`Your community description has been updated.\n\u200B`)
+            .addFields( 
+                { name: 'COMMUNITY INFORMATION', 
+                value: `**${guildName}**
+                **${server.ShortDesc}**
+                **MEMBERS**: ${server.MemberCount}
+                **INVITE**: ${server.ServerInvite}\n\u200B`})
+            .setFooter(footerConnect)
+
+        return embed;
+    },
     StatusChange: async function StatusChange(status, server){
         let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)

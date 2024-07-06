@@ -1,12 +1,12 @@
 const { custom } = require('../log.js');
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField } = require("discord.js");
+const { embedAbout } = require("../../embeds.js");
 
 const colorSuccess = '#45BB8A';
 
 module.exports = {
 	name: 'guildCreate',
 	execute: async(guild) => {
-        console.log(guild)
         const user = await guild.members.fetch(guild.ownerId);
         const embed = new EmbedBuilder()
             .setTitle('GUILD JOINED')
@@ -23,4 +23,27 @@ module.exports = {
         }
 
         custom("Guild Joined", `Joined Guild: ${guild.name} (${guild.id})`, "#", embed);
+        
+        let targetChannel = guild.channels.cache.find(channel =>
+          (channel.name.toLowerCase().includes('general') || channel.name.toLowerCase().includes('chat')) &&
+          channel.type === 0
+        );
+        
+        if (!targetChannel) {
+          const writableChannels = guild.channels.cache.filter(channel =>
+            channel.type === 0
+          );
+          
+          if (writableChannels.size > 0) {
+            const channelsArray = Array.from(writableChannels.values());
+            targetChannel = channelsArray[Math.floor(Math.random() * channelsArray.length)];
+          }
+          if(!targetChannel) {
+            targetChannel = guild.systemChannel;
+          }
+        }
+        
+        if (targetChannel) {
+          targetChannel.send({ embeds: [embedAbout.GetStarted] }).catch(console.error);
+        }
 }};
