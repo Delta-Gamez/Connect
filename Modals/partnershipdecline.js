@@ -10,7 +10,7 @@ module.exports = {
         console.log("partnershipdecline")
         // Extract the partnership decline reason
         const partnershipDeclineReason = await interaction.fields.getTextInputValue("partnership-decline-reason");
-        const embed = await embedPartnership.partnershipDeclineReason(partnershipDeclineReason);
+        const embed = await embedPartnership.PartnershipDeclineReason(partnershipDeclineReason);
 
         // Change channel name if it ends with "- Accepted"
         if (interaction.channel.name.endsWith("- Accepted")) {
@@ -38,7 +38,7 @@ module.exports = {
                 console.log("partnershipdecline - Notify user - Success")
             } else {
                 // Handle case where user cannot be fetched or pinged
-                const embed2 = embedPartnership.partnershipFailedtoPingUser(embed);
+                const embed2 = embedPartnership.PartnershipFailedtoPingUser(embed);
                 await interaction.reply({ embeds: [embed2] });
             }
         } catch (error) {
