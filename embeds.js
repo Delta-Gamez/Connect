@@ -325,31 +325,33 @@ const embedPartnership = {
 
     ThreadOpener: new EmbedBuilder(embedInfo.Success)
         .setTitle(`Partnership Request`)
-        .setDescription(
-            `This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`,
-        ),
+        .setDescription(`This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`)
+        .setFooter(footerPartnership),
     threadOpen: async function threadOpen(url){
         const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("Partnership Request")
             .setDescription(`Your partnership request thread has been opened. [Click here to view it](${url})`)
-            .setTimestamp();
+            .setFooter(footerPartnership)
         return embed
     },
     partnershipDeclineReason: async function partnershipDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle("Partnership Declined")
             .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
-            .setTimestamp();
+            .setFooter(footerPartnership)
         return embed
     },
     partnershipFailedtoPingUser: async function partnershipFailedtoPingUser(embed){
         const embed2 = new EmbedBuilder(embed)
-                .setFooter("Failed to Ping user")
+            .setFooter("Failed to Ping user")
         return embed2;
     },
-    PartnershipDisabled: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Partnership`)
-        .setDescription(`You can not use the Button for Partnership Requests as the Partnership Module is disabled.`),
+    //While disabled, pressing Request Partnership will display this embed
+    PartnershipDisabled: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
+        .setDescription(`We are sorry, but we are currently not accepting any partnership requests.
+            The Partnership Module is currently ${iconDisable}\`disabled\`\n\u200B`)
+        .setFooter(footerPartnership),
 }
 
 // Staff Management Embeds
