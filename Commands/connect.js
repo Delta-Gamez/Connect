@@ -123,8 +123,23 @@ async function DiscoverySubCommand(interaction) {
 
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
-
-    const embed = await embedConnect.ModuleInfo(old.data.server.Connect, old.data.server);
+    let connectEnabled = false
+    let serverData = old.data.server;
+    if(!old.data.exists){
+        connectEnabled = false;
+        serverData = {
+            Connect: false,
+            ServerName: interaction.guild.name,
+            ServerID: interaction.guild.id,
+            MemberCount: interaction.guild.memberCount,
+            ServerIcon: interaction.guild.iconURL(),
+            ServerBanner: interaction.guild.bannerURL(),
+            ServerOwner: interaction.guild.ownerId,
+        }
+    } else {
+        connectEnabled = old.data.server.PartnerShip;
+    }
+    const embed = await embedConnect.ModuleInfo(connectEnabled, serverData);
     const response = await interaction.reply({
         embeds: [embed],
         components: [row],

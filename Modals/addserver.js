@@ -27,7 +27,11 @@ module.exports = {
         
         let old = await getServer(interaction)
 
-        let oldenable = old.server.Connect
+        
+        let oldenable = false
+        if(old.server){
+            oldenable = old.server.Connect
+        }
 
         if(old.exists){            
             let data = await createData(interaction);

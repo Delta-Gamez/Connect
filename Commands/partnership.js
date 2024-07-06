@@ -87,7 +87,23 @@ async function PartnershipSubCommand(old, interaction) {
         row = new ActionRowBuilder().addComponents(PartnerShip_Enable, PartnerShip_Disable);
     }
 
-    const embed = await embedPartnership.ModuleInfo(old.data.server.PartnerShip,old.data.server);
+    let partnershipEnabled = false
+    let serverData = old.data.server;
+    if(!old.data.exists){
+        partnershipEnabled = false;
+        serverData = {
+            PartnerShip: false,
+            ServerName: interaction.guild.name,
+            ServerID: interaction.guild.id,
+            MemberCount: interaction.guild.memberCount,
+            ServerIcon: interaction.guild.iconURL(),
+            ServerBanner: interaction.guild.bannerURL(),
+            ServerOwner: interaction.guild.ownerId,
+        }
+    } else {
+        partnershipEnabled = old.data.server.PartnerShip;
+    }
+    const embed = await embedPartnership.ModuleInfo(partnershipEnabled,serverData);
     const response = await interaction.reply({
         embeds: [embed],
         components: [row],
@@ -153,6 +169,7 @@ async function StartPartnershipModal(interaction, enable) {
         ServerIcon: interaction.guild.iconURL(),
         ServerBanner: interaction.guild.bannerURL(),
         ServerOwner: interaction.guild.ownerId,
+        PartnerShip: true,
     };
 
     const response = await axios.post(
