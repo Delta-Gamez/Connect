@@ -2,10 +2,10 @@ const {
     EmbedBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ActionRowBuilder,
-} = require("discord.js");
+    ActionRowBuilder } = require("discord.js");
 const axios = require("axios");
-const getServer = require("./getServer.js")
+const getServer = require("./getServer.js");
+const { messageButtonTimeout } = require("../embeds.js");
 
 /*
  * @param required {CommandInteraction} interaction The interaction object
@@ -84,7 +84,7 @@ async function enableDisablePrompt(interaction, moduleName, DBName) {
 
         collector.on('end', async collected => {
             if (collected.size === 0) {
-                await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+                await interaction.editReply({ content: messageButtonTimeout, components: [] });
                 reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
             }
         });
