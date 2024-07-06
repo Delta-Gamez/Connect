@@ -58,7 +58,7 @@ async function enableDisablePrompt(interaction, moduleName, DBName) {
         );
     }
 
-    await interaction.reply({
+    await interaction.update({
         embeds: [embedModuleStaffMangement],
         components: [row],
         ephemeral: true,
