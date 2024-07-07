@@ -4,6 +4,7 @@ const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
+const messageErrorPermission = 'PERMISSION ERROR';
 const messageButtonTimeout = '`Button confirmation not received within 60s, cancelling request.`';
 
 const colorSuccess = '#45BB8A';
@@ -154,10 +155,10 @@ const embedConnect = {
             let guildName = server.ServerName.toUpperCase();
             let embed = new EmbedBuilder(embedInfo.Info)
                 .setTitle(`${iconConnect} CONNECT`)
-                .setDescription(`Connect your community to the best advertising platform.
+                .setDescription(`Connect your community to the best advertising platform for Discord communities.
 
                     This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online.                     
+                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online. [Learn about how it works](https://connect.deltagamez.ch/features/#connect)
                     \u200B
                     `)
 
@@ -220,15 +221,18 @@ const embedConnect = {
         .setFooter(footerConnect),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`An error occurred while processing your form.\n Please try again later.\n\u200B`)
+        .setDescription(`An error occurred while processing your form.
+            Please try again later.\n\u200B`)
         .setFooter(footerConnect),
     Process: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`An error occurred while processing your request.\n Please try again later.\n\u200B`)
+        .setDescription(`An error occurred while processing your request.
+            Please try again later.\n\u200B`)
         .setFooter(footerConnect),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`Database could not be reached.\n Please try again later or contact support.\n\u200B`)
+        .setDescription(`Database could not be reached.
+            Please try again later or contact support.\n\u200B`)
         .setFooter(footerConnect),
 };
 
@@ -238,9 +242,9 @@ const embedPartnership = {
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIPS`)
             .setDescription(`Connect your community to other communities across Discord. 
-                
-                This module allows you to set up partnerships with other communities.
-                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
+
+                This module allows your users to easily create partnership requests and lets your staff handle them with ease. Users can view your member requirements, and for new requests your selected staff will automatically be pinged.
+                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#partnerships)
                 \u200B`)
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             .setFooter(footerPartnership)
@@ -269,7 +273,7 @@ const embedPartnership = {
         .setTitle(`CHANNEL SELECTION`)
         .setDescription(`Select the channel users can create a partnership request in.\n\u200B`)
         .addFields({ name: `HOW IT WORKS`, 
-            value: `PUsers can create a partnership request through pressing the \`Request Partnership\` button. 
+            value: `Users can create a partnership request through pressing the \`Request Partnership\` button. 
             We suggest your selected channel is called \`#request-partnership\` and make sure it is public to \`@everyone\`.
             We will post the message, in which users can request a partnership with you.\n\u200B` })
         .setFooter(footerPartnership),
@@ -287,24 +291,30 @@ const embedPartnership = {
         .setFooter(footerPartnership),
 
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
-        partnerShipEmbedDescription = `Press the button below to request a partnership`      
-        if(memberRequirement){
-            partnerShipEmbedDescription += `\n${iconMembers} **Member Requirements**: ${memberRequirement}`;
-        }
-        if (roleMention) {
-            partnerShipEmbedDescription += `\nThis would ping the role(s) : ${roleMention}`;
-        }
-        const PartnerShipEmbed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`${iconConnectB} REQUEST PARTNERSHIP`)
-            .setDescription(partnerShipEmbedDescription)
+        let addFields = ``;
+        let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`REQUEST A PARTNERSHIP`)
+            .setDescription(`We are currently accepting partnership requests!
+                Create a new partnership request through pressing the button below.\n\u200B`)
             .setFooter(footerPartnership)
-        return PartnerShipEmbed;
+        if (memberRequirement) {
+            if(memberRequirement == 'none'){
+                memberRequirement = 'None';
+            }
+            addFields += `\n**MINIMUM MEMBERS**: ${memberRequirement}`;}
+        if (roleMention) {
+            addFields += `\n**PARTNERSHIP HANDLER**: ${roleMention}`;}
+        if (memberRequirement || roleMention){
+            PartnershipEmbed.addFields( { name: 'REQUEST INFO', value: `${addFields}\n\u200B`})}
+
+        return PartnershipEmbed;
     },
-    partnershipOpener: async function partnershipOpener(channel, enable, memberRequirement, roleMention){
+    PartnershipRequester: async function PartnershipRequester(channel, enable, memberRequirement, roleMention){
         // Enable is true if the partnership module is enabled, False if edited
-        let embed = new EmbedBuilder(embedInfo.Info)
+        let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIPS ENABLED`)
-            .setDescription(`Partnership has been sent in <#${channel}>`)
+            .setDescription(`The partnerships module has successfully been enabled, and was sent to <#${channel}>.\n\u200B`)
+            .setFooter(footerPartnership)
         return embed
     },
     partershipAccepted: async function partershipAccepted(user){
@@ -331,18 +341,19 @@ const embedPartnership = {
             value: `How many members does your community have?
             Why do you want to partner with us?\n\u200B` })
         .setFooter(footerPartnership),
-    ThreadOpened: async function ThreadOpened(existingThread){
+    RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
-            .setTitle(`${iconWarn} PARTNERSHIP REQUEST PENDING`)
-            .setDescription(`Your partnership request has already been sent and is pending. Please wait until a staff member handles your request.
-                [View Request](${existingThread.url})`)
+            .setTitle(`${iconWarn} PARTNERSHIP PENDING`)
+            .setDescription(`Your partnership request has already been sent and is pending. You will be mentioned as soon as a staff member handles your request.
+
+                **YOUR REQUEST**: [View Request](${existingThread.url})\n\u200B`)
             .setFooter(footerPartnership)
         return embed
     },
     threadOpen: async function threadOpen(url){
         const embed = new EmbedBuilder(embedInfo.Success)
-            .setTitle("Partnership Request")
-            .setDescription(`Your partnership request thread has been opened. [Click here to view it](${url})`)
+            .setTitle(`${iconSuccess} PARTNERSHIP REQUESTED`)
+            .setDescription(`Your request has successfully been sent. [Click here to view it](${url})`)
             .setFooter(footerPartnership)
         return embed
     },
@@ -379,9 +390,16 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
-    ErrorServer: new EmbedBuilder(embedInfoErrorTemplate)
-    .setTitle(`${iconError} ${messageErrorServer}`)
-    .setDescription('You need to be in a server to use this!'),
+
+    // ERRORS
+    ErrorServer: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription('You need to be in a server to use this.\n\u200B')
+        .setFooter(footerPartnership),
+    ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorPermission}`)
+        .setDescription('Only the server owner can run this command.\n\u200B')
+        .setFooter(footerPartnership),
 }
 
 // Staff Management Embeds
@@ -432,9 +450,9 @@ const embedManage = {
             data = response.data.staffleave;
         } catch (error) {
             if(interaction.customId){
-                await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
+                await interaction.update({embeds: [embedConnect.ErrorDatabase], components: []})
             } else {
-                await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
+                await interaction.reply({embeds: [embedConnect.ErrorDatabase], components: []})
             }
             return;
         }
@@ -519,17 +537,17 @@ const embedInfoError = {
     ModalProcess: new EmbedBuilder(embedInfoErrorTemplate)
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(
-            'An error occurred while processing your form. Please try again later.',
+            `An error occurred while processing your form. Please try again later.`,
         ),
     Process: new EmbedBuilder(embedInfoErrorTemplate)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'An error occurred while processing your request.\n Please try again later.',
+        .setDescription(`An error occurred while processing your request.
+            Please try again later.`,
         ),
     ServerConnectionError: new EmbedBuilder(embedInfoErrorTemplate)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(
-            'Database could not be reached.\n Please try again later or contact support.',
+        .setDescription(`Database could not be reached.
+            Please try again later or contact support.`,
         ),
 };
 

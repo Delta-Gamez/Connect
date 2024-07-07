@@ -30,7 +30,7 @@ module.exports = {
         }
         if (interaction.member.id !== interaction.guild.ownerId) {
             await interaction.reply({
-                embeds: [embedInfoError.ServerOwner],
+                embeds: [embedPartnership.ErrorServerOwner],
                 ephemeral: true,
             });
             return;
@@ -301,21 +301,22 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, enable){
     const channel = await interaction.guild.channels.cache.get(channelid);
-    let PartnerShipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
+    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
-        .setLabel("Request")
+        .setEmoji(`<:DG_CO_Ticket:1141308990446379029>`)
+        .setLabel(`Request`)
         .setStyle(ButtonStyle.Primary);
 
     let actionRow = new ActionRowBuilder().addComponents(button);
 
     await channel.send({
-        embeds: [PartnerShipEmbed],
+        embeds: [PartnershipEmbed],
         components: [actionRow],
     });
 
-    let embed = await embedPartnership.partnershipOpener(channelid, enable, memberRequirement, roleMention)
+    let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention)
 
     await interaction.update({
         embeds: [embed],
