@@ -1,5 +1,5 @@
 const { ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
-const { embedInfoError, embedPartnership } = require("../embeds.js");
+const { embedPartnership } = require("../embeds.js");
 const { getServer } = require("../utils/utils.js");
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         if(!server) return;
 
         if(!server.server.PartnerShip){
-            interaction.reply({embeds: [embedPartnership.PartnershipDisabled], ephemeral: true})
+            interaction.reply({embeds: [embedPartnership.RequestDisabled], ephemeral: true})
             return;
         }
 

@@ -10,7 +10,7 @@ module.exports = {
         console.log("partnershipdecline")
         // Extract the partnership decline reason
         const partnershipDeclineReason = await interaction.fields.getTextInputValue("partnership-decline-reason");
-        const embed = await embedPartnership.PartnershipDeclineReason(partnershipDeclineReason);
+        const embed = await embedPartnership.RequestDeclineReason(partnershipDeclineReason);
 
         // Change channel name if it ends with "- Accepted"
         if (interaction.channel.name.endsWith("- Accepted")) {

@@ -10,7 +10,7 @@ module.exports = {
             return interaction.reply({ embeds: [embedPartnership.ButtonApproveDeclinePermission], ephemeral: true });
         }
 
-        if(interaction.channel.name.endsWith("- Declined")) return interaction.reply({embeds: [embedPartnership.partnershipAlreadyDeclined], ephemeral: true});
+        if(interaction.channel.name.endsWith("- Declined")) return interaction.reply({embeds: [embedPartnership.RequestAlreadyDeclined], ephemeral: true});
         
         const form = new ModalBuilder()
             .setCustomId("partnershipdecline")

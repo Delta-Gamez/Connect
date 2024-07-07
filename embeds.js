@@ -178,7 +178,7 @@ const embedConnect = {
         let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-            .setDescription(`Your community description has been updated and is now displayed on Connect accordingly.\n\u200B`)
+            .setDescription(`Your community description has successfully been updated and will soon be displayed on (Connect)[https://connect.deltagamez.ch/]. \n\u200B`)
             .addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                     value: `**NAME**: ${guildName}
@@ -240,7 +240,6 @@ const embedPartnership = {
             .setDescription(`Connect your community to other communities across Discord. 
                 
                 This module allows you to set up partnerships with other communities.
-                Module is ${status ? "enabled" : "disabled"}.
                 Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and get you online.
                 \u200B`)
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
@@ -325,6 +324,13 @@ const embedPartnership = {
         return embed
     },
 
+    ThreadOpener: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
+        .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
+        .addFields({ name: `QUESTIONS`, 
+            value: `How many members does your community have?
+            Why do you want to partner with us?\n\u200B` })
+        .setFooter(footerPartnership),
     ThreadOpened: async function ThreadOpened(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
             .setTitle(`${iconWarn} PARTNERSHIP REQUEST PENDING`)
@@ -333,11 +339,6 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-
-    ThreadOpener: new EmbedBuilder(embedInfo.Success)
-        .setTitle(`Partnership Request`)
-        .setDescription(`This is your partnership request thread. Please describe what you had in mind, and we will get back to you as soon as possible.`)
-        .setFooter(footerPartnership),
     threadOpen: async function threadOpen(url){
         const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle("Partnership Request")
@@ -345,10 +346,12 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    PartnershipDeclineReason: async function PartnershipDeclineReason(reason){
+
+    RequestDeclineReason: async function RequestDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
-            .setTitle("Partnership Declined")
-            .setDescription(`Your partnership request has been declined for the following reason: ${reason}`)
+            .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
+            .setDescription(`We are sorry to let you know that your partnership request has been declined.
+                **Reason**: ${reason} \n\u200B`)
             .setFooter(footerPartnership)
         return embed
     },
@@ -357,20 +360,28 @@ const embedPartnership = {
             .setFooter("Failed to Ping user")
         return embed2;
     },
-    PartnershipDisabled: new EmbedBuilder(embedInfo.Error)
+    RequestDisabled: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
-        .setDescription(`We are sorry, but we are currently not accepting any partnership requests.
-            The Partnership Module is currently ${iconDisable}\`disabled\`\n\u200B`)
+        .setDescription(`We are sorry, but we are currently not accepting any partnership requests.\n\u200B`)
+        .addFields({ name: `STAFF INFO`, value: `If you are the community owner, use \`/partnership\` to re-enable partnership requests. \n\u200B`})
         .setFooter(footerPartnership),
-    ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Partnership`)
-        .setDescription(`You do not have the required permissions to use this Button.\nPlease ask the Staff Team to Accept/Decline the Partnership Request.`),
-    partnershipAlreadyDeclined: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Partnership`)
-        .setDescription(`This Partnership Request has already been declined.`),
-    partnershipAlreadyAccepted: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`Partnership`)
-        .setDescription(`This Partnership Request has already been accepted.`),
+    ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} PERMISSION ERROR`)
+        .setDescription(`You do not have the required permissions to use this Button.
+            Please ask the Staff Team to Approve/Decline the Partnership Request.
+            
+            Staff Members require the \`Manage Messages\` permission to handle requests.`),
+    RequestAlreadyDeclined: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
+        .setDescription(`This Partnership Request has already been declined.\n\u200B`)
+        .setFooter(footerPartnership),
+    RequestAlreadyAccepted: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
+        .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
+        .setFooter(footerPartnership),
+    ErrorServer: new EmbedBuilder(embedInfoErrorTemplate)
+    .setTitle(`${iconError} ${messageErrorServer}`)
+    .setDescription('You need to be in a server to use this!'),
 }
 
 // Staff Management Embeds
