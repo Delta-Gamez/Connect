@@ -43,7 +43,7 @@ module.exports = {
 
         thread.members.add(interaction.user.id);
         
-        const embed = embedPartnership.ThreadOpener;
+        const embed = embedPartnership.RequestThread;
         
         let approve = new ButtonBuilder()
             .setCustomId("partnershipaccept")
@@ -56,7 +56,7 @@ module.exports = {
             .setStyle(ButtonStyle.Danger);
 
         const row = new ActionRowBuilder()
-        .addComponents(approve, decline);
+            .addComponents(approve, decline);
         
         if (role) {
             thread.send({
@@ -73,7 +73,7 @@ module.exports = {
 
 
 
-        const replyEmbed = await embedPartnership.threadOpen(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
+        const replyEmbed = await embedPartnership.RequestSuccess(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
         
         interaction.reply({ 
             embeds: [replyEmbed], 

@@ -334,12 +334,12 @@ const embedPartnership = {
         return embed
     },
 
-    ThreadOpener: new EmbedBuilder(embedInfo.Info)
+    RequestThread: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
         .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
         .addFields({ name: `QUESTIONS`, 
-            value: `How many members does your community have?
-            Why do you want to partner with us?\n\u200B` })
+            value: `\`•\` How many members does your community have?
+            \`•\` Why do you want to partner with us?\n\u200B` })
         .setFooter(footerPartnership),
     RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
@@ -350,10 +350,12 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    threadOpen: async function threadOpen(url){
+    RequestSuccess: async function RequestSuccess(url){
         const embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIP REQUESTED`)
-            .setDescription(`Your request has successfully been sent. [Click here to view it](${url})`)
+            .setDescription(`Your partnership request has successfully been sent. Please open the request below and provide us with more information about your request. 
+                
+                **YOUR REQUEST**: [View Request](${url})\n\u200B`)
             .setFooter(footerPartnership)
         return embed
     },
@@ -362,7 +364,8 @@ const embedPartnership = {
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
             .setDescription(`We are sorry to let you know that your partnership request has been declined.
-                **Reason**: ${reason} \n\u200B`)
+
+                **REASON**: ${reason} \n\u200B`)
             .setFooter(footerPartnership)
         return embed
     },
