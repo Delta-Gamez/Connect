@@ -42,8 +42,9 @@ module.exports = {
         });
 
         thread.members.add(interaction.user.id);
-        
-        const embed = embedPartnership.RequestThread;
+        const serverData = await getServer(interaction);
+
+        const embed = await embedPartnership.RequestThread(serverData);
         
         let approve = new ButtonBuilder()
             .setCustomId("partnershipaccept")
@@ -75,9 +76,11 @@ module.exports = {
 
         const replyEmbed = await embedPartnership.RequestSuccess(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
         
-        interaction.reply({ 
-            embeds: [replyEmbed], 
-            ephemeral: true
-        });
+        if(interaction.replied || interaction.deferred) {
+            interaction.reply({ 
+                embeds: [replyEmbed], 
+                ephemeral: true
+            });
+        }
     },
 };

@@ -334,13 +334,26 @@ const embedPartnership = {
         return embed
     },
 
-    RequestThread: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
-        .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
-        .addFields({ name: `QUESTIONS`, 
-            value: `\`•\` How many members does your community have?
-            \`•\` Why do you want to partner with us?\n\u200B` })
-        .setFooter(footerPartnership),
+    RequestThread: async function RequestThread(serverData) {
+
+        const embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
+            .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
+            .setFooter(footerPartnership)
+
+        if(serverData.server.PartnerShipQuestions != "null"){
+            let value = ""
+            for (const question of JSON.parse(serverData.server.PartnerShipQuestions)) {
+                value = value + `\`•\` ${question}\n`
+            }
+    
+            if(value != "") {
+                embed.addFields({ name: `QUESTIONS`, value: value })
+            }
+        }
+
+        return embed
+    },
     RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
             .setTitle(`${iconWarn} PARTNERSHIP PENDING`)

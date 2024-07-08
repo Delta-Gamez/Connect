@@ -1,16 +1,16 @@
-const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js');
 const { messageButtonTimeout } = require('../embeds.js')
 
 async function askQuestion(interaction, question, inputs = []) {
     return new Promise(async (resolve, reject) => {
         // Step 1: Create and send a modal to ask the user a question
         const modal = new ModalBuilder() // Create a new modal
-            .setTitle(`Question: ${question}`)
+            .setTitle(`${question[0]}`)
             .setCustomId('xuniqueIdForModal');
 
         const textInput = new TextInputBuilder() // Create a text input for the question
             .setCustomId('textInputCustomId')
-            .setLabel('Type your answer here')
+            .setLabel(`${question[1]}`)
             .setStyle('Short'); // SHORT for single-line input, PARAGRAPH for multi-line
 
         const actionRow = new ActionRowBuilder().addComponents(textInput); // Add the text input to an action row
@@ -50,8 +50,13 @@ async function askQuestion(interaction, question, inputs = []) {
             const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
             // Send the select menu in a message
-            if(modalInteraction.replied) await modalInteraction.update({ content: `Do you want to add more or are you done? ${inputs}`, components: [actionRow] });
-            if(!modalInteraction.replied) await modalInteraction.reply({ content: `Do you want to add more or are you done? ${inputs}`, components: [actionRow] });
+
+            const inputsNice = inputs.map((input, index) => `**${index+1}**: ${input}`).join('\n');
+            const embed = new EmbedBuilder()
+                .setTitle('Question')
+                .setDescription(`Do you want to add more or are you done?\n${inputsNice}`);
+            if(modalInteraction.replied) await modalInteraction.update({ embeds: [embed], components: [actionRow] });
+            if(!modalInteraction.replied) await modalInteraction.reply({ embeds: [embed], components: [actionRow] });
 
             // Step 4: Handle the user's selection
             const selectFilter = (i) => i.customId === 'selectMenuCustomId';
@@ -64,27 +69,18 @@ async function askQuestion(interaction, question, inputs = []) {
                     resolve(await askQuestion(selectInteraction, question, inputs)) 
                 } else {
                     // If the user is done, process the information
-                    await selectInteraction.update({ content: 'Thank you for your input!', components: [] });
-                    console.log('Question:', question);
-                    console.log('Inputs:', inputs);
-                    resolve(inputs);
+                    resolve([selectInteraction, inputs]);
                 }
             });
 
             collector.on('end', async (collected) => {
                 if (collected.size === 0) {
-                    await modalInteraction.editReply({ content: 'No response received in time.', components: [] });
+                    await modalInteraction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
                 }
             });
         } catch (error) {
-            if (error.code === 'INTERACTION_COLLECTOR_ERROR') {
-                await interaction.followUp({ content: 'No response received in time.', ephemeral: true });
-            } else if (error.code === 40060) {
-                reject('Interaction has already been acknowledged.');
-
-            } else {
-                reject(error);
-            }
+            console.error(error);
+            await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
         }
     });
 }

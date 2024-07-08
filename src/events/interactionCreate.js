@@ -88,6 +88,7 @@ module.exports = {
                 );
             }
         } else if (interaction.isModalSubmit()) {
+            if(interaction.customId.startsWith("x")) return;
             let customid = interaction.customId
             if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
             const modal = client.modals.get(customid);
