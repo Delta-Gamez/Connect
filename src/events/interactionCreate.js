@@ -4,6 +4,7 @@ const path = require("path");
 module.exports = {
     name: "interactionCreate",
     execute: async (interaction) => {
+
         if (interaction.isAutocomplete()) {
             let command = interaction.client.slashcommands.get(
                 interaction.commandName,
@@ -63,9 +64,6 @@ module.exports = {
                 }
             }
         } else if (interaction.isButton()) {
-            if (interaction.customId.startsWith("x")) {
-                return;
-            }
             let customid = interaction.customId
             if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
             
@@ -88,6 +86,9 @@ module.exports = {
                 );
             }
         } else if (interaction.isModalSubmit()) {
+            if (interaction.customId.startsWith("x")) {
+                return;
+            }
             let customid = interaction.customId
             if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
             const modal = client.modals.get(customid);

@@ -290,7 +290,9 @@ const embedPartnership = {
             value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
 
-    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
+    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild){
+        // interactionGuild.iconURL() will give the guild icon
+        
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
@@ -466,13 +468,21 @@ const embedManage = {
         if(data.Reason){
             desc += `Reason: ${data.Reason}\n`;
         }
-        if(data.StartDate){
+        if(data.StartDate && !data.EndDate){
             const startTimestampInSeconds = Math.floor(new Date(data.StartDate).getTime() / 1000);
             desc += `Start Date: <t:${startTimestampInSeconds}:D>\n`;
         }
-        if (data.EndDate) {
+        if (data.EndDate && !data.StartDate) {
             const endTimestampInSeconds = Math.floor(new Date(data.EndDate).getTime() / 1000);
             desc += `End Date: <t:${endTimestampInSeconds}:D>\n`;
+        }
+        if(data.StartDate && data.EndDate){
+            const startTimestampInSeconds = Math.floor(new Date(data.StartDate).getTime() / 1000);
+            const endTimestampInSeconds = Math.floor(new Date(data.EndDate).getTime() / 1000);
+            const durationInSeconds = endTimestampInSeconds - startTimestampInSeconds;
+            const durationInDays = Math.floor(durationInSeconds / 86400); // Convert seconds to days
+            desc += `Duration: <t:${startTimestampInSeconds}:R> to <t:${endTimestampInSeconds}:R>\n`;
+            desc += `This is a total of ${durationInDays} days\n`; // Display total duration in days
         }
         if(data.Status){
             desc += `Status: ${data.Status}\n`;
@@ -521,6 +531,9 @@ const embedManage = {
     selectModeraterRoles: new EmbedBuilder(embedInfo.Info)
         .setTitle(`Select Moderation Roles`)
         .setDescription(`Select the roles that can moderate staff leave requests.`),
+    StaffChannelNotFound: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${messageErrorServer}`)
+        .setDescription(`The Staff Leave Channel could not be found.`),
 };
 
 

@@ -301,7 +301,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, enable){
     const channel = await interaction.guild.channels.cache.get(channelid);
-    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
+    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention, interaction.guild)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
