@@ -82,35 +82,16 @@ const embedAbout = {
     About: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconConnect} CONNECT`)
         .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, filled with features for partnerships, advertising and more.\n\u200B`)
-        .addFields({ name: 'CONNECT', 
-            value: `\`•\` [Connect Web](https://connect.deltagamez.ch/)
-            \`•\` [Discord Community Support](https://discord.gg/sYpmUFQ)
-            \`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC)`, 
-            inline: true },
-            { name: `LEGAL`, 
-                value: `\`•\` Privacy Policy
-                \`•\` Terms of Service`, inline: true}, 
-            { name: 'NOTE', value: `
-                Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms.
-                \u200B`})
+        .addFields(
+            { name: 'CONNECT', value: `\`•\` [Connect Web](https://connect.deltagamez.ch/) \n\`•\` [Discord Community Support](https://discord.gg/sYpmUFQ) \n\`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC)`, inline: true },
+            { name: `LEGAL`, value: `\`•\` Privacy Policy \n\`•\` Terms of Service`, inline: true}, 
+            { name: 'NOTE', value: `Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms. \n\u200B`})
         .setFooter(footerConnect),
     GetStarted: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} SUCCESSFULLY CONNECTED`)
-        .setDescription(`Thanks for inviting <:DG_CO_ConnectBlack:1203623412271022150> **Connect**! 
-            
-            Connect your community to the best advertising platform for Discord communities. Connect is an easy-to-use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more.
-            \u200B`)
+        .setDescription(`Thanks for inviting <:DG_CO_ConnectBlack:1203623412271022150> **Connect**! \n\nConnect your community to the best advertising platform for Discord communities. Connect is an easy-to-use Discord Bot, perfected for small and large Discord communities, filled with features for partnerships, advertising and more. \n\u200B`)
         .addFields( 
-            { name: `COMMUNITY INFORMATION`, 
-            value: `Connect uses only minimal commands to get you where you want to be. Here are the commands to help you get started. 
-            
-            \`/connect\` • Advertise your community on the Connect [web-platform](https://connect.deltagamez.ch).
-            \`/partnership\` • Manage partnerships inside your community. 
-            \`/about\` • Learn more about us, our terms and privacy policy.
-            \`/serverinfo\` • Get information about your community.
-            
-            [Join our Discord](https://discord.gg/sYpmUFQ) for more help, updates, and our road-map.
-            \u200B`})
+            { name: `COMMUNITY INFORMATION`, value: `Connect uses only minimal commands to get you where you want to be. Here are the commands to help you get started. \n\n\`/connect\` • Advertise your community on the Connect [web-platform](https://connect.deltagamez.ch). \n\`/partnership\` • Manage partnerships inside your community. \n\`/about\` • Learn more about us, our terms and privacy policy. \n\`/serverinfo\` • Get information about your community. \n\n[Join our Discord](https://discord.gg/sYpmUFQ) for more help, updates, and our road-map. \n\u200B`})
         .setFooter(footerConnect),
     ServerInfo: async function ServerInfo(serverData, guild){
 
@@ -136,14 +117,11 @@ const embedAbout = {
             .addFields(
                 { name: `GUILD ID`, value: `${guild.id}`, inline: true },
                 { name: `MEMBERS`, value: `${guild.memberCount}`, inline: true },
-                { name: `\u200B`, value: `\u200B`, inline: true },
                 { name: `OWNER`, value: `<@${guild.ownerId}>`, inline: true },
                 { name: `CREATED`, value: `<t:${date}:D>\n\u200B`, inline: true }, 
-                { name: `\u200B`, value: `\u200B`, inline: true },
                 { name: `MODULES`, 
-                    value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\`
-                    ${serverData.server.PartnerShip ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: true },
-                { name: `CONNECT PLUS`, value: connectPlus, inline: true }
+                    value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\` \n${serverData.server.PartnerShip ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: false },
+                { name: `CONNECT PLUS`, value: `${connectPlus} \n\u200B`, inline: true }
             )
             .setFooter(footerConnect)
         return embed;
@@ -155,20 +133,14 @@ const embedConnect = {
             let guildName = server.ServerName.toUpperCase();
             let embed = new EmbedBuilder(embedInfo.Info)
                 .setTitle(`${iconConnect} CONNECT`)
-                .setDescription(`Connect your community to the best advertising platform for Discord communities.
-
-                    This module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. 
-                    Use the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online. [Learn about how it works](https://connect.deltagamez.ch/features/#connect)
-                    \u200B
+                .setDescription(`Connect your community to the best advertising platform for Discord communities. \n\nThis module allows your community to be displayed on the [Connect web-platform](https://connect.deltagamez.ch). Through the platform, you can display your community to the web, for everyone to view and join. \n\nUse the buttons below to enable or disable the module and enter your community description, we will fetch your community data and get you online. [Learn about how it works](https://connect.deltagamez.ch/features/#connect)
+                    \u200B 
                     `)
 
             if (server.Connect) {
                 embed.addFields( 
                     { name: 'COMMUNITY INFORMATION', 
-                    value: `**NAME**: ${guildName}
-                    **DESCRIPTION**: ${server.ShortDesc}
-                    **MEMBERS**: ${server.MemberCount}
-                    **INVITE**: ${server.ServerInvite}\n\u200B`})
+                    value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
             }
             embed.addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             embed.setFooter(footerConnect)
@@ -182,10 +154,7 @@ const embedConnect = {
             .setDescription(`Your community description has successfully been updated and will soon be displayed on (Connect)[https://connect.deltagamez.ch/]. \n\u200B`)
             .addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                    value: `**NAME**: ${guildName}
-                    **DESCRIPTION**: ${server.ShortDesc}
-                    **MEMBERS**: ${server.MemberCount}
-                    **INVITE**: ${server.ServerInvite}\n\u200B`})
+                    value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
             .setFooter(footerConnect)
 
         return embed;
@@ -201,14 +170,12 @@ const embedConnect = {
         if (server.Connect) {
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
-                value: `**NAME**: ${guildName}
-                **DESCRIPTION**: ${server.ShortDesc}
-                **MEMBERS**: ${server.MemberCount}
-                **INVITE**: ${server.ServerInvite}\n\u200B`})
+                value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
         }
         return embed
     },
     Error: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ERROR`)
         .setDescription('Error performing this task. Please try again later.\n\u200B')
         .setFooter(footerConnect),
     OutsideServer: new EmbedBuilder(embedInfo.Error)
@@ -216,23 +183,20 @@ const embedConnect = {
         .setDescription(`You need to be in a server to use this command.\n\u200B`)
         .setFooter(footerConnect),
     ServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ERROR`)
+        .setTitle(`${iconError} ${messageErrorPermission}`)
         .setDescription(`Only the server owner can run this command. Please contact the server owner to use this command.\n\u200B`)
         .setFooter(footerConnect),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`An error occurred while processing your form.
-            Please try again later.\n\u200B`)
+        .setDescription(`An error occurred while processing your form. \nPlease try again later.\n\u200B`)
         .setFooter(footerConnect),
     Process: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`An error occurred while processing your request.
-            Please try again later.\n\u200B`)
+        .setDescription(`An error occurred while processing your request. \nPlease try again later.\n\u200B`)
         .setFooter(footerConnect),
     ErrorDatabase: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
-        .setDescription(`Database could not be reached.
-            Please try again later or contact support.\n\u200B`)
+        .setDescription(`Database could not be reached. \nPlease try again later or contact support.\n\u200B`)
         .setFooter(footerConnect),
 };
 
@@ -241,10 +205,7 @@ const embedPartnership = {
     ModuleInfo : async function ModuleInfo(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIPS`)
-            .setDescription(`Connect your community to other communities across Discord. 
-
-                This module allows your users to easily create partnership requests and lets your staff handle them with ease. Users can view your member requirements, and for new requests your selected staff will automatically be pinged.
-                Use the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#partnerships)
+            .setDescription(`Connect your community to other communities across Discord. \n\nThis module allows your users to easily create partnership requests and lets your staff handle them with ease. Users can view your member requirements, and for new requests your selected staff will automatically be pinged. \n\nUse the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#partnerships)
                 \u200B`)
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             .setFooter(footerPartnership)

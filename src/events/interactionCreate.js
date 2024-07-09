@@ -65,6 +65,7 @@ module.exports = {
             }
         } else if (interaction.isButton()) {
             let customid = interaction.customId
+            if(interaction.customId.startsWith("x")) return;
             if(interaction.customId.includes("-")) customid = interaction.customId.split("-")[0]
             
             const button = client.buttons.get(customid);
