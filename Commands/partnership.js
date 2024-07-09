@@ -11,7 +11,7 @@ const {
     EmbedBuilder} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError, messageButtonTimeout } = require("../embeds.js");
-const { askQuestion, updateServer, YesNoOption} = require("../utils/utils.js");
+const { askQuestion, updateServer, YesNoOption, getServer} = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
@@ -190,6 +190,7 @@ async function StartPartnershipModal(interaction, enable) {
 }
 
 async function SendPartnerShipEmbed(interaction, enable) {
+    const server = await getServer(interaction);
 
     const select = new ChannelSelectMenuBuilder()
     .setCustomId("channels")
@@ -342,8 +343,9 @@ async function SendPartnerShipEmbed(interaction, enable) {
     switch (option) {
         case 'yes':
             try {
-                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."])
+                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3)
             } catch (error) {
+                console.log(error)
                 return;
             }
             interaction = questions[0];
@@ -359,10 +361,9 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, questions, enable){
     data = {
-        PartnerShipQuestions: JSON.stringify(questions, (key, value) =>
-            typeof value === 'bigint' ? value.toString() : value // Convert BigInt to string
-        ),
+        PartnerShipQuestions: JSON.stringify(questions)
     }
+
     await updateServer(data, interaction);
     const channel = await interaction.guild.channels.cache.get(channelid);
     let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)

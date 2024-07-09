@@ -1,8 +1,18 @@
 const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js');
 const { messageButtonTimeout } = require('../embeds.js')
 
-async function askQuestion(interaction, question, inputs = []) {
+/*
+ * @param required {CommandInteraction} interaction The interaction object it uses this to update other data for you
+ * @param required {Array} [0] - Title of Modal, [1] - Title of Text Input
+ * @param optional {Array} inputs - Array of inputs
+ * @param optional {Number} limit - Limit of inputs
+ * @returns {Promise} [interaction, inputs]
+ */
+
+
+async function askQuestion(interaction, question, inputs = [], limit) {
     return new Promise(async (resolve, reject) => {
+
         // Step 1: Create and send a modal to ask the user a question
         const modal = new ModalBuilder() // Create a new modal
             .setTitle(`${question[0]}`)
@@ -29,6 +39,8 @@ async function askQuestion(interaction, question, inputs = []) {
             // Get the user's input from the modal
             const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
             inputs.push(userInput);
+
+            if(limit && inputs.length >= limit) return resolve([interaction, inputs]);
 
             // Step 3: Present the user with a select menu to add more or finish
             const selectMenu = new StringSelectMenuBuilder()
@@ -71,7 +83,7 @@ async function askQuestion(interaction, question, inputs = []) {
                 if (selectInteraction.values[0] === 'add_more') {
                     // If the user wants to add more, call askQuestion again
                     collector.stop();
-                    resolve(await askQuestion(selectInteraction, question, inputs)) 
+                    resolve(await askQuestion(selectInteraction, question, inputs, limit)) 
                 } else {
                     // If the user is done, process the information
                     resolve([selectInteraction, inputs]);
