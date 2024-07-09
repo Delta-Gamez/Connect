@@ -21,7 +21,10 @@ async function askQuestion(interaction, question, inputs = [], limit) {
         const textInput = new TextInputBuilder() // Create a text input for the question
             .setCustomId('textInputCustomId')
             .setLabel(`${question[1]}`)
-            .setStyle('Short'); // SHORT for single-line input, PARAGRAPH for multi-line
+            .setStyle('Short')
+            .setMaxLength(80)
+            .setMinLength(5);
+
 
         const actionRow = new ActionRowBuilder().addComponents(textInput); // Add the text input to an action row
 

@@ -289,7 +289,13 @@ const embedPartnership = {
         .addFields({ name: `HOW IT WORKS`, 
             value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
-
+    CustomQuestionsSelection: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`CUSTOM QUESTIONS`)
+        .setDescription(`Select if you want to use custom questions for partnership module.\n\u200B`)
+        .addFields({ name: `HOW IT WORKS`,
+            value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
+        { name: `DEFAULT`, value: `The default questions are:\nWhat is the community name?\nWhat is your member count?\nWhat is your community about?\nCan you provide a Discord invite?"`})
+        .setFooter(footerPartnership),
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
@@ -415,7 +421,7 @@ const embedPartnership = {
     ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorPermission}`)
         .setDescription('Only the server owner can run this command.\n\u200B')
-        .setFooter(footerPartnership),
+        .setFooter(footerPartnership)
 }
 
 // Staff Management Embeds

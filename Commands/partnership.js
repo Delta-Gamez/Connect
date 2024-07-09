@@ -298,9 +298,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
         memberRequirement = 'none';
     }
 
-    const embed = new EmbedBuilder()
-        .setTitle('Partnership Request Questions')
-        .setDescription('Do you want to ask questions for partnership requests?');
+    const embed = embedPartnership.CustomQuestionsSelection;
 
     const options = [
         new StringSelectMenuOptionBuilder()
@@ -352,7 +350,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
             questions = questions[1];
             break;
         case 'default':
-            questions = ["How many members do you have?", "Why do you want to partner?", "Can you send a discord invite link?"];
+            questions = ["What is the community name?", "What is your member count?", "What is your community about?", "Can you provide a Discord invite?"];
             break;
     }
 
