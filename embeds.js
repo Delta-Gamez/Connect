@@ -334,7 +334,7 @@ const embedPartnership = {
         return embed
     },
 
-    RequestThread: async function RequestThread(serverData) {
+    RequestThread: async function RequestThread(serverData, questionsAnswers){ 
 
         const embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
@@ -343,8 +343,8 @@ const embedPartnership = {
 
         if(serverData.server.PartnerShipQuestions != "null"){
             let value = ""
-            for (const question of JSON.parse(serverData.server.PartnerShipQuestions)) {
-                value = value + `\`•\` ${question}\n`
+            for (const question of questionsAnswers) {
+                value = value + `\`•\` ${question.question} - ${question.answer}\n`
             }
     
             if(value != "") {

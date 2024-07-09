@@ -341,7 +341,11 @@ async function SendPartnerShipEmbed(interaction, enable) {
     let questions = null;
     switch (option) {
         case 'yes':
-            questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."]);
+            try {
+                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."])
+            } catch (error) {
+                return;
+            }
             interaction = questions[0];
             questions = questions[1];
             break;

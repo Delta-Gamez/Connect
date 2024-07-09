@@ -24,7 +24,7 @@ async function askQuestion(interaction, question, inputs = []) {
         // Step 2: Listen for the modal submit interaction
         const filter = (i) => i.customId === 'xuniqueIdForModal';
         try {
-            const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 15000 });
+            const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 60_000 });
             
             // Get the user's input from the modal
             const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
@@ -55,8 +55,13 @@ async function askQuestion(interaction, question, inputs = []) {
             const embed = new EmbedBuilder()
                 .setTitle('Question')
                 .setDescription(`Do you want to add more or are you done?\n${inputsNice}`);
-            if(modalInteraction.replied) await modalInteraction.update({ embeds: [embed], components: [actionRow] });
-            if(!modalInteraction.replied) await modalInteraction.reply({ embeds: [embed], components: [actionRow] });
+                
+            if(modalInteraction.message){
+                await modalInteraction.update({ embeds: [embed], components: [actionRow] });
+            } else {
+                if(modalInteraction.replied) await modalInteraction.update({ embeds: [embed], components: [actionRow] });
+                if(!modalInteraction.replied) await modalInteraction.reply({ embeds: [embed], components: [actionRow] });
+            }
 
             // Step 4: Handle the user's selection
             const selectFilter = (i) => i.customId === 'selectMenuCustomId';
@@ -76,10 +81,11 @@ async function askQuestion(interaction, question, inputs = []) {
             collector.on('end', async (collected) => {
                 if (collected.size === 0) {
                     await modalInteraction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
+                    reject('Confirmation not received within 60 seconds');
                 }
             });
         } catch (error) {
-            console.error(error);
+            reject(error);
             await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
         }
     });

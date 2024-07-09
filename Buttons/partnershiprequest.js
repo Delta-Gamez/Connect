@@ -1,4 +1,4 @@
-const { ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const { ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { embedPartnership } = require("../embeds.js");
 const { getServer } = require("../utils/utils.js");
 
@@ -29,58 +29,93 @@ module.exports = {
             return;
         }
 
-        // Split the description at ": "
-        const parts = description.split(": ");
-        let role = null;
-        if(parts[parts.length - 1].startsWith("<@")) {
-            role = parts[parts.length - 1];
+
+
+        // Below needs moved into a modal
+        if(!server.server.PartnerShipQuestions || server.server.PartnerShipQuestions.length === 0 || server.server.PartnerShipQuestions === 'null') {
+            
+            // Split the description at ": "
+            const parts = description.split(": ");
+            let role = null;
+            if(parts[parts.length - 1].startsWith("<@")) {
+                role = parts[parts.length - 1];
+            }
+
+            const thread = await interaction.channel.threads.create({
+                name: `${interaction.user.id}: Partnership Request`,
+                type: ChannelType.PrivateThread,
+            });
+
+            thread.members.add(interaction.user.id);
+            const serverData = await getServer(interaction);
+
+            const embed = await embedPartnership.RequestThread(serverData);
+            
+            let approve = new ButtonBuilder()
+                .setCustomId("partnershipaccept")
+                .setLabel("Approve")
+                .setStyle(ButtonStyle.Success);
+
+            let decline = new ButtonBuilder()
+                .setCustomId("partnershipdecline")
+                .setLabel("Decline")
+                .setStyle(ButtonStyle.Danger);
+
+            const row = new ActionRowBuilder()
+                .addComponents(approve, decline);
+            
+            if (role) {
+                thread.send({
+                    content: `${role}`,
+                    embeds: [embed],
+                    components: [row] 
+                });
+            } else {
+                thread.send({
+                    embeds: [embed],
+                    components: [row] 
+                });
+            }
+
+
+
+            const replyEmbed = await embedPartnership.RequestSuccess(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
+            
+            if(!interaction.replied && !interaction.deferred) {
+                interaction.reply({ 
+                    embeds: [replyEmbed], 
+                    ephemeral: true
+                });
+            }
+
+            return;
         }
 
-        const thread = await interaction.channel.threads.create({
-            name: `${interaction.user.id}: Partnership Request`,
-            type: ChannelType.PrivateThread,
-        });
+        let questions = server.server.PartnerShipQuestions;
+        questions = JSON.parse(questions);
 
-        thread.members.add(interaction.user.id);
-        const serverData = await getServer(interaction);
-
-        const embed = await embedPartnership.RequestThread(serverData);
-        
-        let approve = new ButtonBuilder()
-            .setCustomId("partnershipaccept")
-            .setLabel("Approve")
-            .setStyle(ButtonStyle.Success);
-
-        let decline = new ButtonBuilder()
-            .setCustomId("partnershipdecline")
-            .setLabel("Decline")
-            .setStyle(ButtonStyle.Danger);
-
-        const row = new ActionRowBuilder()
-            .addComponents(approve, decline);
-        
-        if (role) {
-            thread.send({
-                content: `${role}`,
-                embeds: [embed],
-                components: [row] 
-            });
-        } else {
-            thread.send({
-                embeds: [embed],
-                components: [row] 
-            });
-        }
-
-
-
-        const replyEmbed = await embedPartnership.RequestSuccess(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
-        
-        if(!interaction.replied && !interaction.deferred) {
-            interaction.reply({ 
-                embeds: [replyEmbed], 
-                ephemeral: true
-            });
-        }
+        await createAndShowModal(interaction, questions);
     },
 };
+
+async function createAndShowModal(interaction, questions) {
+    // Create a modal
+    const modal = new ModalBuilder()
+        .setCustomId('partnershipQuestionsModal')
+        .setTitle('Partnership Application');
+
+    // For each question, create a text input and add it to the modal
+    questions.forEach((question, index) => {
+        const textInput = new TextInputBuilder()
+            .setCustomId(`question${index}`)
+            .setLabel(question)
+            .setStyle(TextInputStyle.Short); // Use TextInputStyle.Paragraph for longer inputs
+
+        const actionRow = new ActionRowBuilder().addComponents(textInput);
+
+        modal.addComponents(actionRow);
+    });
+
+    // Show the modal to the user
+    await interaction.showModal(modal);
+}
