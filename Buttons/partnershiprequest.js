@@ -76,7 +76,7 @@ module.exports = {
 
         const replyEmbed = await embedPartnership.RequestSuccess(`https://discord.com/channels/${interaction.guild.id}/${thread.id}`)
         
-        if(interaction.replied || interaction.deferred) {
+        if(!interaction.replied && !interaction.deferred) {
             interaction.reply({ 
                 embeds: [replyEmbed], 
                 ephemeral: true

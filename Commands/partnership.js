@@ -301,23 +301,59 @@ async function SendPartnerShipEmbed(interaction, enable) {
         .setTitle('Partnership Request Questions')
         .setDescription('Do you want to ask questions for partnership requests?');
 
-    let option = await YesNoOption(interaction, embed);
+    const options = [
+        new StringSelectMenuOptionBuilder()
+            .setLabel('Yes')
+            .setValue('yes')
+            .setDescription('Ask questions for partnership requests')
+            .setEmoji('✅'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('Default')
+            .setValue('default')
+            .setDescription('Use the default questions for partnership requests')
+            .setEmoji('😭'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('No')
+            .setValue('no')
+            .setDescription('Do not ask questions for partnership requests')
+            .setEmoji('❌'),
+    ]
+
+    const noyes = new StringSelectMenuBuilder()
+        .setCustomId('xquestions')
+        .setPlaceholder('Select an Option')
+        .addOptions(options);
+
+    let option
+    try {
+        option = await sendMenuBuilders(interaction, noyes, false, embed, options);
+    } catch (error) {
+        return;
+    }
+
+    if (!option) {
+        return;
+    }
+    
     interaction = option[1];
     option = option[0];
 
-    if(option){
-        let questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."]);
-        interaction = questions[0];
-        questions = questions[1];
-    } else {
-        questions = null;
+    let questions = null;
+    switch (option) {
+        case 'yes':
+            questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."]);
+            interaction = questions[0];
+            questions = questions[1];
+            break;
+        case 'default':
+            questions = ["How many members do you have?", "Why do you want to partner?", "Can you send a discord invite link?"];
+            break;
     }
 
     await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, questions, enable)
 }
 
 async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, questions, enable){
-    console.log(questions)
     data = {
         PartnerShipQuestions: JSON.stringify(questions, (key, value) =>
             typeof value === 'bigint' ? value.toString() : value // Convert BigInt to string
