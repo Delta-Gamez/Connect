@@ -317,8 +317,10 @@ const embedPartnership = {
 
         return PartnershipEmbed;
     },
-    PartnershipRequester: async function PartnershipRequester(channel, enable, memberRequirement, roleMention){
+    PartnershipRequester: async function PartnershipRequester(channel, enable, memberRequirement, roleMention, questions){
         // Enable is true if the partnership module is enabled, False if edited
+        // questions is a array of questions from Custom Questions
+        
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIPS ENABLED`)
             .setDescription(`The partnerships module has successfully been enabled, and was sent to <#${channel}>.\n\u200B`)

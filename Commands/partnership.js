@@ -381,7 +381,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         components: [actionRow],
     });
 
-    let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention)
+    let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention, questions)
 
     await interaction.update({
         embeds: [embed],

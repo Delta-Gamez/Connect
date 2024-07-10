@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder, ButtonBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { messageButtonTimeout } = require('../embeds.js')
 
 /*
