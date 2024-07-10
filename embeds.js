@@ -19,6 +19,7 @@ const iconDisable = '<:DG_CO_Cross:1163377608025702410>';
 const iconConnect = '<:DG_CO_Connect:1249377684962803794>';
 const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>';
 const iconMembers = '<:DG_CO_Members:1257658527426674731>';
+const iconBoost = '<:DG_CO_NitroBoost:1107640916182839317>'
 
 const iconURLConnect = 'https://cdn.discordapp.com/emojis/1249377684962803794.webp?size=22&quality=lossless'
 const iconURLCommunity = 'https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless'
@@ -117,8 +118,10 @@ const embedAbout = {
             .addFields(
                 { name: `GUILD ID`, value: `${guild.id}`, inline: true },
                 { name: `MEMBERS`, value: `${guild.memberCount}`, inline: true },
+                { name: `${iconBoost} BOOSTERS`, value: `\u200B ${guild.premiumSubscriptionCount}\n`, inline: true },
                 { name: `OWNER`, value: `<@${guild.ownerId}>`, inline: true },
-                { name: `CREATED`, value: `<t:${date}:D>\n\u200B`, inline: true }, 
+                { name: `CREATED`, value: `<t:${date}:D>`, inline: true },
+                { name: `\u200B`, value: `\u200B\n\u200B`, inline: true }, 
                 { name: `MODULES`, 
                     value: `${serverData.server.Connect ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/connect\` \n${serverData.server.PartnerShip ? `${iconSuccess}` : `${iconDisable}`} \`•\` \`/partnership\`\n\u200B`, inline: false },
                 { name: `CONNECT PLUS`, value: `${connectPlus} \n\u200B`, inline: true }
