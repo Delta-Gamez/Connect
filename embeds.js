@@ -298,7 +298,7 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, questions){
         // questions is a array of questions from Custom Questions
-        
+
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
@@ -325,7 +325,7 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    partershipAccepted: async function partershipAccepted(user){
+    partnershipAccepted: async function partnershipAccepted(user){
         if (!user) {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
@@ -389,11 +389,6 @@ const embedPartnership = {
                 **REASON**: ${reason} \n\u200B`)
             .setFooter(footerPartnership)
         return embed
-    },
-    PartnershipFailedtoPingUser: async function PartnershipFailedtoPingUser(embed){
-        const embed2 = new EmbedBuilder(embed)
-            .setFooter("Failed to Ping user")
-        return embed2;
     },
     RequestDisabled: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PARTNERSHIPS DISABLED`)

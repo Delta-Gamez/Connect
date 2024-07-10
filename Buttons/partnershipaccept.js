@@ -11,7 +11,7 @@ module.exports = {
         }
         if(interaction.channel.name.endsWith("- Accepted")) return interaction.reply({embeds: [embedPartnership.RequestAlreadyAccepted], ephemeral: true});
 
-        const changeEmbed = await embedPartnership.partershipAccepted(null)
+        const changeEmbed = await embedPartnership.partnershipAccepted(null)
         
 
         if(interaction.channel.name.endsWith("- Declined")) {
@@ -27,7 +27,7 @@ module.exports = {
             user = await interaction.guild.members.fetch(userId);
         }
         
-       const embed = await embedPartnership.partershipAccepted(user)
+       const embed = await embedPartnership.partnershipAccepted(user)
 
 
 
