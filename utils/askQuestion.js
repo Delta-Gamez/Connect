@@ -48,16 +48,14 @@ async function askQuestion(interaction, question, inputs = [], limit, addRemoveE
                 const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
                 inputs.push(userInput);
     
-                if(limit && inputs.length >= limit) return resolve([interaction, inputs]);
-    
                 await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject);
                 
             } catch (error) {
-                reject(error);
+                resolve('error');
                 await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
             }
         } catch (error) {
-            reject('error');
+            resolve('error');
             await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
         }
     });
@@ -65,26 +63,35 @@ async function askQuestion(interaction, question, inputs = [], limit, addRemoveE
 
 async function selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject){
     // Step 3: Present the user with a select menu to add more or finish
+    const options = []
+
+    if(!(limit && inputs.length >= limit)){
+        options.push(
+            {
+                label: `${inputs.length > 0 ? 'Add more' : 'Add'}`,
+                description: 'Select to add more information',
+                value: 'add_more',
+            }
+        )
+    }
+
+    if(inputs.length > 0){
+        options.push({
+            label: 'Remove',
+            description: 'Select to remove an input',
+            value: 'remove',
+        },
+        {
+            label: 'That\'s it',
+            description: 'Select if you\'re done',
+            value: 'done',
+        })
+    }
+
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId('selectMenuCustomId')
         .setPlaceholder('Choose an option')
-        .addOptions([
-            {
-                label: 'Add More',
-                description: 'Select to add more information',
-                value: 'add_more',
-            },
-            {
-                label: 'Remove',
-                description: 'Select to remove a input',
-                value: 'remove',
-            },
-            {
-                label: 'That\'s it',
-                description: 'Select if you\'re done',
-                value: 'done',
-            },
-        ]);
+        .addOptions(options);
 
     const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
@@ -110,7 +117,7 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
     collector.on('end', async (collected) => {
         if (collected.size === 0) {
             await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
-            reject('Confirmation not received within 60 seconds');
+            resolve('error');
         }
     });
 }
