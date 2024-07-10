@@ -344,9 +344,10 @@ async function SendPartnerShipEmbed(interaction, enable) {
             try {
                 questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.addRemoveQuestions, embedPartnership.removeEmbed)
             } catch (error) {
-                console.log(error)
                 return;
             }
+            if(!questions) return;
+            if(questions == 'error') return;
             interaction = questions[0];
             questions = questions[1];
             break;

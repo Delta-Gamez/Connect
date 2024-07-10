@@ -12,53 +12,58 @@ const { messageButtonTimeout } = require('../embeds.js')
 
 async function askQuestion(interaction, question, inputs = [], limit, addRemoveEmbed, removeEmbeds, skip = false) {
     return new  Promise(async (resolve, reject) => {
-        if(skip){
-            await selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve);
-            return;
-        }
-
-        // Step 1: Create and send a modal to ask the user a question
-        const modal = new ModalBuilder() // Create a new modal
-            .setTitle(`${question[0]}`)
-            .setCustomId('xuniqueIdForModal');
-
-        const textInput = new TextInputBuilder() // Create a text input for the question
-            .setCustomId('textInputCustomId')
-            .setLabel(`${question[1]}`)
-            .setStyle('Short')
-            .setMaxLength(80)
-            .setMinLength(5);
-
-
-        const actionRow = new ActionRowBuilder().addComponents(textInput); // Add the text input to an action row
-
-        // Add components to modal
-        modal.addComponents(actionRow);
-
-        // Show the modal to the user
-        await interaction.showModal(modal);
-
-        // Step 2: Listen for the modal submit interaction
-        const filter = (i) => i.customId === 'xuniqueIdForModal';
-        try {
-            const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 60_000 });
-            
-            // Get the user's input from the modal
-            const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
-            inputs.push(userInput);
-
-            if(limit && inputs.length >= limit) return resolve([interaction, inputs]);
-
-            await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve);
-            
+        try{
+            if(skip){
+                await selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve);
+                return;
+            }
+    
+            // Step 1: Create and send a modal to ask the user a question
+            const modal = new ModalBuilder() // Create a new modal
+                .setTitle(`${question[0]}`)
+                .setCustomId('xuniqueIdForModal');
+    
+            const textInput = new TextInputBuilder() // Create a text input for the question
+                .setCustomId('textInputCustomId')
+                .setLabel(`${question[1]}`)
+                .setStyle('Short')
+                .setMaxLength(80)
+                .setMinLength(5);
+    
+    
+            const actionRow = new ActionRowBuilder().addComponents(textInput); // Add the text input to an action row
+    
+            // Add components to modal
+            modal.addComponents(actionRow);
+    
+            // Show the modal to the user
+            await interaction.showModal(modal);
+    
+            // Step 2: Listen for the modal submit interaction
+            const filter = (i) => i.customId === 'xuniqueIdForModal';
+            try {
+                const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 60_000 });
+                
+                // Get the user's input from the modal
+                const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
+                inputs.push(userInput);
+    
+                if(limit && inputs.length >= limit) return resolve([interaction, inputs]);
+    
+                await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject);
+                
+            } catch (error) {
+                reject(error);
+                await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
+            }
         } catch (error) {
-            reject(error);
+            reject('error');
             await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
         }
     });
 }
 
-async function selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve){
+async function selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject){
     // Step 3: Present the user with a select menu to add more or finish
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId('selectMenuCustomId')
