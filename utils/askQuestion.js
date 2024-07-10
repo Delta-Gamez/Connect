@@ -10,8 +10,12 @@ const { messageButtonTimeout } = require('../embeds.js')
  */
 
 
-async function askQuestion(interaction, question, inputs = [], limit) {
-    return new Promise(async (resolve, reject) => {
+async function askQuestion(interaction, question, inputs = [], limit, addRemoveEmbed, removeEmbeds, skip = false) {
+    return new  Promise(async (resolve, reject) => {
+        if(skip){
+            await selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve);
+            return;
+        }
 
         // Step 1: Create and send a modal to ask the user a question
         const modal = new ModalBuilder() // Create a new modal
@@ -45,65 +49,111 @@ async function askQuestion(interaction, question, inputs = [], limit) {
 
             if(limit && inputs.length >= limit) return resolve([interaction, inputs]);
 
-            // Step 3: Present the user with a select menu to add more or finish
-            const selectMenu = new StringSelectMenuBuilder()
-                .setCustomId('selectMenuCustomId')
-                .setPlaceholder('Choose an option')
-                .addOptions([
-                    {
-                        label: 'Add More',
-                        description: 'Select to add more information',
-                        value: 'add_more',
-                    },
-                    {
-                        label: 'That\'s it',
-                        description: 'Select if you\'re done',
-                        value: 'done',
-                    },
-                ]);
-
-            const actionRow = new ActionRowBuilder().addComponents(selectMenu);
-
-            // Send the select menu in a message
-
-            const inputsNice = inputs.map((input, index) => `**${index+1}**: ${input}`).join('\n');
-            const embed = new EmbedBuilder()
-                .setTitle('Question')
-                .setDescription(`Do you want to add more or are you done?\n${inputsNice}`);
-                
-            if(modalInteraction.message){
-                await modalInteraction.update({ embeds: [embed], components: [actionRow] });
-            } else {
-                if(modalInteraction.replied) await modalInteraction.update({ embeds: [embed], components: [actionRow] });
-                if(!modalInteraction.replied) await modalInteraction.reply({ embeds: [embed], components: [actionRow] });
-            }
-
-            // Step 4: Handle the user's selection
-            const selectFilter = (i) => i.customId === 'selectMenuCustomId';
-            const collector = modalInteraction.channel.createMessageComponentCollector({ filter: selectFilter, time: 15000 });
-
-            collector.on('collect', async (selectInteraction) => {
-                if (selectInteraction.values[0] === 'add_more') {
-                    // If the user wants to add more, call askQuestion again
-                    collector.stop();
-                    resolve(await askQuestion(selectInteraction, question, inputs, limit)) 
-                } else {
-                    // If the user is done, process the information
-                    resolve([selectInteraction, inputs]);
-                }
-            });
-
-            collector.on('end', async (collected) => {
-                if (collected.size === 0) {
-                    await modalInteraction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
-                    reject('Confirmation not received within 60 seconds');
-                }
-            });
+            await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve);
+            
         } catch (error) {
             reject(error);
             await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
         }
     });
+}
+
+async function selectMenu(interaction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve){
+    // Step 3: Present the user with a select menu to add more or finish
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId('selectMenuCustomId')
+        .setPlaceholder('Choose an option')
+        .addOptions([
+            {
+                label: 'Add More',
+                description: 'Select to add more information',
+                value: 'add_more',
+            },
+            {
+                label: 'Remove',
+                description: 'Select to remove a input',
+                value: 'remove',
+            },
+            {
+                label: 'That\'s it',
+                description: 'Select if you\'re done',
+                value: 'done',
+            },
+        ]);
+
+    const actionRow = new ActionRowBuilder().addComponents(selectMenu);
+
+    // Send the select menu in a message
+
+    const embed = await addRemoveEmbed(inputs) 
+        
+    if(interaction.message){
+        await interaction.update({ embeds: [embed], components: [actionRow] });
+    } else {
+        if(interaction.replied) await interaction.update({ embeds: [embed], components: [actionRow] });
+        if(!interaction.replied) await interaction.reply({ embeds: [embed], components: [actionRow] });
+    }
+
+    // Step 4: Handle the user's selection
+    const selectFilter = (i) => i.customId === 'selectMenuCustomId';
+    const collector = interaction.channel.createMessageComponentCollector({ filter: selectFilter, time: 15000 });
+
+    collector.on('collect', async (selectInteraction) => {
+        await selectInteractione(collector, selectInteraction, removeEmbeds, addRemoveEmbed, inputs, limit, question, resolve);
+    });
+
+    collector.on('end', async (collected) => {
+        if (collected.size === 0) {
+            await interaction.editReply({ content: messageButtonTimeout, components: [], embeds: []});
+            reject('Confirmation not received within 60 seconds');
+        }
+    });
+}
+
+
+async function selectInteractione(collecter, interaction, removeEmbeds, addRemoveEmbed, inputs, limit, question, resolve){
+    switch (interaction.values[0]) {
+        case 'add_more':
+            // If the user wants to add more, call askQuestion again
+            collecter.stop();
+            resolve(await askQuestion(interaction, question, inputs, limit, addRemoveEmbed, removeEmbeds));
+            break;
+        case 'remove':
+            collecter.stop();
+            const removeSelectMenu = new StringSelectMenuBuilder()
+                .setCustomId('removeSelectMenuCustomId')
+                .setPlaceholder('Choose an option')
+                .addOptions(
+                    inputs.map((input, index) => ({
+                        label: input,
+                        value: index.toString(),
+                    }))
+                );
+
+            const removeActionRow = new ActionRowBuilder().addComponents(removeSelectMenu);
+
+            const removeEmbed = await removeEmbeds(inputs);
+
+            await interaction.update({ embeds: [removeEmbed], components: [removeActionRow] });
+
+            const removeFilter = (i) => i.customId === 'removeSelectMenuCustomId';
+
+            const removeCollector = interaction.channel.createMessageComponentCollector({ filter: removeFilter, time: 15000 });
+
+            removeCollector.on('collect', async (removeInteraction) => {
+                const index = parseInt(removeInteraction.values[0]);
+                inputs.splice(index, 1);
+                removeCollector.stop();
+                resolve(await askQuestion(removeInteraction, question, inputs, limit, addRemoveEmbed, removeEmbeds, true));
+            });
+            break;
+        case 'done':
+            // If the user is done, process the information
+            resolve([interaction, inputs]);
+            break;
+        default:
+            break;
+    }
 }
 
 

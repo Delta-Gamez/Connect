@@ -412,6 +412,24 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
+    addRemoveQuestions: async function addRemoveQuestions(questions){
+        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+
+        const embed = new EmbedBuilder()
+                .setTitle('Question')
+                .setDescription(`Do you want to add more or are you done?\n${questions}`);
+
+        return embed;
+    },
+    removeEmbed: async function removeEmbed(questions){
+        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+
+        const embed = new EmbedBuilder()
+                .setTitle('Question')
+                .setDescription(`Select the question you want to remove.\n${questions}`);
+
+        return embed;
+    },
 
     // ERRORS
     ErrorServer: new EmbedBuilder(embedInfo.Error)

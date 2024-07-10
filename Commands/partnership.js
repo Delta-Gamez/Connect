@@ -203,6 +203,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     try {
         channelid = await sendMenuBuilders(interaction, select, true, selectembed);
     } catch (error) {
+        console.log("Error Handaled")
         return;
     }
 
@@ -341,7 +342,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     switch (option) {
         case 'yes':
             try {
-                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3)
+                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.addRemoveQuestions, embedPartnership.removeEmbed)
             } catch (error) {
                 console.log(error)
                 return;
