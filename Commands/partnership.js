@@ -11,7 +11,7 @@ const {
     EmbedBuilder} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError, messageButtonTimeout } = require("../embeds.js");
-const { askQuestion, updateServer, YesNoOption, getServer} = require("../utils/utils.js");
+const { askQuestion, updateServer, getServer} = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
@@ -203,7 +203,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     try {
         channelid = await sendMenuBuilders(interaction, select, true, selectembed);
     } catch (error) {
-        console.log("Error Handaled")
+        console.log(error)
         return;
     }
 
@@ -326,7 +326,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
     let option
     try {
-        option = await sendMenuBuilders(interaction, noyes, false, embed, options);
+        option = await sendMenuBuilders(interaction, noyes, true, embed, options);
     } catch (error) {
         return;
     }
@@ -366,7 +366,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
 
     await updateServer(data, interaction);
     const channel = await interaction.guild.channels.cache.get(channelid);
-    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention)
+    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention, questions)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")

@@ -296,7 +296,9 @@ const embedPartnership = {
             value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
         { name: `DEFAULT`, value: `The default questions are:\nWhat is the community name?\nWhat is your member count?\nWhat is your community about?\nCan you provide a Discord invite?"`})
         .setFooter(footerPartnership),
-    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention){
+    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, questions){
+        // questions is a array of questions from Custom Questions
+        
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)

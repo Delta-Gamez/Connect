@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder, ButtonBuilder } = require('discord.js');
 const { messageButtonTimeout } = require('../embeds.js')
 
 /*
@@ -144,19 +144,31 @@ async function selectInteractione(collecter, interaction, removeEmbeds, addRemov
 
             const removeActionRow = new ActionRowBuilder().addComponents(removeSelectMenu);
 
+            const backButton = new ButtonBuilder()
+                .setCustomId('xback')
+                .setLabel('Back')
+                .setStyle('Secondary');
+            
+            const backButtonRow = new ActionRowBuilder().addComponents(backButton);
+
             const removeEmbed = await removeEmbeds(inputs);
 
-            await interaction.update({ embeds: [removeEmbed], components: [removeActionRow] });
+            await interaction.update({ embeds: [removeEmbed], components: [removeActionRow, backButtonRow] });
 
-            const removeFilter = (i) => i.customId === 'removeSelectMenuCustomId';
+            const removeFilter = (i) => i.customId === 'removeSelectMenuCustomId' || i.customId === 'xback';
 
             const removeCollector = interaction.channel.createMessageComponentCollector({ filter: removeFilter, time: 15000 });
 
             removeCollector.on('collect', async (removeInteraction) => {
-                const index = parseInt(removeInteraction.values[0]);
-                inputs.splice(index, 1);
-                removeCollector.stop();
-                resolve(await askQuestion(removeInteraction, question, inputs, limit, addRemoveEmbed, removeEmbeds, true));
+                if(removeInteraction.customId === 'xback'){
+                    removeCollector.stop();
+                    resolve(await askQuestion(removeInteraction, question, inputs, limit, addRemoveEmbed, removeEmbeds, true));
+                } else {
+                    const index = parseInt(removeInteraction.values[0]);
+                    inputs.splice(index, 1);
+                    removeCollector.stop();
+                    resolve(await askQuestion(removeInteraction, question, inputs, limit, addRemoveEmbed, removeEmbeds, true));
+                }
             });
             break;
         case 'done':
