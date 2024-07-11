@@ -7,6 +7,7 @@ config.json
 replit_zip_error_log.txt
 cookie
 notes
+commands/test.js
 
 # Packager files
 .local

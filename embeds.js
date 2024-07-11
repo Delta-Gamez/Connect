@@ -306,13 +306,15 @@ const embedPartnership = {
             .setFooter(footerPartnership)
 
         if(serverData.server.PartnerShipQuestions != "null"){
-            let value = ""
-            for (const question of questionsAnswers) {
-                value = value + `\`•\` ${question.question} - ${question.answer}\n`
-            }
-    
-            if(value != "") {
-                embed.addFields({ name: `QUESTIONS`, value: value })
+            if(questionsAnswers.length > 0){
+                let value = ""
+                for (let question of questionsAnswers) {
+                    value = value + `\`•\` ${question.question} - ${question.answer}\n`
+                }
+        
+                if(value != "") {
+                    embed.addFields({ name: `QUESTIONS`, value: value })
+                }
             }
         }
 
