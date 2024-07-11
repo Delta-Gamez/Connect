@@ -242,10 +242,16 @@ const embedPartnership = {
         .addFields({ name: `HOW IT WORKS`, 
             value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
-
-    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild){
+    CustomQuestionsSelection: new EmbedBuilder(embedInfo.Info)
+        .setTitle(`CUSTOM QUESTIONS`)
+        .setDescription(`Select if you want to use custom questions for partnership module.\n\u200B`)
+        .addFields({ name: `HOW IT WORKS`,
+            value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
+        { name: `DEFAULT`, value: `The default questions are:\nWhat is the community name?\nWhat is your member count?\nWhat is your community about?\nCan you provide a Discord invite?"`})
+        .setFooter(footerPartnership),   
+    PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
+        // questions is a array of questions from Custom Questions
         // interactionGuild.iconURL() will give the guild icon
-        
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
@@ -264,8 +270,10 @@ const embedPartnership = {
 
         return PartnershipEmbed;
     },
-    PartnershipRequester: async function PartnershipRequester(channel, enable, memberRequirement, roleMention){
+    PartnershipRequester: async function PartnershipRequester(channel, enable, memberRequirement, roleMention, questions){
         // Enable is true if the partnership module is enabled, False if edited
+        // questions is a array of questions from Custom Questions
+        
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIPS ENABLED`)
             .setDescription(`The partnerships module has successfully been enabled, and was sent to <#${channel}>.\n\u200B`)
@@ -273,7 +281,7 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    PartershipAccepted: async function PartershipAccepted(user){
+    PartnershipAccepted: async function partnershipAccepted(user){
         if (!user) {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
@@ -290,13 +298,26 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
+    RequestThread: async function RequestThread(serverData, questionsAnswers){ 
 
-    RequestThread: new EmbedBuilder(embedInfo.Info)
-        .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
-        .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
-        .setThumbnail(iconURLCommunity)
-        .addFields({ name: `QUESTIONS`, value: `\`•\` How many members does your community have? \n\`•\` Why do you want to partner with us?\n\u200B` })
-        .setFooter(footerPartnership),
+        const embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
+            .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
+            .setFooter(footerPartnership)
+
+        if(serverData.server.PartnerShipQuestions != "null"){
+            let value = ""
+            for (const question of questionsAnswers) {
+                value = value + `\`•\` ${question.question} - ${question.answer}\n`
+            }
+    
+            if(value != "") {
+                embed.addFields({ name: `QUESTIONS`, value: value })
+            }
+        }
+
+        return embed
+    },
     RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
             .setTitle(`${iconWarn} PARTNERSHIP PENDING`)
@@ -322,11 +343,6 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    PartnershipFailedtoPingUser: async function PartnershipFailedtoPingUser(embed){
-        const embed2 = new EmbedBuilder(embed)
-            .setFooter("Failed to Ping user")
-        return embed2;
-    },
     RequestDisabled: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
         .setDescription(`We are sorry, but we are currently not accepting any partnership requests.\n\u200B`)
@@ -343,6 +359,24 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
+    addRemoveQuestions: async function addRemoveQuestions(questions){
+        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+
+        const embed = new EmbedBuilder()
+                .setTitle('Question')
+                .setDescription(`Do you want to add more or are you done?\n${questions}`);
+
+        return embed;
+    },
+    removeEmbed: async function removeEmbed(questions){
+        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+
+        const embed = new EmbedBuilder()
+                .setTitle('Question')
+                .setDescription(`Select the question you want to remove.\n${questions}`);
+
+        return embed;
+    },
 
     // ERRORS
     ErrorServer: new EmbedBuilder(embedInfo.Error)
@@ -352,7 +386,7 @@ const embedPartnership = {
     ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorPermission}`)
         .setDescription('Only the server owner can run this command.\n\u200B')
-        .setFooter(footerPartnership),
+        .setFooter(footerPartnership)
 }
 
 // Staff Management Embeds

@@ -33,7 +33,11 @@ async function updateServer(data, interaction) {
         return response;
     } catch (error) {
         if(interaction){
-            interaction.reply({embeds: [embedInfoError.ServerConnectionError]})
+            if(interaction.replied){
+                await interaction.editReply({embeds: [embedInfoError.ServerConnectionError]})
+            } else {
+                await interaction.reply({embeds: [embedInfoError.ServerConnectionError]})
+            }
         }
         throw new Error(error);
     }

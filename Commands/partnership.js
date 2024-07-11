@@ -7,10 +7,11 @@ const {
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
-    PermissionFlagsBits } = require("discord.js");
+    PermissionFlagsBits, 
+    EmbedBuilder} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError, messageButtonTimeout } = require("../embeds.js");
-const utils = require("../utils/utils.js");
+const { askQuestion, updateServer, getServer} = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
@@ -189,6 +190,7 @@ async function StartPartnershipModal(interaction, enable) {
 }
 
 async function SendPartnerShipEmbed(interaction, enable) {
+    const server = await getServer(interaction);
 
     const select = new ChannelSelectMenuBuilder()
     .setCustomId("channels")
@@ -201,6 +203,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     try {
         channelid = await sendMenuBuilders(interaction, select, true, selectembed);
     } catch (error) {
+        console.log(error)
         return;
     }
 
@@ -296,12 +299,74 @@ async function SendPartnerShipEmbed(interaction, enable) {
         memberRequirement = 'none';
     }
 
-    await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, enable)
+    const embed = embedPartnership.CustomQuestionsSelection;
+
+    const options = [
+        new StringSelectMenuOptionBuilder()
+            .setLabel('Yes')
+            .setValue('yes')
+            .setDescription('Ask questions for partnership requests')
+            .setEmoji('✅'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('Default')
+            .setValue('default')
+            .setDescription('Use the default questions for partnership requests')
+            .setEmoji('😭'),
+        new StringSelectMenuOptionBuilder()
+            .setLabel('No')
+            .setValue('no')
+            .setDescription('Do not ask questions for partnership requests')
+            .setEmoji('❌'),
+    ]
+
+    const noyes = new StringSelectMenuBuilder()
+        .setCustomId('xquestions')
+        .setPlaceholder('Select an Option')
+        .addOptions(options);
+
+    let option
+    try {
+        option = await sendMenuBuilders(interaction, noyes, true, embed, options);
+    } catch (error) {
+        return;
+    }
+
+    if (!option) {
+        return;
+    }
+    
+    interaction = option[1];
+    option = option[0];
+
+    let questions = null;
+    switch (option) {
+        case 'yes':
+            try {
+                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.addRemoveQuestions, embedPartnership.removeEmbed, true)
+            } catch (error) {
+                return;
+            }
+            if(!questions) return;
+            if(questions == 'error') return;
+            interaction = questions[0];
+            questions = questions[1];
+            break;
+        case 'default':
+            questions = ["What is the community name?", "What is your member count?", "What is your community about?", "Can you provide a Discord invite?"];
+            break;
+    }
+
+    await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, questions, enable)
 }
 
-async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, enable){
+async function SendEmbededMessage(interaction, channelid, roleMention, memberRequirement, questions, enable){
+    data = {
+        PartnerShipQuestions: JSON.stringify(questions)
+    }
+
+    await updateServer(data, interaction);
     const channel = await interaction.guild.channels.cache.get(channelid);
-    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention, interaction.guild)
+    let PartnershipEmbed = await embedPartnership.PartnershipRequest(memberRequirement, roleMention, interaction.guild, questions)
 
     let button = new ButtonBuilder()
         .setCustomId("partnershiprequest")
@@ -316,7 +381,7 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
         components: [actionRow],
     });
 
-    let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention)
+    let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention, questions)
 
     await interaction.update({
         embeds: [embed],
