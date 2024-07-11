@@ -281,7 +281,7 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    partnershipAccepted: async function partnershipAccepted(user){
+    PartnershipAccepted: async function partnershipAccepted(user){
         if (!user) {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
