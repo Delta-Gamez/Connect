@@ -63,12 +63,13 @@ module.exports = {
 
         if(server.server.RequestStaffLeaveChannel){
             channel = await interaction.guild.channels.cache.get(server.server.RequestStaffLeaveChannel)
-            if(channel){
-                await channel.send({embeds: [embed], components: [row]});
+            if(!channel){
+                return interaction.reply({embeds: [embedManage.StaffChannelNotFound], ephemeral: true})
             }
+            await channel.send({embeds: [embed], components: [row]});
             await interaction.reply({embeds: [embedManage.StaffLeaveSubmitted], ephemeral: true});
         } else {
-            await interaction.reply({content: `Unable to find Staff Leave Channel. Please contact the server owner.`, ephemeral: true})
+            await interaction.reply({embeds: [embedManage.StaffChannelNotFound], ephemeral: true})
         }
         
     }
