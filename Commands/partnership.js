@@ -303,17 +303,17 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
     const options = [
         new StringSelectMenuOptionBuilder()
-            .setLabel('Yes')
-            .setValue('yes')
-            .setDescription('Ask questions for partnership requests')
+            .setLabel('Custom Questions')
+            .setValue('custom')
+            .setDescription('Ask custom questions for partnership requests')
             .setEmoji('✅'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('Default')
+            .setLabel('Default Questions')
             .setValue('default')
             .setDescription('Use the default questions for partnership requests')
             .setEmoji('😭'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('No')
+            .setLabel('No Questions')
             .setValue('no')
             .setDescription('Do not ask questions for partnership requests')
             .setEmoji('❌'),
@@ -340,7 +340,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
 
     let questions = null;
     switch (option) {
-        case 'yes':
+        case 'custom':
             try {
                 questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.AddRemoveQuestions, embedPartnership.removeEmbed, true)
             } catch (error) {
@@ -352,7 +352,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
             questions = questions[1];
             break;
         case 'default':
-            questions = ["What is the community name?", "What is your member count?", "What is your community about?", "Can you provide a Discord invite?"];
+            questions = ["What is your community name?", "What is your member count?", "Why would you like to partner?", "Can you provide a Discord invite?"];
             break;
     }
 
