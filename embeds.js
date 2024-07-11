@@ -350,7 +350,8 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PERMISSION ERROR`)
-        .setDescription(`You do not have the required permissions to use this Button. \n\nPlease ask the Staff Team to Approve/Decline the Partnership Request. \nStaff Members require the \`Manage Messages\` permission to handle requests.`),
+        .setDescription(`You do not have the required permissions to use this Button. \n\nPlease ask the Staff Team to Approve/Decline the Partnership Request. \nStaff Members require the \`Manage Messages\` permission to handle requests.`)
+        .setFooter(footerPartnership),
     RequestAlreadyDeclined: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
         .setDescription(`This Partnership Request has already been declined.\n\u200B`)
@@ -364,18 +365,20 @@ const embedPartnership = {
 
         const embed = new EmbedBuilder()
                 .setTitle('Question')
-                .setDescription(`Do you want to add more or are you done?\n${questions}`);
+                .setDescription(`Do you want to add more or are you done?\n${questions}`)
+                .setFooter(footerPartnership);
 
-        return embed;
+            return embed;
     },
     removeEmbed: async function removeEmbed(questions){
         questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
 
         const embed = new EmbedBuilder()
                 .setTitle('Question')
-                .setDescription(`Select the question you want to remove.\n${questions}`);
+                .setDescription(`Select the question you want to remove.\n${questions}`)
+                .setFooter(footerPartnership);
 
-        return embed;
+            return embed;
     },
 
     // ERRORS
