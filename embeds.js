@@ -51,7 +51,6 @@ const embedLog = {
     }
 };
 
-
 const embedInfo = {
     Success: new EmbedBuilder()
         .setTitle('SUCCESS')
@@ -524,7 +523,7 @@ const embedManage = {
 };
 
 
-// Old, refactor code into respective modules. Embeds outside of module should use embedConnect. ...
+// These embeds are out of date, refactor code into respective modules. Embeds outside of module should use embedConnect. ...
 // Info Error Embeds
 const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter({ text: "Connect" });
 const embedInfoError = {
