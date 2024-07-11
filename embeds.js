@@ -281,7 +281,7 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    PartnershipAccepted: async function partnershipAccepted(user){
+    PartnershipAccepted: async function PartnershipAccepted(user){
         if (!user) {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
@@ -359,7 +359,7 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
-    addRemoveQuestions: async function addRemoveQuestions(questions){
+    AddRemoveQuestions: async function AddRemoveQuestions(questions){
         questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
 
         const embed = new EmbedBuilder()
