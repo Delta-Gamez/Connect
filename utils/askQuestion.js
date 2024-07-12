@@ -190,7 +190,7 @@ async function selectInteractione(collecter, interaction, removeEmbeds, addRemov
 
             const removeFilter = (i) => i.customId === 'removeSelectMenuCustomId' || i.customId === 'xback';
 
-            const removeCollector = interaction.channel.createMessageComponentCollector({ filter: removeFilter, time: 15000 });
+            const removeCollector = interaction.channel.createMessageComponentCollector({ filter: removeFilter, time: 60_000 });
 
             removeCollector.on('collect', async (removeInteraction) => {
                 if(removeInteraction.customId === 'xback'){
