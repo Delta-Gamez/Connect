@@ -378,7 +378,7 @@ const embedPartnership = {
 
         const embed = new EmbedBuilder(embedInfo.Info)
             .setTitle('CUSTOM QUESTIONS')
-            .setDescription(`Create custom questions for partnership requests. \nAdd up to three unique questions for users to answer, before requesting a partnership. ${newLine} ${questions}\n\u200B`)
+            .setDescription(`Create custom questions for partnership requests. \nAdd up to three unique questions for partnership requests. ${newLine} ${questions}\n\u200B`)
             .addFields({ name: `HOW IT WORKS`, value: `Users creating a partnership request are asked to fill out questions before submitting a request. This can be used for your staff to get more information about individual communities, and whether a community suits your partnership requirements.\n\u200B` })
             .setThumbnail(iconURLCommunity)
             .setFooter(footerPartnership);
