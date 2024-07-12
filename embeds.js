@@ -369,7 +369,7 @@ const embedPartnership = {
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
     CustomQuestions: async function CustomQuestions(questions){
-        questions = questions.map((question) => `${question}`).join('\n');
+        questions = questions.map((question) => `\`•\` ${question}`).join('\n');
         let newLine = '';
 
         if (questions && questions.length > 0) {
@@ -386,9 +386,9 @@ const embedPartnership = {
         return embed;
     },
     removeEmbed: async function removeEmbed(questions){
-        questions = questions.map((question) => `${question}`).join('\n');
+        questions = questions.map((question) => `\`•\` ${question}`).join('\n');
 
-        const embed = new EmbedBuilder(embedinfo.Info)
+        const embed = new EmbedBuilder(embedInfo.Info)
             .setTitle('CUSTOM QUESTIONS')
             .setDescription(`Select a question to remove. \n${questions}`)
             .setFooter(footerPartnership);
