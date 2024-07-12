@@ -247,10 +247,10 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     QuestionsSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CUSTOM QUESTIONS`)
-        .setDescription(`Select if you want to use custom questions for partnership module.\n\u200B`)
+        .setDescription(`Select what questions should be asked whenever someone requests a partnership.\n\u200B`)
         .setThumbnail(iconURLCommunity)
         .addFields({ name: `HOW IT WORKS`, value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
-        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \nWhat is the community name? \nWhat is your member count? \nWhat is your community about? \nCan you provide a Discord invite?\n\u200B`})
+        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \n\`•\` What is the community name? \n\`•\` What is your member count? \n\`•\` What is your community about? \n\`•\` Can you provide a Discord invite?\n\u200B`})
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
@@ -377,22 +377,23 @@ const embedPartnership = {
         }
 
         const embed = new EmbedBuilder(embedInfo.Info)
-                .setTitle('CUSTOM QUESTIONS')
-                .setDescription(`Create custom questions for users requesting a partnership in your community. Users must answer these questions before requesting a new partnership. \nYou can ask three unique questions. ${newLine} ${questions}\n\u200B`)
-                .setThumbnail(iconURLCommunity)
-                .setFooter(footerPartnership);
+            .setTitle('CUSTOM QUESTIONS')
+            .setDescription(`Create custom questions for partnership requests. \nAdd up to three unique questions for users to answer, before requesting a partnership. ${newLine} ${questions}\n\u200B`)
+            .addFields({ name: `HOW IT WORKS`, value: `Users creating a partnership request are asked to fill out questions before submitting a request. This can be used for your staff to get more information about individual communities, and whether a community suits your partnership requirements.\n\u200B` })
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerPartnership);
 
-            return embed;
+        return embed;
     },
     removeEmbed: async function removeEmbed(questions){
         questions = questions.map((question) => `${question}`).join('\n');
 
-        const embed = new EmbedBuilder()
-                .setTitle('Question')
-                .setDescription(`Select a question to remove. \n${questions}`)
-                .setFooter(footerPartnership);
+        const embed = new EmbedBuilder(embedinfo.Info)
+            .setTitle('CUSTOM QUESTIONS')
+            .setDescription(`Select a question to remove. \n${questions}`)
+            .setFooter(footerPartnership);
 
-            return embed;
+        return embed;
     },
 
     // ERRORS
