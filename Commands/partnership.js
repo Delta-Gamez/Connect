@@ -299,24 +299,21 @@ async function SendPartnerShipEmbed(interaction, enable) {
         memberRequirement = 'none';
     }
 
-    const embed = embedPartnership.CustomQuestionsSelection;
+    const embed = embedPartnership.QuestionsSelection;
 
     const options = [
         new StringSelectMenuOptionBuilder()
             .setLabel('Custom Questions')
             .setValue('custom')
-            .setDescription('Ask custom questions for partnership requests')
-            .setEmoji('✅'),
+            .setDescription('Ask custom questions for partnership requests'),
         new StringSelectMenuOptionBuilder()
             .setLabel('Default Questions')
             .setValue('default')
-            .setDescription('Use the default questions for partnership requests')
-            .setEmoji('😭'),
+            .setDescription('Use the default questions for partnership requests'),
         new StringSelectMenuOptionBuilder()
             .setLabel('No Questions')
             .setValue('no')
-            .setDescription('Do not ask questions for partnership requests')
-            .setEmoji('❌'),
+            .setDescription('Do not ask questions for partnership requests'),
     ]
 
     const noyes = new StringSelectMenuBuilder()
@@ -342,7 +339,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
     switch (option) {
         case 'custom':
             try {
-                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.AddRemoveQuestions, embedPartnership.removeEmbed, true)
+                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.CustomQuestions, embedPartnership.removeEmbed, true)
             } catch (error) {
                 return;
             }

@@ -238,15 +238,14 @@ const embedPartnership = {
         .setTitle(`MEMBER REQUIREMENTS`)
         .setDescription(`Select the minimum members a community needs to partner with you.\n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, 
-            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .addFields({ name: `HOW IT WORKS`, value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
-    CustomQuestionsSelection: new EmbedBuilder(embedInfo.Info)
+    QuestionsSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CUSTOM QUESTIONS`)
         .setDescription(`Select if you want to use custom questions for partnership module.\n\u200B`)
-        .addFields({ name: `HOW IT WORKS`,
-            value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
-        { name: `DEFAULT`, value: `The default questions are:\nWhat is the community name?\nWhat is your member count?\nWhat is your community about?\nCan you provide a Discord invite?"`})
+        .setThumbnail(iconURLCommunity)
+        .addFields({ name: `HOW IT WORKS`, value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
+        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \nWhat is the community name? \nWhat is your member count? \nWhat is your community about? \nCan you provide a Discord invite?\n\u200B`})
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
@@ -304,15 +303,15 @@ const embedPartnership = {
             .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
             .setFooter(footerPartnership)
 
-        if(serverData.server.PartnerShipQuestions != "null"){
+        if(serverData.server.PartnerShipQuestions != 'null'){
             if(questionsAnswers.length > 0){
-                let value = ""
+                let value = ''
                 for (let question of questionsAnswers) {
-                    value = value + `\`•\` ${question.question} - ${question.answer}\n`
+                    value = value + `\`•\` **${question.question}** \n${question.answer}\n`
                 }
         
-                if(value != "") {
-                    embed.addFields({ name: `QUESTIONS`, value: value })
+                if(value != '') {
+                    embed.addFields({ name: `QUESTIONS`, value: `${value}\u200B` })
                 }
             }
         }
@@ -361,22 +360,31 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
-    AddRemoveQuestions: async function AddRemoveQuestions(questions){
-        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+    CustomQuestions: async function CustomQuestions(questions){
+        questions = questions.map((question) => `${question}`).join('\n');
+        console.log("QUESTION: " + questions)
+        let newLine = '';
 
-        const embed = new EmbedBuilder()
-                .setTitle('Question')
-                .setDescription(`Do you want to add more or are you done?\n${questions}`)
+        if (questions && questions.length > 0) {
+            console.log(questions.length);
+            newLine = '\n\n';
+            console.log(newLine);
+        }
+
+        const embed = new EmbedBuilder(embedInfo.Info)
+                .setTitle('CUSTOM QUESTIONS')
+                .setDescription(`Create custom questions you would like to ask before a partnership request is created. ${newLine} ${questions}\n\u200B`)
+                .setThumbnail(iconURLCommunity)
                 .setFooter(footerPartnership);
 
             return embed;
     },
     removeEmbed: async function removeEmbed(questions){
-        questions = questions.map((question, index) => `**${index+1}**: ${question}`).join('\n');
+        questions = questions.map((question) => `${question}`).join('\n');
 
         const embed = new EmbedBuilder()
                 .setTitle('Question')
-                .setDescription(`Select the question you want to remove.\n${questions}`)
+                .setDescription(`Select a question to remove. \n${questions}`)
                 .setFooter(footerPartnership);
 
             return embed;
