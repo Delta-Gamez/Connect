@@ -153,7 +153,7 @@ const embedConnect = {
         let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-            .setDescription(`Your community description has successfully been updated and will soon be displayed on (Connect)[https://connect.deltagamez.ch/]. \n\u200B`)
+            .setDescription(`Your community description has successfully been updated and will soon be displayed on [Connect](https://connect.deltagamez.ch/). \n\u200B`)
             .addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                     value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
@@ -163,16 +163,21 @@ const embedConnect = {
     },
     StatusChange: async function StatusChange(status, server){
         let guildName = server.ServerName.toUpperCase();
+        let descriptionMessage = 'Your community will soon be removed from [Connect](https://connect.deltagamez.ch/).';
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`The Connect module has successfully been ${status ? 'enabled' : 'disabled'}. \nCheck which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
-            .setFooter(footerConnect)
+            
         if (server.Connect) {
+            descriptionMessage = 'Your community will soon be displayed on [Connect](https://connect.deltagamez.ch/).';
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                 value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
         }
         return embed
+
+            .setDescription(`The Connect module has successfully been ${status ? 'enabled' : 'disabled'}. ${descriptionMessage}\nCheck which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
+            .setFooter(footerConnect)
+        
     },
     Error: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ERROR`)
