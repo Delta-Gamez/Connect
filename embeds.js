@@ -302,26 +302,30 @@ const embedPartnership = {
         return embed
     },
     RequestThread: async function RequestThread(serverData, questionsAnswers){ 
+        let descriptionMessage2 = `Please wait for further instructions by the staff team, before we can approve your partnership request.`;
 
         const embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
-            .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
-            .setFooter(footerPartnership)
+            .setTitle(`PARTNERSHIP REQUEST`)
 
         if(serverData.server.PartnerShipQuestions != 'null'){
             if(questionsAnswers.length > 0){
                 let value = ''
                 for (let question of questionsAnswers) {
-                    value = value + `\`•\` **${question.question}** \n${question.answer}\n`
+                    value = value + `**${question.question}** \n\`•\` ${question.answer}\n\u200B\n`
                 }
         
                 if(value != '') {
-                    embed.addFields({ name: `QUESTIONS`, value: `${value}\u200B` })
+                    descriptionMessage2 = `Before we can approve your partnership please answer the questions below.`
+                    embed.addFields({ name: `PARTNERSHIP QUESTIONS`, value: `${value}` })
                 }
             }
         }
 
         return embed
+
+        .setDescription(`Thanks for requesting a partnership. ${descriptionMessage2}\n\u200B`)
+        .setThumbnail(iconURLCommunity)
+        .setFooter(footerPartnership)
     },
     RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
@@ -339,7 +343,6 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-
     RequestDeclineReason: async function RequestDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
@@ -367,18 +370,15 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     CustomQuestions: async function CustomQuestions(questions){
         questions = questions.map((question) => `${question}`).join('\n');
-        console.log("QUESTION: " + questions)
         let newLine = '';
 
         if (questions && questions.length > 0) {
-            console.log(questions.length);
             newLine = '\n\n';
-            console.log(newLine);
         }
 
         const embed = new EmbedBuilder(embedInfo.Info)
                 .setTitle('CUSTOM QUESTIONS')
-                .setDescription(`Create custom questions you would like to ask before a partnership request is created. ${newLine} ${questions}\n\u200B`)
+                .setDescription(`Create custom questions for users requesting a partnership in your community. Users must answer these questions before requesting a new partnership. \nYou can ask three unique questions. ${newLine} ${questions}\n\u200B`)
                 .setThumbnail(iconURLCommunity)
                 .setFooter(footerPartnership);
 
