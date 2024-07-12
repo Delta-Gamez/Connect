@@ -10,6 +10,7 @@ const {
 const { info, error } = require("../src/log.js");
 const { embedConnect, messageButtonTimeout } = require("../embeds.js");
 const axios = require("axios");
+const {getServer} = require("../utils/utils.js");
 
 module.exports = {
     global: true,
@@ -92,9 +93,7 @@ async function ChangeConnect(status, interaction, old, reply) {
 
 // Main Screen (Enable or Disable)
 async function DiscoverySubCommand(interaction) {
-    let old = await axios.get(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    );
+    let old = await getServer(interaction);
     
     const Connect_Enable = new ButtonBuilder()
         .setCustomId("xconnect-enable")
@@ -137,7 +136,7 @@ async function DiscoverySubCommand(interaction) {
             ServerOwner: interaction.guild.ownerId,
         }
     } else {
-        connectEnabled = old.data.server.PartnerShip;
+        connectEnabled = old.data.server.Connect;
     }
     const embed = await embedConnect.ModuleInfo(connectEnabled, serverData);
     const response = await interaction.reply({
