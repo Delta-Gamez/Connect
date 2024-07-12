@@ -106,7 +106,7 @@ async function DiscoverySubCommand(interaction) {
         .setStyle(ButtonStyle.Primary);
 
     let row
-    if(old.data.exists && old.data.server.Connect){
+    if(old.exists && old.server.Connect){
         const Connect_Disable = new ButtonBuilder()
             .setCustomId("xconnect-disable")
             .setLabel("Disable")
@@ -123,8 +123,8 @@ async function DiscoverySubCommand(interaction) {
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
     let connectEnabled = false
-    let serverData = old.data.server;
-    if(!old.data.exists){
+    let serverData = old.server;
+    if(!old.exists){
         connectEnabled = false;
         serverData = {
             Connect: false,
@@ -136,7 +136,7 @@ async function DiscoverySubCommand(interaction) {
             ServerOwner: interaction.guild.ownerId,
         }
     } else {
-        connectEnabled = old.data.server.Connect;
+        connectEnabled = old.server.Connect;
     }
     const embed = await embedConnect.ModuleInfo(connectEnabled, serverData);
     const response = await interaction.reply({
