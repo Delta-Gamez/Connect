@@ -93,21 +93,27 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
         .setPlaceholder('Choose an option')
         .addOptions(options);
 
+    const returnButton = new ButtonBuilder()
+        .setCustomId('xreturn')
+        .setLabel('Return')
+        .setStyle('Secondary');
+
     const actionRow = new ActionRowBuilder().addComponents(selectMenu);
+    const returnRow = new ActionRowBuilder().addComponents(returnButton);
 
     // Send the select menu in a message
 
     const embed = await addRemoveEmbed(inputs) 
         
     if(interaction.message){
-        await interaction.update({ embeds: [embed], components: [actionRow] });
+        await interaction.update({ embeds: [embed], components: [actionRow, returnRow] });
     } else {
-        if(interaction.replied) await interaction.update({ embeds: [embed], components: [actionRow] });
-        if(!interaction.replied) await interaction.reply({ embeds: [embed], components: [actionRow] });
+        if(interaction.replied) await interaction.update({ embeds: [embed], components: [actionRow, returnRow] });
+        if(!interaction.replied) await interaction.reply({ embeds: [embed], components: [actionRow, returnRow] });
     }
 
     // Step 4: Handle the user's selection
-    const selectFilter = (i) => i.customId === 'selectMenuCustomId';
+    const selectFilter = (i) => i.customId === 'selectMenuCustomId' || i.customId === 'xreturn';
     const collector = interaction.channel.createMessageComponentCollector({ filter: selectFilter, time: 15000 });
 
     collector.on('collect', async (selectInteraction) => {
@@ -124,6 +130,11 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
 
 
 async function selectInteractione(collecter, interaction, removeEmbeds, addRemoveEmbed, inputs, limit, question, resolve){
+    if(interaction.customId === 'xreturn'){
+        collecter.stop();
+        resolve([interaction, []]);
+        return;
+    }
     switch (interaction.values[0]) {
         case 'add_more':
             // If the user wants to add more, call askQuestion again

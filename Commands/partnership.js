@@ -164,25 +164,19 @@ async function PartnershipSubCommande(old, interaction, enable) {
 
 async function StartPartnershipModal(interaction, enable) {
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
-        MemberCount: interaction.guild.memberCount,
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         PartnerShip: true,
     };
 
-    const response = await axios.post(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    const response = updateServer(data, interaction);
+
+    if(!response){
+        await interaction.reply({
+            embeds: [embedInfoError.ServerConnectionError],
+            ephemeral: true,
+            components: [],
+        });
+        return;
+    }
 
     if(response.data.status == 200){
         PartnershipSubCommande(response, interaction, enable);
@@ -321,36 +315,41 @@ async function SendPartnerShipEmbed(interaction, enable) {
         .setPlaceholder('Select an Option')
         .addOptions(options);
 
-    let option
-    try {
-        option = await sendMenuBuilders(interaction, noyes, true, embed, options);
-    } catch (error) {
-        return;
-    }
+    let questions = [];
+    while (questions = []){
+        let option
+        try {
+            option = await sendMenuBuilders(interaction, noyes, true, embed, options);
+        } catch (error) {
+            return;
+        }
 
-    if (!option) {
-        return;
-    }
-    
-    interaction = option[1];
-    option = option[0];
+        if (!option) {
+            return;
+        }
+        
+        interaction = option[1];
+        option = option[0];
 
-    let questions = null;
-    switch (option) {
-        case 'custom':
-            try {
-                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.CustomQuestions, embedPartnership.removeEmbed, true)
-            } catch (error) {
-                return;
-            }
-            if(!questions) return;
-            if(questions == 'error') return;
-            interaction = questions[0];
-            questions = questions[1];
-            break;
-        case 'default':
-            questions = ["What is your community name?", "What is your member count?", "Why would you like to partner?", "Can you provide a Discord invite?"];
-            break;
+        switch (option) {
+            case 'custom':
+                try {
+                    questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.CustomQuestions, embedPartnership.removeEmbed, true)
+                } catch (error) {
+                    return;
+                }
+                if(!questions) return;
+                if(questions == 'error') return;
+                interaction = questions[0];
+                questions = questions[1];
+                break;
+            case 'default':
+                questions = ["What is your community name?", "What is your member count?", "Why would you like to partner?", "Can you provide a Discord invite?"];
+                break;
+            case 'no':
+                questions = null;
+                break;
+        }
     }
 
     await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, questions, enable)
