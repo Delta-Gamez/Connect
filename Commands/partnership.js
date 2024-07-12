@@ -143,7 +143,7 @@ async function ChangePartnership(status, interaction, old, reply) {
         PartnerShip: status,
     };
 
-    await utils.updateServer(data, interaction)
+    await updateServer(data, interaction)
 
     if(reply){
         await interaction.update({
