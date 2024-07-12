@@ -250,7 +250,7 @@ const embedPartnership = {
         .setDescription(`Select what questions should be asked whenever someone requests a partnership.\n\u200B`)
         .setThumbnail(iconURLCommunity)
         .addFields({ name: `HOW IT WORKS`, value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
-        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \nWhat is the community name? \nWhat is your member count? \nWhat is your community about? \nCan you provide a Discord invite?\n\u200B`})
+        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \n\`•\` What is the community name? \n\`•\` What is your member count? \n\`•\` What is your community about? \n\`•\` Can you provide a Discord invite?\n\u200B`})
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
