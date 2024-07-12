@@ -114,7 +114,7 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
 
     // Step 4: Handle the user's selection
     const selectFilter = (i) => i.customId === 'selectMenuCustomId' || i.customId === 'xreturn';
-    const collector = interaction.channel.createMessageComponentCollector({ filter: selectFilter, time: 15000 });
+    const collector = interaction.channel.createMessageComponentCollector({ filter: selectFilter, time: 60_000 });
 
     collector.on('collect', async (selectInteraction) => {
         await selectInteractione(collector, selectInteraction, removeEmbeds, addRemoveEmbed, inputs, limit, question, resolve);

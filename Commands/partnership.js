@@ -38,10 +38,7 @@ module.exports = {
         }
         let old;
         try {
-            old = await axios.get(
-                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-                { timeout: 1000 } // Move the timeout configuration here
-            );
+            old = await getServer(interaction)
         } catch (e) {
             await interaction.reply({
                 embeds: [embedInfoError.ServerConnectionError],
