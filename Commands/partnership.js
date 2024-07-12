@@ -316,7 +316,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
         .addOptions(options);
 
     let questions = [];
-    while (questions = []){
+    while (!questions || questions.length === 0) {
         let option
         try {
             option = await sendMenuBuilders(interaction, noyes, true, embed, options);
@@ -327,7 +327,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
         if (!option) {
             return;
         }
-        
+
         interaction = option[1];
         option = option[0];
 
