@@ -85,7 +85,7 @@ async function enableDisablePrompt(interaction, moduleName, DBName) {
         collector.on('end', async collected => {
             if (collected.size === 0) {
                 await interaction.editReply({ content: messageButtonTimeout, components: [] });
-                reject('Confirmation not received within 1 minute'); // Reject the Promise if no confirmation was received
+                reject(messageButtonTimeout); // Reject the Promise if no confirmation was received
             }
         });
     });
