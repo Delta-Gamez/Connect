@@ -44,6 +44,6 @@ module.exports = {
         }
         
         if (targetChannel) {
-          targetChannel.send({ embeds: [embedAbout.GetStarted] }).catch(console.error);
+          targetChannel.send({ embeds: [embedAbout.GetStarted], content: `<@${guild.ownerId}>` }).catch(console.error);
         }
 }};
