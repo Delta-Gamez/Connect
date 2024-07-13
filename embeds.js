@@ -83,7 +83,7 @@ const embedAbout = {
         .setTitle(`${iconConnect} CONNECT`)
         .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, filled with features for partnerships, advertising and planned to do even more.\n\u200B`)
         .addFields(
-            { name: 'CONNECT', value: `\`•\` [Connect Web](https://connect.deltagamez.ch/) \n\`•\` [Discord Community Support](https://discord.gg/sYpmUFQ) \n\`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC) \n\`•\` [Connect Status Page](https://status.deltagamez.ch) \n\u200B` , inline: true },
+            { name: 'CONNECT', value: `\`•\` [Invite Connect](https://discord.com/oauth2/authorize?client_id=1203656804731461672) \n\`•\` [Connect Web](https://connect.deltagamez.ch/) \n\`•\` [Discord Community Support](https://discord.gg/sYpmUFQ) \n\`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC) \n\`•\` [Connect Status Page](https://status.deltagamez.ch) \n\u200B` , inline: true },
             { name: `LEGAL`, value: `\`•\` Privacy Policy \n\`•\` Terms of Service`, inline: true}, 
             { name: 'NOTE', value: `Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms. \n\n\`v0.1\` \n\u200B`})
         .setFooter(footerConnect),
