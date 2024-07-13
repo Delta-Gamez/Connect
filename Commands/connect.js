@@ -11,6 +11,7 @@ const { info, error } = require("../src/log.js");
 const { embedConnect, messageButtonTimeout } = require("../embeds.js");
 const axios = require("axios");
 const {getServer} = require("../utils/utils.js");
+const {updateServer} = require("../utils/utils");
 
 module.exports = {
     global: true,
@@ -43,7 +44,7 @@ module.exports = {
 
 async function ChangeConnect(status, interaction, old, reply) {
 
-    if(!old.data.exists){
+    if(!old.exists){
         return;
     }
 
@@ -64,16 +65,7 @@ async function ChangeConnect(status, interaction, old, reply) {
         ServerInvite: String(invite.url),
     };
 
-    let response = await axios.put(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    let response = await updateServer(data, interaction)
 
     if(reply){
         const embed = await embedConnect.StatusChange(status, response.data.server)

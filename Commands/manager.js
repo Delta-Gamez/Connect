@@ -11,7 +11,6 @@ const {
 const { embedInfoError, embedManage } = require("../embeds.js");
 const { info, warn, error } = require("../src/log.js");
 const { sendMenuBuilders, enableDisablePrompt, enableCommandForGuild, disableCommandForGuild, getServer, createServer, updateServer } = require("../utils/utils.js");
-const axios = require("axios");
 
 module.exports = {
     global: true,
@@ -35,10 +34,15 @@ module.exports = {
             return;
         }
         try {
-            await axios.get(
-                `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-                { timeout: 1000 } // Move the timeout configuration here
-            );
+            let server = await getServer(interaction)
+            if(!server){
+                await interaction.reply({
+                    embeds: [embedInfoError.ServerConnectionError],
+                    ephemeral: true,
+                    components: [],
+                });
+                return;
+            }
         } catch (e) {
             await interaction.reply({
                 embeds: [embedInfoError.ServerConnectionError],
@@ -215,6 +219,7 @@ async function SendStaffLeaveQuestions(interaction) {
     }
 
     let server = await getServer(interaction)
+
     if(server.exists){
         await updateServer(data, interaction);
     } else {
