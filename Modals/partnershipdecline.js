@@ -7,7 +7,6 @@ module.exports = {
         description: "Process partnerships decline.",
     },
     async execute(interaction) {
-        console.log("partnershipdecline")
         // Extract the partnership decline reason
         const partnershipDeclineReason = await interaction.fields.getTextInputValue("partnership-decline-reason");
         const embed = await embedPartnership.RequestDeclineReason(partnershipDeclineReason);

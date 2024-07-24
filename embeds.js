@@ -583,7 +583,23 @@ const embedSuggestion = {
             .setThumbnail(iconURLCommunity)
             .setFooter(footerSuggestions)
         return embed;
-    }
+    },
+    createdSuggestionUser: async function createdSuggestionUser(suggestionDescription){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Suggestion Created`)
+            .setDescription(`Your Suggestion has been created\nYour suggestion is: ${suggestionDescription}`)
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerSuggestions)
+        return embed;
+    },
+    createdSuggestion: async function createdSuggestion(server, user, suggestionDescription){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Suggestion Created`)
+            .setDescription(`A Suggestion has been created by <@${user.id}>\nTheir suggestion is: ${suggestionDescription}`)
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerSuggestions)
+        return embed;
+    },
 }
 
 

@@ -127,8 +127,14 @@ async function enableDisableEdit(interaction, status, channel) {
         let channelObject = await interaction.client.channels.cache.get(channel);
         let embed = await embedSuggestion.SuggestionsChannel(channelObject.type, interaction.guild);
 
+        let createButton = new ButtonBuilder()
+            .setCustomId("suggestionsCreate")
+            .setLabel("Create")
+            .setStyle(ButtonStyle.Primary);
+
+        let actionRow = new ActionRowBuilder().addComponents(createButton);
         if(channelObject.type == 0){
-            await channelObject.send({ embeds: [embed] });
+            await channelObject.send({ embeds: [embed], components: [actionRow] });
         }
         if(channelObject.type == 15){
             const thread = await channelObject.threads.create({
@@ -136,12 +142,7 @@ async function enableDisableEdit(interaction, status, channel) {
                 message: { embeds: [embed] },
             });
 
-            const initialMessage = await thread.fetchStarterMessage();
-
-            // Pinning the initial message
-            if (initialMessage) {
-              await initialMessage.pin();
-            }
+            thread.pin();
         }
     }
 }

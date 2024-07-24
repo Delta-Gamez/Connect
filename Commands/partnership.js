@@ -7,11 +7,10 @@ const {
     RoleSelectMenuBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
-    PermissionFlagsBits, 
-    EmbedBuilder} = require("discord.js");
+    PermissionFlagsBits} = require("discord.js");
 const { info, error } = require("../src/log.js");
 const { embedPartnership, embedInfoError, messageButtonTimeout } = require("../embeds.js");
-const { askQuestion, updateServer, getServer} = require("../utils/utils.js");
+const { askQuestion, updateServer, getServer, updateorCreateServer} = require("../utils/utils.js");
 const sendMenuBuilders = require("../utils/sendMenuBuilders.js");
 const axios = require("axios");
 
@@ -155,7 +154,7 @@ async function ChangePartnership(status, interaction, old, reply) {
 }
 
 async function PartnershipSubCommande(old, interaction, enable) {
-    if (old.data.status != 200) {
+    if (!old.data.exists) {
         await StartPartnershipModal(interaction, enable);
     } else {
         await SendPartnerShipEmbed(interaction, enable);
@@ -167,7 +166,7 @@ async function StartPartnershipModal(interaction, enable) {
         PartnerShip: true,
     };
 
-    const response = updateServer(data, interaction);
+    const response = await updateorCreateServer(data, interaction);
 
     if(!response){
         await interaction.reply({
