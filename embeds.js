@@ -215,7 +215,7 @@ const embedPartnership = {
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             .setFooter(footerPartnership)
 
-        return embed
+        return embed;
     },
     StatusChange : async function StatusChange(status){
         const StatusChange = new EmbedBuilder(embedInfo.Success)
@@ -536,6 +536,19 @@ const embedManage = {
         .setDescription(`The Staff Leave Channel could not be found.`),
 };
 
+const embedSuggestion = {
+    ModuleInfo: async function ModuleInfo(satus, server){
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`${iconConnect} SUGGESTIONS`)
+            .setDescription(`Connect your community to other communities across Discord. \n\nThis module allows your users to easily create suggestions requests and lets your staff handle them with ease. Users can view their suggestions, and for new requests your selected staff will automatically be pinged. \n\nUse the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#suggestions)\n\u200B`)
+            .setThumbnail(iconURLCommunity)
+            .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
+            .setFooter(footerPartnership)
+
+        return embed;
+    }
+}
+
 
 // These embeds are out of date, refactor code into respective modules. Embeds outside of module should use embedConnect. ...
 // Info Error Embeds
@@ -573,6 +586,7 @@ module.exports = {
     embedConnect,
     embedPartnership,
     embedManage,
+    embedSuggestion,
     embedInfoError,
     embedAbout,
     messageButtonTimeout
