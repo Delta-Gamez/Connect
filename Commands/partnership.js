@@ -167,7 +167,7 @@ async function StartPartnershipModal(interaction, enable) {
         PartnerShip: true,
     };
 
-    const response = updateServer(data, interaction);
+    const response = await updateServer(data, interaction);
 
     if(!response){
         await interaction.reply({

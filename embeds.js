@@ -253,11 +253,15 @@ const embedPartnership = {
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
+        let partnershipThumbnail = iconURLCommunity;
+        if (interactionGuild.iconURL() != null) {
+            partnershipThumbnail = interactionGuild.iconURL();
+        }
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
             .setDescription(`We are currently accepting partnership requests! \nCreate a new partnership request through pressing the button below.\n\u200B`)
-            .setThumbnail(interactionGuild.iconURL())
+            .setThumbnail(partnershipThumbnail)
             .setFooter(footerPartnership)
         if (memberRequirement) {
             if(memberRequirement == 'none'){
