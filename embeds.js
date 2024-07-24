@@ -19,7 +19,7 @@ const iconDisable = '<:DG_CO_Cross:1163377608025702410>';
 const iconConnect = '<:DG_CO_Connect:1249377684962803794>';
 const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>';
 const iconMembers = '<:DG_CO_Members:1257658527426674731>';
-const iconBoost = '<:DG_CO_NitroBoost:1107640916182839317>'
+const iconBoost = '<:DG_CO_NitroBoost:1107640916182839317>';
 
 const iconURLConnect = 'https://cdn.discordapp.com/emojis/1249377684962803794.webp?size=22&quality=lossless'
 const iconURLCommunity = 'https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless'
@@ -253,12 +253,11 @@ const embedPartnership = {
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
-        // interactionGuild.iconURL() will give the guild icon
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
             .setDescription(`We are currently accepting partnership requests! \nCreate a new partnership request through pressing the button below.\n\u200B`)
-            .setThumbnail(iconURLCommunity)
+            .setThumbnail(interactionGuild.iconURL())
             .setFooter(footerPartnership)
         if (memberRequirement) {
             if(memberRequirement == 'none'){
