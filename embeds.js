@@ -234,16 +234,15 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     RoleSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`ROLE SELECTION`)
-        .setDescription(`Select the roles which should be mentioned for new partnership requests.\n\u200B`)
+        .setDescription(`Select the roles which should be mentioned for new partnership requests. Ensure the role has the \`Manage Messages\` permission, in order to handle partnership requests.\n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, 
-            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .addFields({ name: `HOW IT WORKS`, value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
     MemberRequirementSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`MEMBER REQUIREMENTS`)
-        .setDescription(`Select the minimum members a community needs to partner with you.\n\u200B`)
+        .setDescription(`Select the minimum members a community needs before partner with you.\n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .addFields({ name: `HOW IT WORKS`, value: `Users will be able to view your minimum member requirements before opening a partnership request. A partnership request will automatically get declined if not matching the minimum requirements.\n\u200B` })
         .setFooter(footerPartnership),
     QuestionsSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CUSTOM QUESTIONS`)
@@ -301,11 +300,11 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    RequestThread: async function RequestThread(serverData, questionsAnswers){ 
-        let descriptionMessage2 = `Please wait for further instructions by the staff team, before we can approve your partnership request.`;
-
+    RequestThread: async function RequestThread(serverData, questionsAnswers){
+        
         const embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`PARTNERSHIP REQUEST`)
+            .setDescription(`Thanks for requesting a partnership. Our staff team will be with you shortly and handling your request. \n\u200B`)
 
         if(serverData.server.PartnerShipQuestions != 'null'){
             if(questionsAnswers.length > 0){
@@ -315,7 +314,6 @@ const embedPartnership = {
                 }
         
                 if(value != '') {
-                    descriptionMessage2 = `Before we can approve your partnership please answer the questions below.`
                     embed.addFields({ name: `PARTNERSHIP QUESTIONS`, value: `${value}` })
                 }
             }
@@ -323,7 +321,6 @@ const embedPartnership = {
 
         return embed
 
-        .setDescription(`Thanks for requesting a partnership. ${descriptionMessage2}\n\u200B`)
         .setThumbnail(iconURLCommunity)
         .setFooter(footerPartnership)
     },
@@ -354,7 +351,7 @@ const embedPartnership = {
     RequestDisabled: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
         .setDescription(`We are sorry, but we are currently not accepting any partnership requests.\n\u200B`)
-        .addFields({ name: `STAFF INFO`, value: `If you are the community owner, use \`/partnership\` to re-enable partnership requests.\n\u200B`})
+        .addFields({ name: `STAFF INFO`, value: `If you are the community owner, use \`/partnership\` to re-enable the partnership module.\n\u200B`})
         .setFooter(footerPartnership),
     ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PERMISSION ERROR`)

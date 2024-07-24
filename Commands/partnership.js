@@ -240,8 +240,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
         new StringSelectMenuOptionBuilder()
             .setLabel('None')
             .setValue('none')
-            .setDescription('No member requirement')
-            .setEmoji('🚫'),
+            .setDescription('No member requirement'),
         new StringSelectMenuOptionBuilder()
             .setLabel('25 Members')
             .setValue('25+ Members')
