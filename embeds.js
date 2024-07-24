@@ -27,6 +27,7 @@ const iconURLConnectB = 'https://connect.deltagamez.ch/common/img/ConnectTranspa
 
 const footerConnect = { text: 'Connect', iconURL: iconURLConnectB };
 const footerPartnership = { text: 'Connect Partnership', iconURL: iconURLConnectB };
+const footerSuggestions = { text: 'Connect Suggestions', iconURL: iconURLConnectB };
 
 const moduleEnabled = { name: 'MODULE STATUS', value: `${iconSuccess}\u200B \`ENABLED\`\n\u200B`}
 const moduleDisabled = { name: 'MODULE STATUS', value: `${iconError}\u200B \`DISABLED\`\n\u200B`}
@@ -537,14 +538,50 @@ const embedManage = {
 };
 
 const embedSuggestion = {
-    ModuleInfo: async function ModuleInfo(satus, server){
+    ModuleInfo: async function ModuleInfo(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} SUGGESTIONS`)
             .setDescription(`Connect your community to other communities across Discord. \n\nThis module allows your users to easily create suggestions requests and lets your staff handle them with ease. Users can view their suggestions, and for new requests your selected staff will automatically be pinged. \n\nUse the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#suggestions)\n\u200B`)
             .setThumbnail(iconURLCommunity)
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
-            .setFooter(footerPartnership)
+            .setFooter(footerSuggestions)
 
+        return embed;
+    },
+    askForChannel: async function askForChannel(server, edit){
+        // server is the server data
+        // edit is a boolean if the module is being edited
+
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Channel Selection`)
+            .setDescription(`Select the channel users can create a suggestion in.\n\u200B`)
+            .setThumbnail(iconURLCommunity)
+            .addFields({ name: `HOW IT WORKS`, 
+                value: `Users can create a suggestion by making a Fourm or sending a message \nWe suggest your selected channel is called \`#request-suggestion\` and make sure it is public to \`@everyone\`. \nWe will post the message, in which users can request a suggestion with you.\n\u200B` })
+            .setFooter(footerSuggestions)
+
+        return embed;
+    },
+    StatusChanged: async function StatusChanged(status, channel){
+        let description = ''
+
+        if(status == 0) description = `The Suggestions module has successfully been enabled. It has been set to <#${channel}>.`
+        if(status == 1) description = `The Suggestions module has successfully been disabled.`
+        if(status == 2) description = `The Suggestions module has successfully been edited. It has been set to <#${channel}>.`
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Suggestions`)
+            .setDescription(description)
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerSuggestions)
+        return embed;
+    },
+    SuggestionsChannel: async function SuggestionsChannel(type, server){
+        // type = 0 then it's a text channel if it = 15 then its a fourm
+        let embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle(`Suggestions Channel`)
+            .setDescription(`This is the Suggestions channel for ${server.name}\n${type == 0 ? `Send a message to create a Suggestion` : `Create a Fourm to create a Suggestion`}`)
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerSuggestions)
         return embed;
     }
 }

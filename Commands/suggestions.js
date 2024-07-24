@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChannelSelectMenuBuilder } = require("discord.js");
 const { embedSuggestion } = require('../embeds.js')
-const { enableDisablePrompt } = require("../utils/utils.js");
+const { getServer, sendMenuBuilders, updateorCreateServer } = require("../utils/utils.js");
 
 module.exports = {
     global: true,
@@ -10,47 +10,52 @@ module.exports = {
     async execute(interaction) {
         let old = await getServer(interaction)
 
-        const embedModuleStaffMangement = new EmbedBuilder()
-            .setTitle(moduleName)
-            .setDescription(`Would you like to setup the ${moduleName} module?`)
-            .setColor("#004898");
+        try{
+            let old = await getServer(interaction)
+        } catch (e) {
+            return;
+        }
+
+        if(!old){
+            return;
+        }
+
+        const embedModuleSuggestions = await embedSuggestion.ModuleInfo(old.exists && old.server.Suggestions, old.server)
     
         const StaffMangement_Enable = new ButtonBuilder()
-            .setCustomId("xStaffMan-enable")
+            .setCustomId("xSuggestions-enable")
             .setLabel("Enable")
             .setStyle(ButtonStyle.Primary);
     
         const StaffMangement_Edit = new ButtonBuilder()
-            .setCustomId("xStaffMan-edit")
+            .setCustomId("xSuggestions-edit")
             .setLabel("Edit")
             .setStyle(ButtonStyle.Primary);
     
         let row;
-        if (old.exists && old.server[DBName]) {
-            const StaffMangement_Disable = new ButtonBuilder()
-                .setCustomId("xStaffMan-disable")
-                .setLabel("Disable")
-                .setStyle(ButtonStyle.Danger);
-    
+
+        let StaffMangement_Disable = new ButtonBuilder()
+            .setCustomId("xSuggestions-disable")
+            .setLabel("Disable")
+            .setStyle(ButtonStyle.Danger)
+            .setDisabled(false);
+
+        if (old.exists && old.server.Suggestions) {
             row = new ActionRowBuilder().addComponents(
                 StaffMangement_Edit,
                 StaffMangement_Disable,
             );
         } else {
-            const StaffMangement_Disable = new ButtonBuilder()
-                .setCustomId("xStaffMan-disable")
-                .setLabel("Disable")
-                .setStyle(ButtonStyle.Danger)
-                .setDisabled(true);
-    
+            StaffMangement_Disable.setDisabled(true);
+
             row = new ActionRowBuilder().addComponents(
                 StaffMangement_Enable,
                 StaffMangement_Disable,
             );
         }
     
-        await interaction.update({
-            embeds: [embedModuleStaffMangement],
+        await interaction.reply({
+            embeds: [embedModuleSuggestions],
             components: [row],
             ephemeral: true,
         });
@@ -59,26 +64,84 @@ module.exports = {
     
         const collector = interaction.channel.createMessageComponentCollector({ filter: collectorFilter, time: 60_000 });
     
-        return new Promise((resolve, reject) => {
-            collector.on('collect', async i => {
-    
-                if (i.customId == "xStaffMan-enable") {
-                    // Enable the Module
-                    resolve([i, 1])
-                } else if (i.customId == "xStaffMan-disable") {
-                    // Disable the Module
-                    resolve([i, 3])
-                } else if (i.customId == "xStaffMan-edit") {
-                    resolve([i, 2])
-                }
-            });
-    
-            collector.on('end', async collected => {
-                if (collected.size === 0) {
-                    await interaction.editReply({ content: messageButtonTimeout, components: [] });
-                    reject(messageButtonTimeout); // Reject the Promise if no confirmation was received
-                }
-            });
+        collector.on('collect', async i => {
+            collector.stop();
+            if (i.customId == "xSuggestions-enable") {
+                await EnableEdit(i, old, false)
+            } else if (i.customId == "xSuggestions-disable") {
+                await enableDisableEdit(i, 1, null)
+            } else if (i.customId == "xSuggestions-edit") {
+                await EnableEdit(i, old, true)
+            }
+        });
+
+        collector.on('end', async collected => {
+            if (collected.size === 0) {
+                await interaction.editReply({ content: messageButtonTimeout, components: [] });
+                reject(messageButtonTimeout); // Reject the Promise if no confirmation was received
+            }
         });
     },
 };
+
+async function EnableEdit(interaction, server, edit) {
+    const embed = await embedSuggestion.askForChannel(server.server, edit);
+
+    const channelSelect = new ChannelSelectMenuBuilder()
+        .setCustomId("xSuggestions-channel")
+        .setPlaceholder("Select a Channel")
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setChannelTypes([15, 0]);
+
+    let channel = await sendMenuBuilders(interaction, channelSelect, true, embed);
+
+    interaction = channel[1];
+    channel = channel[0][0];
+
+    await enableDisableEdit(interaction, edit ? 2 : 0, channel);
+}
+
+/*
+    Enable/Disable the Suggestions Module
+    @param interaction: The interaction object
+    @param server: The server object
+    @param enable: Enable or Disable the module (0 - Enable, 1 - Disable, 2 - Edit)
+    @param channel: The channel to send suggestions to
+*/
+
+async function enableDisableEdit(interaction, status, channel) {
+    let enable = status == 1 ? false : true;
+    let data = {
+        "Suggestions": enable,
+        "SuggestionsChannel": status != 1 ? channel : null
+    }
+
+    await updateorCreateServer(data, interaction);
+
+    let embed = await embedSuggestion.StatusChanged(status, channel);
+
+    await interaction.update({ embeds: [embed], components: [] });
+
+    if(interaction.type == 3 && channel){
+        let channelObject = await interaction.client.channels.cache.get(channel);
+        let embed = await embedSuggestion.SuggestionsChannel(channelObject.type, interaction.guild);
+
+        if(channelObject.type == 0){
+            await channelObject.send({ embeds: [embed] });
+        }
+        if(channelObject.type == 15){
+            const thread = await channelObject.threads.create({
+                name: "Suggestions",
+                message: { embeds: [embed] },
+            });
+
+            const initialMessage = await thread.fetchStarterMessage();
+
+            // Pinning the initial message
+            if (initialMessage) {
+              await initialMessage.pin();
+            }
+        }
+    }
+}

@@ -20,7 +20,11 @@ async function getServer(interaction) {
         if(interaction.customId){
             await interaction.update({embeds: [embedInfoError.ServerConnectionError], components: []})
         } else {
-            await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
+            try{
+                await interaction.reply({embeds: [embedInfoError.ServerConnectionError], components: []})
+            } catch (e) {
+                console.log(e)
+            }
         }
         return null;
     }

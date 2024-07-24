@@ -11,6 +11,7 @@ const checkDateFormat = require("./checkDateFormat.js");
 const createStaffLeave = require("./createStaffLeave.js");
 const editStaffLeave = require("./editStaffLeave.js");
 const askQuestion = require("./askQuestion.js");
+const updateorCreateServer = require("./updateorCreateServer.js");
 
 module.exports = {
         "disableCommandForGuild": disableCommandForGuild,
@@ -26,4 +27,5 @@ module.exports = {
         "createStaffLeave": createStaffLeave,
         "editStaffLeave": editStaffLeave,
         "askQuestion": askQuestion,
+        "updateorCreateServer": updateorCreateServer,
     };

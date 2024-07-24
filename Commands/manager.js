@@ -109,6 +109,9 @@ async function askForSubModule(interaction) {
                 return;
             }
             
+            if(!interaction){
+                return;
+            }
             await interaction.update({ embeds: [embedManage.PromotionEnabled], components: []})
         } else if (result == 2){
             // Edit
@@ -166,7 +169,10 @@ async function askForSubModule(interaction) {
 async function SendStaffLeaveQuestions(interaction) {
     const selectManagementRoles = new ChannelSelectMenuBuilder()
         .setCustomId("channel")
-        .setPlaceholder("Select a Channel to post the Staff Leave Requests in for review.");
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setChannelTypes([0])
+        .setPlaceholder("Select a Channel to post the Staff Leave Request Button in.");
 
     const selectembed = embedManage.channelSelect;
 
@@ -191,6 +197,9 @@ async function SendStaffLeaveQuestions(interaction) {
 
     const SelectChanneltoPost = new ChannelSelectMenuBuilder()
         .setCustomId("postchannel")
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setChannelTypes([0])
         .setPlaceholder("Select a Channel to post the Staff Leave Requests in for review.");
 
     const postembed = embedManage.postChannelSelect;
