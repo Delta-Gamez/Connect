@@ -25,9 +25,15 @@ module.exports = {
         custom("Guild Joined", `Joined Guild: ${guild.name} (${guild.id})`, "#", embed);
         
         let targetChannel = guild.channels.cache.find(channel =>
-          (channel.name.toLowerCase().includes('general') || channel.name.toLowerCase().includes('chat')) &&
+          channel.name.toLowerCase().includes('general')&&
           channel.type === 0
         );
+        if(!targetChannel) {
+            targetChannel = guild.channels.cache.find(channel =>
+              channel.name.toLowerCase().includes('chat') &&
+              channel.type === 0
+            );
+        }
         
         if (!targetChannel) {
           const writableChannels = guild.channels.cache.filter(channel =>
