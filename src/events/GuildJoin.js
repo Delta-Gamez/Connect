@@ -1,5 +1,5 @@
-const { custom } = require('../log.js');
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
+const { custom, info } = require('../log.js');
+const { EmbedBuilder } = require("discord.js");
 const { embedAbout } = require("../../embeds.js");
 
 const colorSuccess = '#45BB8A';
@@ -50,6 +50,7 @@ module.exports = {
         }
         
         if (targetChannel) {
+          info(`Sending welcome message to ${guild.name} (${guild.id}), in channel ${targetChannel.name} (${targetChannel.id})`);
           targetChannel.send({ embeds: [embedAbout.GetStarted], content: `<@${guild.ownerId}>` }).catch(console.error);
         }
 }};
