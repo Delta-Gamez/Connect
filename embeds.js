@@ -4,13 +4,14 @@ const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
-const messageErrorPermission = 'PERMISSION ERROR';
+const errorTitlePermission = 'PERMISSION ERROR';
+const errorDescriptionPermission = `Please ensure you are the server owner or have the \`Administrator\` permission to run this command.\n\u200B`;
 const messageButtonTimeout = '`Button confirmation not received within 60s, cancelling request.`';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
 const colorError = '#F14647';
-const colorInfo = '#00469F';
+const colorInfo = '#5965f3';
 
 const iconSuccess = '<:DG_CO_Check:1028309734450806815>';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536>';
@@ -188,8 +189,8 @@ const embedConnect = {
         .setDescription(`You need to be in a server to use this command.\n\u200B`)
         .setFooter(footerConnect),
     ServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorPermission}`)
-        .setDescription(`Only the server owner can run this command. Please contact the server owner to use this command.\n\u200B`)
+        .setTitle(`${iconError} ${errorTitlePermission}`)
+        .setDescription(`${errorDescriptionPermission}`)
         .setFooter(footerConnect),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
@@ -402,7 +403,7 @@ const embedPartnership = {
         .setDescription('You need to be in a server to use this.\n\u200B')
         .setFooter(footerPartnership),
     ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorPermission}`)
+        .setTitle(`${iconError} ${errorTitlePermission}`)
         .setDescription('Only the server owner can run this command.\n\u200B')
         .setFooter(footerPartnership)
 }
