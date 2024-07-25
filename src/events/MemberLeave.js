@@ -6,16 +6,6 @@ module.exports = {
     name: "guildMemberRemove",
     execute: async (member) => {
         const guild = member.guild;
-        const embed = new EmbedBuilder()
-            .setTitle("Member Left")
-            .setDescription(`Member Data:\nID: ${member.id}\nUsername: ${member.user.username}\nGuild: ${guild.name}(${guild.id})\nMembers: ${guild.memberCount}`)
-            .setTimestamp();
-
-        if (member.user.avatarURL()) {
-            embed.setThumbnail(member.user.avatarURL());
-        }
-
-        custom("Member Left", `Member Left: ${member.user.username} (${member.id}) from Guild: ${guild.name} (${guild.id})`, "#", embed);
 
         data = {
             ServerID: guild.id,
