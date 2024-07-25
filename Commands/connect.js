@@ -18,7 +18,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('connect')
         .setDescription('Advertise your community on the web.')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
       if (!interaction.guildId) {
           await interaction.reply({
@@ -27,7 +27,7 @@ module.exports = {
           });
           return;
       }
-      if (interaction.member.id !== interaction.guild.ownerId) {
+      if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
           await interaction.reply({
               embeds: [embedConnect.ServerOwner],
               ephemeral: true,

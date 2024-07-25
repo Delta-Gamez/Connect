@@ -20,7 +20,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('partnership')
         .setDescription('Manage your partnerships')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
@@ -29,7 +29,7 @@ module.exports = {
             });
             return;
         }
-        if (interaction.member.id !== interaction.guild.ownerId) {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
             await interaction.reply({
                 embeds: [embedPartnership.ErrorServerOwner],
                 ephemeral: true,

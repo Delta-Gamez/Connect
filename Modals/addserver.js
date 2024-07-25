@@ -10,21 +10,6 @@ module.exports = {
         description: "Process submitted addserver modals.",
     },
     async execute(interaction) {
-        if (
-            !(
-                interaction.member.id &&
-                interaction.guild.ownerId &&
-                parseInt(interaction.member.id) ===
-                    parseInt(interaction.guild.ownerId)
-            )
-        ) {
-            await interaction.reply({
-                embeds: [embedConnect.ServerOwner],
-                components: [],
-            });
-            return;
-        }
-        
         let old = await getServer(interaction)
 
         
