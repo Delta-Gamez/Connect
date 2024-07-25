@@ -29,7 +29,7 @@ module.exports = {
       }
       if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
           await interaction.reply({
-              embeds: [embedConnect.ServerOwner],
+              embeds: [embedConnect.ErrorPermission],
               ephemeral: true,
           });
           return;

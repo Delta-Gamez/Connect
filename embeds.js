@@ -188,7 +188,7 @@ const embedConnect = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(`You need to be in a server to use this command.\n\u200B`)
         .setFooter(footerConnect),
-    ServerOwner: new EmbedBuilder(embedInfo.Error)
+    ErrorPermission: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${errorTitlePermission}`)
         .setDescription(`${errorDescriptionPermission}`)
         .setFooter(footerConnect),
@@ -402,9 +402,9 @@ const embedPartnership = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this.\n\u200B')
         .setFooter(footerPartnership),
-    ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
+    ErrorPermission: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${errorTitlePermission}`)
-        .setDescription('Only the server owner can run this command.\n\u200B')
+        .setDescription(`${errorDescriptionPermission}`)
         .setFooter(footerPartnership)
 }
 
