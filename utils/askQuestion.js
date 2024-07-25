@@ -46,6 +46,10 @@ async function askQuestion(interaction, question, inputs = [], limit, addRemoveE
                 
                 // Get the user's input from the modal
                 const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
+                if(userInput.toLowerCase().includes('member') || userInput.toLowerCase().includes('members')){
+                    type = 'member';
+                }
+
                 inputs.push([userInput, type]);
     
                 await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject);
@@ -68,33 +72,10 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
     if(!(limit && inputs.length >= limit)){
         options.push(
             {
-                label: `${inputs.length > 0 ? 'Add more Short' : 'Add Short'}`,
+                label: `${inputs.length > 0 ? 'Add more' : 'Add'}`,
                 description: 'Select to add more information',
                 value: 'add_more_short',
             },
-            {
-                label: `${inputs.length > 0 ? 'Add more Long' : 'Add Long'}`,
-                description: 'Select to add more information',
-                value: 'add_more_long',
-            }
-        )
-    }
-
-    test = false;
-    for (const input of inputs) {
-        if(input[1] === 'member'){
-            test = true;
-            break;
-        }
-    }
-
-    if(!test){
-        options.push(
-            {
-                label: 'Add Member',
-                description: 'Select to add a member',
-                value: 'add_member',
-            }
         )
     }
 
@@ -147,7 +128,6 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
 
 
 async function selectInteractione(collecter, interaction, removeEmbeds, addRemoveEmbed, inputs, limit, question, resolve){
-    console.log(interaction.values[0])
     switch (interaction.values[0]) {
         case 'add_more_short':
             // If the user wants to add more, call askQuestion again
