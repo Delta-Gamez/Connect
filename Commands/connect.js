@@ -18,7 +18,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('connect')
         .setDescription('Advertise your community on the web.')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
     async execute(interaction) {
       if (!interaction.guildId) {
           await interaction.reply({
@@ -27,7 +27,7 @@ module.exports = {
           });
           return;
       }
-      if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+      if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
           await interaction.reply({
               embeds: [embedConnect.ErrorPermission],
               ephemeral: true,
