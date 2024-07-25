@@ -11,7 +11,7 @@ const messageButtonTimeout = '`Button confirmation not received within 60s, canc
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
 const colorError = '#F14647';
-const colorInfo = '#5965f3';
+const colorInfo = '#1f1f23';
 
 const iconSuccess = '<:DG_CO_Check:1028309734450806815>';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536>';
