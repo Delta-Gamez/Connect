@@ -1,0 +1,11 @@
+const { ModalBuilder, ActionRowBuilder, TextInputBuilder } = require("discord.js");
+
+module.exports = {
+    data: {
+        customId: "suggestionsApprove",
+    },
+    async execute(interaction) {
+        const id = interaction.customId.split("-")[1];
+        
+    },
+};

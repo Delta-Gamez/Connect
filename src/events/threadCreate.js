@@ -1,5 +1,6 @@
-const { EmbedBuilder } = require("discord.js");
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const { custom } = require("../log.js");
+const { embedSuggestion } = require("../../embeds.js");
 const { getServer } = require("../../utils/utils.js");
 
 module.exports = {
@@ -26,16 +27,28 @@ module.exports = {
             return;
         }
 
-        if (thread.channel.id != data.server.SuggestionsChannel) {
+        if (thread.parentId != data.server.SuggestionsChannel) {
             return;
         }
 
-        if (thread.author.avatarURL()) {
-            embed.setThumbnail(thread.author.avatarURL());
-        }
+        const suggestionDescription = messsage.content;
 
-        custom("New Suggestion", `New Suggestion: ${thread.author.username} (${thread.id}) in Guild: ${guild.name} (${guild.id})`, "#", embed);
+        let Approve = new ButtonBuilder()
+            .setCustomId("suggestions-approve")
+            .setLabel("Approve")
+            .setStyle(ButtonStyle.Primary);
+        let Deny = new ButtonBuilder()
+            .setCustomId("suggestions-deny")
+            .setLabel("Deny")
+            .setStyle(ButtonStyle.Danger);
 
-        await thread.react("👍");
+        let row = new ActionRowBuilder().addComponents(
+            Approve,
+            Deny,
+        );
+
+        let embeds = await embedSuggestion.createdSuggestion(thread.guild, messsage.author, suggestionDescription);
+
+        await thread.send({embeds: [embeds], components: [row]});
     },
 };

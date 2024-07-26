@@ -12,6 +12,10 @@ const createStaffLeave = require("./createStaffLeave.js");
 const editStaffLeave = require("./editStaffLeave.js");
 const askQuestion = require("./askQuestion.js");
 const updateorCreateServer = require("./updateorCreateServer.js");
+const createSuggestion = require("./createSuggestion.js");
+const getSuggestion = require("./getSuggestion.js");
+const delSuggestion = require("./delSuggestion.js");
+const updateSuggestion = require("./updateSuggestion.js");
 
 module.exports = {
         "disableCommandForGuild": disableCommandForGuild,
@@ -28,4 +32,8 @@ module.exports = {
         "editStaffLeave": editStaffLeave,
         "askQuestion": askQuestion,
         "updateorCreateServer": updateorCreateServer,
+        "createSuggestion": createSuggestion,
+        "getSuggestion": getSuggestion,
+        "delSuggestion": delSuggestion,
+        "updateSuggestion": updateSuggestion
     };
