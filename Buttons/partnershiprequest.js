@@ -106,10 +106,18 @@ async function createAndShowModal(interaction, questions) {
 
     // For each question, create a text input and add it to the modal
     questions.forEach((question, index) => {
-        const textInput = new TextInputBuilder()
-            .setCustomId(`question${index}`)
-            .setLabel(question)
-            .setStyle(TextInputStyle.Short); // Use TextInputStyle.Paragraph for longer inputs
+        let textInput;
+        if(question[1] === 'long'){
+            textInput = new TextInputBuilder()
+                .setCustomId(`question${index}`)
+                .setLabel(question[0])
+                .setStyle(TextInputStyle.Paragraph)
+        } else {
+            textInput = new TextInputBuilder()
+                .setCustomId(`question${index}`)
+                .setLabel(question[0])
+                .setStyle(TextInputStyle.Short);
+        }
 
         const actionRow = new ActionRowBuilder().addComponents(textInput);
 

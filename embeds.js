@@ -370,7 +370,7 @@ const embedPartnership = {
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
     CustomQuestions: async function CustomQuestions(questions){
-        questions = questions.map((question) => `\`•\` ${question}`).join('\n');
+        questions = questions.map((question, index) => `**${index+1}**: ${question[0]} (${question[1]})`).join('\n');
         let newLine = '';
 
         if (questions && questions.length > 0) {
@@ -387,7 +387,7 @@ const embedPartnership = {
         return embed;
     },
     removeEmbed: async function removeEmbed(questions){
-        questions = questions.map((question) => `\`•\` ${question}`).join('\n');
+        questions = questions.map((question, index) => `**${index+1}**: ${question[0]} (${question[1]})`).join('\n');
 
         const embed = new EmbedBuilder(embedInfo.Info)
             .setTitle('CUSTOM QUESTIONS')
@@ -396,6 +396,9 @@ const embedPartnership = {
 
         return embed;
     },
+    NotEnoughMembers: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} NOT ENOUGH MEMBERS`)
+        .setDescription(`Your community does not meet the minimum member requirements to request a partnership. \n\nPlease make sure you have the required amount of members to request a partnership.\n\u200B`),
 
     // ERRORS
     ErrorServer: new EmbedBuilder(embedInfo.Error)

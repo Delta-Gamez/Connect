@@ -10,7 +10,7 @@ const { messageButtonTimeout } = require('../embeds.js')
  */
 
 
-async function askQuestion(interaction, question, inputs = [], limit, addRemoveEmbed, removeEmbeds, skip = false) {
+async function askQuestion(interaction, question, inputs = [], limit, addRemoveEmbed, removeEmbeds, skip = false, type) {
     return new  Promise(async (resolve, reject) => {
         try{
             if(skip){
@@ -46,7 +46,11 @@ async function askQuestion(interaction, question, inputs = [], limit, addRemoveE
                 
                 // Get the user's input from the modal
                 const userInput = modalInteraction.fields.getTextInputValue('textInputCustomId');
-                inputs.push(userInput);
+                if(userInput.toLowerCase().includes('member') || userInput.toLowerCase().includes('members')){
+                    type = 'member';
+                }
+
+                inputs.push([userInput, type]);
     
                 await selectMenu(modalInteraction, inputs, limit, question, removeEmbeds, addRemoveEmbed, resolve, reject);
                 
@@ -70,8 +74,8 @@ async function selectMenu(interaction, inputs, limit, question, removeEmbeds, ad
             {
                 label: `${inputs.length > 0 ? 'Add more' : 'Add'}`,
                 description: 'Select to add more information',
-                value: 'add_more',
-            }
+                value: 'add_more_short',
+            },
         )
     }
 
@@ -136,10 +140,19 @@ async function selectInteractione(collecter, interaction, removeEmbeds, addRemov
         return;
     }
     switch (interaction.values[0]) {
-        case 'add_more':
+        case 'add_more_short':
             // If the user wants to add more, call askQuestion again
             collecter.stop();
-            resolve(await askQuestion(interaction, question, inputs, limit, addRemoveEmbed, removeEmbeds));
+            resolve(await askQuestion(interaction, question, inputs, limit, addRemoveEmbed, removeEmbeds, false, 'short'));
+            break;
+        case 'add_more_long':
+            // If the user wants to add more, call askQuestion again
+            collecter.stop();
+            resolve(await askQuestion(interaction, question, inputs, limit, addRemoveEmbed, removeEmbeds, false, 'long'));
+            break;
+        case 'add_member':
+            collecter.stop();
+            resolve(await askQuestion(interaction, question, inputs, limit, addRemoveEmbed, removeEmbeds, false, 'member'));
             break;
         case 'remove':
             collecter.stop();
@@ -148,7 +161,7 @@ async function selectInteractione(collecter, interaction, removeEmbeds, addRemov
                 .setPlaceholder('Choose an option')
                 .addOptions(
                     inputs.map((input, index) => ({
-                        label: input,
+                        label: `${input[0]} (${input[1]})`,
                         value: index.toString(),
                     }))
                 );

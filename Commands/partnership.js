@@ -378,10 +378,24 @@ async function SendEmbededMessage(interaction, channelid, roleMention, memberReq
 
     let embed = await embedPartnership.PartnershipRequester(channelid, enable, memberRequirement, roleMention, questions)
 
-    await interaction.update({
-        embeds: [embed],
-        ephemeral: true,
-        components: [],
-    });
+    try {
+        await interaction.update({
+            embeds: [embed],
+            ephemeral: true,
+            components: [],
+        });
+    } catch (error) {
+        try {
+            await interaction.reply({
+                embeds: [embed],
+                ephemeral: true,
+                components: [],
+            });
+        
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return;
 }

@@ -54,6 +54,10 @@ async function sendMenuBuilders(interaction, component, requiremnet, embed, opti
                     selectedChannel = i.values;
                     await i.update({ components: [row1, row2] });
                 } else {
+                    if(!i.values){
+                        reject('Mega Error');
+                        return;
+                    }
                     selectedChannel = i.values[0]
                     const updatedMemberRequirementOptions = options.map(option =>
                         option.data.value === i.values[0] 
