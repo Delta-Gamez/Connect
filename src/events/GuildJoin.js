@@ -1,5 +1,5 @@
-const { custom } = require('../log.js');
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
+const { custom, info } = require('../log.js');
+const { EmbedBuilder } = require("discord.js");
 const { embedAbout } = require("../../embeds.js");
 
 const colorSuccess = '#45BB8A';
@@ -25,9 +25,15 @@ module.exports = {
         custom("Guild Joined", `Joined Guild: ${guild.name} (${guild.id})`, "#", embed);
         
         let targetChannel = guild.channels.cache.find(channel =>
-          (channel.name.toLowerCase().includes('general') || channel.name.toLowerCase().includes('chat')) &&
+          channel.name.toLowerCase().includes('general')&&
           channel.type === 0
         );
+        if(!targetChannel) {
+            targetChannel = guild.channels.cache.find(channel =>
+              channel.name.toLowerCase().includes('chat') &&
+              channel.type === 0
+            );
+        }
         
         if (!targetChannel) {
           const writableChannels = guild.channels.cache.filter(channel =>
@@ -44,6 +50,7 @@ module.exports = {
         }
         
         if (targetChannel) {
-          targetChannel.send({ embeds: [embedAbout.GetStarted] }).catch(console.error);
+          info(`Sending welcome message to ${guild.name} (${guild.id}), in channel ${targetChannel.name} (${targetChannel.id})`);
+          targetChannel.send({ embeds: [embedAbout.GetStarted], content: `<@${guild.ownerId}>` }).catch(console.error);
         }
 }};

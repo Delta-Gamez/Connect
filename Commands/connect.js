@@ -10,13 +10,15 @@ const {
 const { info, error } = require("../src/log.js");
 const { embedConnect, messageButtonTimeout } = require("../embeds.js");
 const axios = require("axios");
+const {getServer} = require("../utils/utils.js");
+const {updateServer} = require("../utils/utils");
 
 module.exports = {
     global: true,
     data: new SlashCommandBuilder()
         .setName('connect')
         .setDescription('Advertise your community on the web.')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
     async execute(interaction) {
       if (!interaction.guildId) {
           await interaction.reply({
@@ -25,9 +27,9 @@ module.exports = {
           });
           return;
       }
-      if (interaction.member.id !== interaction.guild.ownerId) {
+      if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
           await interaction.reply({
-              embeds: [embedConnect.ServerOwner],
+              embeds: [embedConnect.ErrorPermission],
               ephemeral: true,
           });
           return;
@@ -42,7 +44,7 @@ module.exports = {
 
 async function ChangeConnect(status, interaction, old, reply) {
 
-    if(!old.data.exists){
+    if(!old.exists){
         return;
     }
 
@@ -63,16 +65,7 @@ async function ChangeConnect(status, interaction, old, reply) {
         ServerInvite: String(invite.url),
     };
 
-    let response = await axios.put(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    let response = await updateServer(data, interaction)
 
     if(reply){
         const embed = await embedConnect.StatusChange(status, response.data.server)
@@ -92,9 +85,7 @@ async function ChangeConnect(status, interaction, old, reply) {
 
 // Main Screen (Enable or Disable)
 async function DiscoverySubCommand(interaction) {
-    let old = await axios.get(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers/find/${interaction.guildId}`,
-    );
+    let old = await getServer(interaction);
     
     const Connect_Enable = new ButtonBuilder()
         .setCustomId("xconnect-enable")
@@ -107,7 +98,7 @@ async function DiscoverySubCommand(interaction) {
         .setStyle(ButtonStyle.Primary);
 
     let row
-    if(old.data.exists && old.data.server.Connect){
+    if(old.exists && old.server.Connect){
         const Connect_Disable = new ButtonBuilder()
             .setCustomId("xconnect-disable")
             .setLabel("Disable")
@@ -124,8 +115,8 @@ async function DiscoverySubCommand(interaction) {
         row = new ActionRowBuilder().addComponents(Connect_Enable, Connect_Disable);
     }
     let connectEnabled = false
-    let serverData = old.data.server;
-    if(!old.data.exists){
+    let serverData = old.server;
+    if(!old.exists){
         connectEnabled = false;
         serverData = {
             Connect: false,
@@ -137,7 +128,7 @@ async function DiscoverySubCommand(interaction) {
             ServerOwner: interaction.guild.ownerId,
         }
     } else {
-        connectEnabled = old.data.server.PartnerShip;
+        connectEnabled = old.server.Connect;
     }
     const embed = await embedConnect.ModuleInfo(connectEnabled, serverData);
     const response = await interaction.reply({

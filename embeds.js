@@ -4,13 +4,14 @@ const axios = require('axios');
 
 // Styling Variables
 const messageErrorServer = 'SERVER ERROR';
-const messageErrorPermission = 'PERMISSION ERROR';
+const errorTitlePermission = 'PERMISSION ERROR';
+const errorDescriptionPermission = `Please ensure you are the server owner or have the \`Administrator\` permission to run this command.\n\u200B`;
 const messageButtonTimeout = '`Button confirmation not received within 60s, cancelling request.`';
 
 const colorSuccess = '#45BB8A';
 const colorWarn = '#FFB53E';
 const colorError = '#F14647';
-const colorInfo = '#00469F';
+const colorInfo = '#5965f3';
 
 const iconSuccess = '<:DG_CO_Check:1028309734450806815>';
 const iconWarn = '<:DG_CO_Warn:1142925963668238536>';
@@ -19,7 +20,7 @@ const iconDisable = '<:DG_CO_Cross:1163377608025702410>';
 const iconConnect = '<:DG_CO_Connect:1249377684962803794>';
 const iconConnectB = '<:DG_CO_ConnectBlack:1203623412271022150>';
 const iconMembers = '<:DG_CO_Members:1257658527426674731>';
-const iconBoost = '<:DG_CO_NitroBoost:1107640916182839317>'
+const iconBoost = '<:DG_CO_NitroBoost:1107640916182839317>';
 
 const iconURLConnect = 'https://cdn.discordapp.com/emojis/1249377684962803794.webp?size=22&quality=lossless'
 const iconURLCommunity = 'https://cdn.discordapp.com/emojis/1172188410522386533.webp?size=22&quality=lossless'
@@ -51,7 +52,6 @@ const embedLog = {
     }
 };
 
-
 const embedInfo = {
     Success: new EmbedBuilder()
         .setTitle('SUCCESS')
@@ -82,11 +82,11 @@ const embedInfo = {
 const embedAbout = {
     About: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconConnect} CONNECT`)
-        .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, filled with features for partnerships, advertising and more.\n\u200B`)
+        .setDescription(`Connect your community to the best advertising platform for Discord communities. Connect is an easy to use Discord Bot, filled with features for partnerships, advertising and planned to do even more.\n\u200B`)
         .addFields(
-            { name: 'CONNECT', value: `\`•\` [Connect Web](https://connect.deltagamez.ch/) \n\`•\` [Discord Community Support](https://discord.gg/sYpmUFQ) \n\`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC)`, inline: true },
+            { name: 'CONNECT', value: `\`•\` [Invite Connect](https://discord.com/oauth2/authorize?client_id=1203656804731461672) \n\`•\` [Connect Web](https://connect.deltagamez.ch/) \n\`•\` [Discord Community Support](https://discord.gg/sYpmUFQ) \n\`•\` [Connect Discord Server](https://discord.gg/bJ8EPmdnrC) \n\`•\` [Connect Status Page](https://status.deltagamez.ch) \n\u200B` , inline: true },
             { name: `LEGAL`, value: `\`•\` Privacy Policy \n\`•\` Terms of Service`, inline: true}, 
-            { name: 'NOTE', value: `Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms. \n\u200B`})
+            { name: 'NOTE', value: `Please note we're still working on our legal information, create a ticket in our [Discord](https://discord.gg/sYpmUFQ) for any questions about your data and our terms. \n\n\`v0.1\` \n\u200B`})
         .setFooter(footerConnect),
     GetStarted: new EmbedBuilder(embedInfo.Success)
         .setTitle(`${iconSuccess} SUCCESSFULLY CONNECTED`)
@@ -154,7 +154,7 @@ const embedConnect = {
         let guildName = server.ServerName.toUpperCase();
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} DESCRIPTION UPDATED`)
-            .setDescription(`Your community description has successfully been updated and will soon be displayed on (Connect)[https://connect.deltagamez.ch/]. \n\u200B`)
+            .setDescription(`Your community description has successfully been updated and will soon be displayed on [Connect](https://connect.deltagamez.ch/). \n\u200B`)
             .addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                     value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
@@ -164,16 +164,21 @@ const embedConnect = {
     },
     StatusChange: async function StatusChange(status, server){
         let guildName = server.ServerName.toUpperCase();
+        let descriptionMessage = 'Your community will soon be removed from [Connect](https://connect.deltagamez.ch/).';
         let embed = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} CONNECT ${status ? 'ENABLED' : 'DISABLED'}`)
-            .setDescription(`The Connect module has successfully been ${status ? 'enabled' : 'disabled'}. \nCheck which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
-            .setFooter(footerConnect)
+            
         if (server.Connect) {
+            descriptionMessage = 'Your community will soon be displayed on [Connect](https://connect.deltagamez.ch/).';
             embed.addFields( 
                 { name: 'COMMUNITY INFORMATION', 
                 value: `**NAME**: ${guildName} \n**DESCRIPTION**: ${server.ShortDesc} \n**MEMBERS**: ${server.MemberCount} \n**INVITE**: ${server.ServerInvite}\n\u200B`})
         }
         return embed
+
+            .setDescription(`The Connect module has successfully been ${status ? 'enabled' : 'disabled'}. ${descriptionMessage}\nCheck which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
+            .setFooter(footerConnect)
+        
     },
     Error: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ERROR`)
@@ -183,9 +188,9 @@ const embedConnect = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription(`You need to be in a server to use this command.\n\u200B`)
         .setFooter(footerConnect),
-    ServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorPermission}`)
-        .setDescription(`Only the server owner can run this command. Please contact the server owner to use this command.\n\u200B`)
+    ErrorPermission: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${errorTitlePermission}`)
+        .setDescription(`${errorDescriptionPermission}`)
         .setFooter(footerConnect),
     ModalProcess: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} ${messageErrorServer}`)
@@ -230,33 +235,34 @@ const embedPartnership = {
         .setFooter(footerPartnership),
     RoleSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`ROLE SELECTION`)
-        .setDescription(`Select the roles which should be mentioned for new partnership requests.\n\u200B`)
+        .setDescription(`Select the roles which should be mentioned for new partnership requests. Ensure the role has the \`Manage Messages\` permission, in order to handle partnership requests.\n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, 
-            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .addFields({ name: `HOW IT WORKS`, value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
     MemberRequirementSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`MEMBER REQUIREMENTS`)
-        .setDescription(`Select the minimum members a community needs to partner with you.\n\u200B`)
+        .setDescription(`Select the minimum members a community needs before partner with you.\n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, 
-            value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
+        .addFields({ name: `HOW IT WORKS`, value: `Users will be able to view your minimum member requirements before opening a partnership request. A partnership request will automatically get declined if not matching the minimum requirements.\n\u200B` })
         .setFooter(footerPartnership),
-    CustomQuestionsSelection: new EmbedBuilder(embedInfo.Info)
+    QuestionsSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CUSTOM QUESTIONS`)
-        .setDescription(`Select if you want to use custom questions for partnership module.\n\u200B`)
-        .addFields({ name: `HOW IT WORKS`,
-            value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
-        { name: `DEFAULT`, value: `The default questions are:\nWhat is the community name?\nWhat is your member count?\nWhat is your community about?\nCan you provide a Discord invite?"`})
+        .setDescription(`Select what questions should be asked whenever someone requests a partnership.\n\u200B`)
+        .setThumbnail(iconURLCommunity)
+        .addFields({ name: `HOW IT WORKS`, value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
+        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \n\`•\` What is the community name? \n\`•\` What is your member count? \n\`•\` What is your community about? \n\`•\` Can you provide a Discord invite?\n\u200B`})
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
-        // interactionGuild.iconURL() will give the guild icon
+        let partnershipThumbnail = iconURLCommunity;
+        if (interactionGuild.iconURL() != null) {
+            partnershipThumbnail = interactionGuild.iconURL();
+        }
         let addFields = ``;
         let PartnershipEmbed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`REQUEST A PARTNERSHIP`)
             .setDescription(`We are currently accepting partnership requests! \nCreate a new partnership request through pressing the button below.\n\u200B`)
-            .setThumbnail(iconURLCommunity)
+            .setThumbnail(partnershipThumbnail)
             .setFooter(footerPartnership)
         if (memberRequirement) {
             if(memberRequirement == 'none'){
@@ -281,7 +287,7 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    PartnershipAccepted: async function partnershipAccepted(user){
+    PartnershipAccepted: async function PartnershipAccepted(user){
         if (!user) {
             const embed = new EmbedBuilder(embedInfo.Success)
                 .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
@@ -298,25 +304,29 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-    RequestThread: async function RequestThread(serverData, questionsAnswers){ 
-
+    RequestThread: async function RequestThread(serverData, questionsAnswers){
+        
         const embed = new EmbedBuilder(embedInfo.Info)
-            .setTitle(`${iconConnect} PARTNERSHIP REQUEST`)
-            .setDescription(`Thanks for requesting a partnership. Before we can accept your partnership, please answer the questions below.\n\u200B`)
-            .setFooter(footerPartnership)
+            .setTitle(`PARTNERSHIP REQUEST`)
+            .setDescription(`Thanks for requesting a partnership. Our staff team will be with you shortly and handling your request. \n\u200B`)
 
-        if(serverData.server.PartnerShipQuestions != "null"){
-            let value = ""
-            for (const question of questionsAnswers) {
-                value = value + `\`•\` ${question.question} - ${question.answer}\n`
-            }
-    
-            if(value != "") {
-                embed.addFields({ name: `QUESTIONS`, value: value })
+        if(serverData.server.PartnerShipQuestions != 'null'){
+            if(questionsAnswers.length > 0){
+                let value = ''
+                for (let question of questionsAnswers) {
+                    value = value + `**${question.question}** \n\`•\` ${question.answer}\n\u200B\n`
+                }
+        
+                if(value != '') {
+                    embed.addFields({ name: `PARTNERSHIP QUESTIONS`, value: `${value}` })
+                }
             }
         }
 
         return embed
+
+        .setThumbnail(iconURLCommunity)
+        .setFooter(footerPartnership)
     },
     RequestPending: async function RequestPending(existingThread){
         const embed = new EmbedBuilder(embedInfo.Warn)
@@ -334,7 +344,6 @@ const embedPartnership = {
             .setFooter(footerPartnership)
         return embed
     },
-
     RequestDeclineReason: async function RequestDeclineReason(reason){
         const embed = new EmbedBuilder(embedInfo.Error)
             .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
@@ -346,11 +355,12 @@ const embedPartnership = {
     RequestDisabled: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PARTNERSHIPS DISABLED`)
         .setDescription(`We are sorry, but we are currently not accepting any partnership requests.\n\u200B`)
-        .addFields({ name: `STAFF INFO`, value: `If you are the community owner, use \`/partnership\` to re-enable partnership requests.\n\u200B`})
+        .addFields({ name: `STAFF INFO`, value: `If you are the community owner, use \`/partnership\` to re-enable the partnership module.\n\u200B`})
         .setFooter(footerPartnership),
     ButtonApproveDeclinePermission: new EmbedBuilder(embedInfo.Error)
         .setTitle(`${iconError} PERMISSION ERROR`)
-        .setDescription(`You do not have the required permissions to use this Button. \n\nPlease ask the Staff Team to Approve/Decline the Partnership Request. \nStaff Members require the \`Manage Messages\` permission to handle requests.`),
+        .setDescription(`You do not have the required permissions to use this Button. \n\nPlease ask the Staff Team to Approve/Decline the Partnership Request. \nStaff Members require the \`Manage Messages\` permission to handle requests.`)
+        .setFooter(footerPartnership),
     RequestAlreadyDeclined: new EmbedBuilder(embedInfo.Info)
         .setTitle(`${iconDisable} PARTNERSHIP DECLINED`)
         .setDescription(`This Partnership Request has already been declined.\n\u200B`)
@@ -359,21 +369,30 @@ const embedPartnership = {
         .setTitle(`${iconSuccess} PARTNERSHIP ACCEPTED`)
         .setDescription(`This Partnership Request has already been accepted.\n\u200B`)
         .setFooter(footerPartnership),
-    addRemoveQuestions: async function addRemoveQuestions(questions){
+    CustomQuestions: async function CustomQuestions(questions){
         questions = questions.map((question, index) => `**${index+1}**: ${question[0]} (${question[1]})`).join('\n');
+        let newLine = '';
 
-        const embed = new EmbedBuilder()
-                .setTitle('Question')
-                .setDescription(`Do you want to add more or are you done?\n${questions}`);
+        if (questions && questions.length > 0) {
+            newLine = '\n\n';
+        }
+
+        const embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle('CUSTOM QUESTIONS')
+            .setDescription(`Create custom questions for partnership requests. \nAdd up to three unique questions for partnership requests. ${newLine} ${questions}\n\u200B`)
+            .addFields({ name: `HOW IT WORKS`, value: `Users creating a partnership request are asked to fill out questions before submitting a request. This can be used for your staff to get more information about individual communities, and whether a community suits your partnership requirements.\n\u200B` })
+            .setThumbnail(iconURLCommunity)
+            .setFooter(footerPartnership);
 
         return embed;
     },
     removeEmbed: async function removeEmbed(questions){
         questions = questions.map((question, index) => `**${index+1}**: ${question[0]} (${question[1]})`).join('\n');
 
-        const embed = new EmbedBuilder()
-                .setTitle('Question')
-                .setDescription(`Select the question you want to remove.\n${questions}`);
+        const embed = new EmbedBuilder(embedInfo.Info)
+            .setTitle('CUSTOM QUESTIONS')
+            .setDescription(`Select a question to remove. \n${questions}`)
+            .setFooter(footerPartnership);
 
         return embed;
     },
@@ -386,9 +405,9 @@ const embedPartnership = {
         .setTitle(`${iconError} ${messageErrorServer}`)
         .setDescription('You need to be in a server to use this.\n\u200B')
         .setFooter(footerPartnership),
-    ErrorServerOwner: new EmbedBuilder(embedInfo.Error)
-        .setTitle(`${iconError} ${messageErrorPermission}`)
-        .setDescription('Only the server owner can run this command.\n\u200B')
+    ErrorPermission: new EmbedBuilder(embedInfo.Error)
+        .setTitle(`${iconError} ${errorTitlePermission}`)
+        .setDescription(`${errorDescriptionPermission}`)
         .setFooter(footerPartnership)
 }
 
@@ -522,7 +541,7 @@ const embedManage = {
 };
 
 
-// Old, refactor code into respective modules. Embeds outside of module should use embedConnect. ...
+// These embeds are out of date, refactor code into respective modules. Embeds outside of module should use embedConnect. ...
 // Info Error Embeds
 const embedInfoErrorTemplate = new EmbedBuilder().setColor(colorError).setFooter({ text: "Connect" });
 const embedInfoError = {

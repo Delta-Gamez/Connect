@@ -12,6 +12,11 @@ module.exports = {
         const server = await getServer(interaction)
         if(!server) return;
 
+        if(!server.server.PartnerShip){
+            interaction.reply({embeds: [embedPartnership.RequestDisabled], ephemeral: true})
+            return;
+        }
+
         let questionsAnswers = [];
         let index = 0;
         for (const question of JSON.parse(server.server.PartnerShipQuestions)) {
@@ -20,10 +25,7 @@ module.exports = {
             index++;
         }
 
-        if(!server.server.PartnerShip){
-            interaction.reply({embeds: [embedPartnership.RequestDisabled], ephemeral: true})
-            return;
-        }
+
 
         let role = null;
         let memberRequirement = 0;

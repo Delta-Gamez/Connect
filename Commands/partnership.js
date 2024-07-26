@@ -20,7 +20,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('partnership')
         .setDescription('Manage your partnerships')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
     async execute(interaction) {
         if (!interaction.guildId) {
             await interaction.reply({
@@ -29,9 +29,9 @@ module.exports = {
             });
             return;
         }
-        if (interaction.member.id !== interaction.guild.ownerId) {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
             await interaction.reply({
-                embeds: [embedPartnership.ErrorServerOwner],
+                embeds: [embedPartnership.ErrorPermission],
                 ephemeral: true,
             });
             return;
@@ -164,25 +164,19 @@ async function PartnershipSubCommande(old, interaction, enable) {
 
 async function StartPartnershipModal(interaction, enable) {
     data = {
-        ServerID: interaction.guild.id,
-        ServerName: interaction.guild.name,
-        MemberCount: interaction.guild.memberCount,
-        ServerIcon: interaction.guild.iconURL(),
-        ServerBanner: interaction.guild.bannerURL(),
-        ServerOwner: interaction.guild.ownerId,
         PartnerShip: true,
     };
 
-    const response = await axios.post(
-        `${process.env.DATABASE_URL}${process.env.STORAGE_PATH}/servers`,
-        data,
-        {
-            headers: {
-                Authorization: `${process.env.DATABASE_TOKEN}`,
-            },
-            withCredentials: true,
-        },
-    );
+    const response = await updateServer(data, interaction);
+
+    if(!response){
+        await interaction.reply({
+            embeds: [embedInfoError.ServerConnectionError],
+            ephemeral: true,
+            components: [],
+        });
+        return;
+    }
 
     if(response.data.status == 200){
         PartnershipSubCommande(response, interaction, enable);
@@ -246,8 +240,7 @@ async function SendPartnerShipEmbed(interaction, enable) {
         new StringSelectMenuOptionBuilder()
             .setLabel('None')
             .setValue('none')
-            .setDescription('No member requirement')
-            .setEmoji('🚫'),
+            .setDescription('No member requirement'),
         new StringSelectMenuOptionBuilder()
             .setLabel('25 Members')
             .setValue('25+ Members')
@@ -299,24 +292,21 @@ async function SendPartnerShipEmbed(interaction, enable) {
         memberRequirement = 'none';
     }
 
-    const embed = embedPartnership.CustomQuestionsSelection;
+    const embed = embedPartnership.QuestionsSelection;
 
     const options = [
         new StringSelectMenuOptionBuilder()
-            .setLabel('Yes')
-            .setValue('yes')
-            .setDescription('Ask questions for partnership requests')
-            .setEmoji('✅'),
+            .setLabel('Custom Questions')
+            .setValue('custom')
+            .setDescription('Ask custom questions for partnership requests'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('Default')
+            .setLabel('Default Questions')
             .setValue('default')
-            .setDescription('Use the default questions for partnership requests')
-            .setEmoji('😭'),
+            .setDescription('Use the default questions for partnership requests'),
         new StringSelectMenuOptionBuilder()
-            .setLabel('No')
+            .setLabel('No Questions')
             .setValue('no')
-            .setDescription('Do not ask questions for partnership requests')
-            .setEmoji('❌'),
+            .setDescription('Do not ask questions for partnership requests'),
     ]
 
     const noyes = new StringSelectMenuBuilder()
@@ -324,36 +314,41 @@ async function SendPartnerShipEmbed(interaction, enable) {
         .setPlaceholder('Select an Option')
         .addOptions(options);
 
-    let option
-    try {
-        option = await sendMenuBuilders(interaction, noyes, true, embed, options);
-    } catch (error) {
-        return;
-    }
+    let questions = [];
+    while (questions && questions.length === 0) {
+        let option
+        try {
+            option = await sendMenuBuilders(interaction, noyes, true, embed, options);
+        } catch (error) {
+            return;
+        }
 
-    if (!option) {
-        return;
-    }
-    
-    interaction = option[1];
-    option = option[0];
+        if (!option) {
+            return;
+        }
 
-    let questions = null;
-    switch (option) {
-        case 'yes':
-            try {
-                questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.addRemoveQuestions, embedPartnership.removeEmbed, true)
-            } catch (error) {
-                return;
-            }
-            if(!questions) return;
-            if(questions == 'error') return;
-            interaction = questions[0];
-            questions = questions[1];
-            break;
-        case 'default':
-            questions = ["What is the community name?", "What is your member count?", "What is your community about?", "Can you provide a Discord invite?"];
-            break;
+        interaction = option[1];
+        option = option[0];
+
+        switch (option) {
+            case 'custom':
+                try {
+                    questions = await askQuestion(interaction, ["Questions to ask", "Partnership request Qs."], [], server.server.Premiumlevel == 1 ? 6 : 3, embedPartnership.CustomQuestions, embedPartnership.removeEmbed, true)
+                } catch (error) {
+                    return;
+                }
+                if(!questions) return;
+                if(questions == 'error') return;
+                interaction = questions[0];
+                questions = questions[1];
+                break;
+            case 'default':
+                questions = ["What is your community name?", "What is your member count?", "Why would you like to partner?", "Can you provide a Discord invite?"];
+                break;
+            case 'no':
+                questions = null;
+                break;
+        }
     }
 
     await SendEmbededMessage(interaction, channelid, rolesText, memberRequirement, questions, enable)
