@@ -211,7 +211,7 @@ const embedPartnership = {
     ModuleInfo : async function ModuleInfo(status, server){
         let embed = new EmbedBuilder(embedInfo.Info)
             .setTitle(`${iconConnect} PARTNERSHIPS`)
-            .setDescription(`Connect your community to other communities across Discord. \n\nThis module allows your users to easily create partnership requests and lets your staff handle them with ease. Users can view your member requirements, and for new requests your selected staff will automatically be pinged. \n\nUse the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#partnerships)\n\u200B`)
+            .setDescription(`Connect your community to partnerships across Discord. \n\nThis module allows your users to easily create partnership requests and lets your staff handle them with ease. Users can view your member requirements, and for new requests your selected staff will automatically be pinged. \n\nUse the buttons below to enable or disable the module and walk-through the setup, we will do the rest and set it up for you. [Learn about how it works](https://connect.deltagamez.ch/features/#partnerships)\n\u200B`)
             .setThumbnail(iconURLCommunity)
             .addFields({ name: `MODULE STATUS`, value: `${status ? `${iconSuccess} \`Enabled\`` : `${iconDisable} \`Disabled\``}\n\u200B` })
             .setFooter(footerPartnership)
@@ -221,36 +221,31 @@ const embedPartnership = {
     StatusChange : async function StatusChange(status){
         const StatusChange = new EmbedBuilder(embedInfo.Success)
             .setTitle(`${iconSuccess} PARTNERSHIPS ${status ? 'ENABLED' : 'DISABLED'} `)
-            .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}. \nCheck which modules are enabled, by using \`/serverinfo\`.\n\u200B`)
+            .setDescription(`The Partnership module has sucessfully been ${status ? 'enabled' : 'disabled'}. \nCheck which modules are enabled, by using \`/serverinfo\`. \n\u200B`)
             .setThumbnail(iconURLCommunity)
             .setFooter(footerPartnership);
         return StatusChange;
     },
     ChannelSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CHANNEL SELECTION`)
-        .setDescription(`Select the channel users can create a partnership request in.\n\u200B`)
+        .setDescription(`Select the channel users can create partnership requests in. Users will be able to request a partnership in this channel, through pressing the \`Request Partnership\` button. \n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, 
-            value: `Users can create a partnership request through pressing the \`Request Partnership\` button. \nWe suggest your selected channel is called \`#request-partnership\` and make sure it is public to \`@everyone\`. \nWe will post the message, in which users can request a partnership with you.\n\u200B` })
         .setFooter(footerPartnership),
     RoleSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`ROLE SELECTION`)
-        .setDescription(`Select the roles which should be mentioned for new partnership requests. Ensure the role has the \`Manage Messages\` permission, in order to handle partnership requests.\n\u200B`)
+        .setDescription(`Select the roles which handle partnership requests in your community. Ensure the selected role has the \`Manage Messages\` permission, in order to handle partnership requests. Your selected roles will be mentioned, as soon as a user requests a partnership. \n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, value: `As soon as someone requests a new partnership, your selected roles will be mentioned. A thread is created for your staff to approve or decline a partnership request.\n\u200B` })
         .setFooter(footerPartnership),
     MemberRequirementSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`MEMBER REQUIREMENTS`)
-        .setDescription(`Select the minimum members a community needs before partner with you.\n\u200B`)
+        .setDescription(`Select how many members a community needs in order to partner with you. Communities not matching your requirements will automatically be denied. \n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, value: `Users will be able to view your minimum member requirements before opening a partnership request. A partnership request will automatically get declined if not matching the minimum requirements.\n\u200B` })
         .setFooter(footerPartnership),
     QuestionsSelection: new EmbedBuilder(embedInfo.Info)
         .setTitle(`CUSTOM QUESTIONS`)
-        .setDescription(`Select what questions should be asked whenever someone requests a partnership.\n\u200B`)
+        .setDescription(`Select questions that should be answered in partnership requests. \`Default Questions\` fits most communities. For more customization, you can also ask up to three custom questions, by selecting \`Custom Questions\` below. \n\u200B`)
         .setThumbnail(iconURLCommunity)
-        .addFields({ name: `HOW IT WORKS`, value: `You can add custom questions to the partnership request. This can be used to get more information from the requester.\n\u200B` },
-        { name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \n\`•\` What is the community name? \n\`•\` What is your member count? \n\`•\` What is your community about? \n\`•\` Can you provide a Discord invite?\n\u200B`})
+        .addFields({ name: `DEFAULT QUESTIONS`, value: `Default questions fit most communities to gather. \n\`•\` What is the community name? \n\`•\` What is your member count? \n\`•\` What is your community about? \n\`•\` Can you provide a Discord invite?\n\u200B`})
         .setFooter(footerPartnership),   
     PartnershipRequest: async function PartnershipRequest(memberRequirement, roleMention, interactionGuild, questions){
         // questions is a array of questions from Custom Questions
