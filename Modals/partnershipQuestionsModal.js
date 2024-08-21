@@ -21,19 +21,60 @@ module.exports = {
         let index = 0;
         for (const question of JSON.parse(server.server.PartnerShipQuestions)) {
             const answer = await interaction.fields.getTextInputValue(`question${index}`);
-            questionsAnswers.push({ "question": question, "answer": answer });
+            questionsAnswers.push({ "question": question[0], "answer": answer });
             index++;
         }
 
 
 
-        const description = interaction.message.embeds[0].data.description;
-
-        // Split the description at ": "
-        const parts = description.split(": ");
         let role = null;
-        if(parts[parts.length - 1].startsWith("<@")) {
-            role = parts[parts.length - 1];
+        let memberRequirement = 0;
+
+        if(interaction.message.embeds[0].data.fields.length !== 0) {
+            const parts = interaction.message.embeds[0].data.fields[0].value.split("\n");
+
+            parts.forEach(part => {
+                if (part.includes("**MINIMUM MEMBERS**:")) {
+                    // Extracting memberRequirement directly
+                    let tempRequirement = part.split("**MINIMUM MEMBERS**:")[1].trim();
+                    if(tempRequirement) {
+                        const matches = tempRequirement.match(/\d+/);
+                        if (matches) {
+                            memberRequirement = matches[0]; // This will be '100' if the string is '100+ Members'
+                        }
+                    }
+                } else if (part.includes("**PARTNERSHIP HANDLER**:")) {
+                    // Extracting roleMention directly
+                    let tempRoleMention = part.split("**PARTNERSHIP HANDLER**:")[1].trim();
+                    if(tempRoleMention.startsWith("<@")) {
+                        role = tempRoleMention;
+                    }
+                }
+            });
+
+            let memberQuestion = false;
+            let memberQuestionID = 0
+            for ( const question of JSON.parse(server.server.PartnerShipQuestions)) {
+                if (question[1] == 'member') {
+                    memberQuestion = memberQuestionID
+                    break;
+                }
+                memberQuestionID++;
+            }
+
+
+            if (memberQuestion !== false) {
+                // Use a regular expression to find numbers in the string
+                const matches = questionsAnswers[memberQuestion].answer.match(/\d+/);
+                // Check if there was at least one match
+                if (matches) {
+                    const number = parseInt(matches[0], 10); // Convert the first match to a number
+                    if (number < memberRequirement) {
+                        await interaction.reply({embeds: [embedPartnership.NotEnoughMembers], ephemeral: true});
+                        return;
+                    }
+                }
+            }
         }
 
         const thread = await interaction.channel.threads.create({
