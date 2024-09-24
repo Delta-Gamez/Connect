@@ -3,6 +3,9 @@ Meet Connect. The Future of Discord Advertising.
 
 Connect is a Discord-based project, allowing users to advertise their Discord server on a webpage free of charge.
 
+### Status Page
+View the current uptime on the [Status Page](https://status.deltagamez.ch).
+
 ## Delta Gamez
 This project is developed by Delta Gamez, a game creation, development group and gaming community. 
 
